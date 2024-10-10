@@ -1,5 +1,8 @@
 #pragma once
 
+#include <limits.h>
+#define ERROR INT_MIN
+
 typedef struct list_t {
 	int data;
 	struct list_t* next;

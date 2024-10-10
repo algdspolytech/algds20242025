@@ -1,8 +1,8 @@
 #include <assert.h>
 #include "lab1.h"
 
- 
-void Create_ArrayStack_NegativeCapacity_returnNull(){
+
+void Create_ArrayStack_NegativeCapacity_returnNull() {
 	assert(Create_ArrayStack(-1) == NULL);
 }
 
@@ -91,7 +91,7 @@ void Pop_ArrayStack_Empty_returnValidVal() {
 
 void Peek_ArrayStack_Empty_returnInteger() {
 	array_t* p = Create_ArrayStack(1);
-	assert(Peek_ArrayStack(p)==666);
+	assert(Peek_ArrayStack(p) == ERROR);
 }
 
 void Peek_ArrayStack_NotEmpty_returnInteger() {
@@ -100,7 +100,7 @@ void Peek_ArrayStack_NotEmpty_returnInteger() {
 	assert(Peek_ArrayStack(p) == 1);
 }
 
-void Push_LinkedStack_Integer_returnValidVal(){
+void Push_LinkedStack_Integer_returnValidVal() {
 	list_t* p = NULL;
 	p = Push_LinkedStack(p, 1);
 	assert(p->data == 1);
@@ -132,7 +132,7 @@ void Peek_LinkedStack_NotEmpty_returnInteger() {
 
 void Peek_LinkedStack_Empty_returnInteger() {
 	list_t* p = NULL;
-	assert(Peek_LinkedStack(p) == 666);
+	assert(Peek_LinkedStack(p) == ERROR);
 }
 
 void test() {

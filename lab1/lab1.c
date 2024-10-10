@@ -3,7 +3,7 @@
 #include <crtdbg.h>
 #include <stdio.h>
 #include "test.h"
-//#include "lab1.h"
+#include "lab1.h"
 
 
 int main() {
@@ -44,7 +44,7 @@ list_t* Pop_LinkedStack(list_t* p) {
 
 int Peek_LinkedStack(list_t* p) {
 	if (p == NULL)
-		return 666;              //пустой стэк
+		return ERROR;              //пустой стэк
 	return p->data;
 }
 
@@ -66,7 +66,7 @@ array_t* Create_ArrayStack(int capacity) {
 
 int IncreazeCapacity_ArrayStack(array_t* p) {
 	int* t = realloc(p->array, p->capacity * 2 * sizeof(int));
-	if (t != NULL) 
+	if (t != NULL)
 		p->array = t;
 	else {
 		free(p->array);
@@ -88,7 +88,7 @@ int IsEmpty_ArrayStack(array_t* p) {
 int Push_ArrayStack(array_t* p, int data) {
 	if (IsFull_ArrayStack(p))
 		if (IncreazeCapacity_ArrayStack(p) == 1)
-			return 666;
+			return ERROR;
 	p->array[++p->last] = data;
 	return data;
 }
@@ -96,7 +96,7 @@ int Push_ArrayStack(array_t* p, int data) {
 int Pop_ArrayStack(array_t* p) {
 	if (IsEmpty_ArrayStack(p)) {
 		printf("There are no more elements\n");
-		return 666;
+		return ERROR;
 	}
 	int data = p->array[p->last];
 	p->last--;
@@ -105,7 +105,7 @@ int Pop_ArrayStack(array_t* p) {
 
 int Peek_ArrayStack(array_t* p) {
 	if (p->last == -1)
-		return 666;               //пустой стэк
+		return ERROR;               //пустой стэк
 	return p->array[p->last];
 }
 
