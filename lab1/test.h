@@ -89,15 +89,17 @@ void Pop_ArrayStack_Empty_returnValidVal() {
 	Free_ArrayStack(p);
 }
 
-void Peek_ArrayStack_Empty_returnInteger() {
+void Peek_ArrayStack_Empty_returnERROR() {
 	array_t* p = Create_ArrayStack(1);
 	assert(Peek_ArrayStack(p) == ERROR);
+	Free_ArrayStack(p);
 }
 
 void Peek_ArrayStack_NotEmpty_returnInteger() {
 	array_t* p = Create_ArrayStack(1);
 	Push_ArrayStack(p, 1);
 	assert(Peek_ArrayStack(p) == 1);
+	Free_ArrayStack(p);
 }
 
 void Push_LinkedStack_Integer_returnValidVal() {
@@ -128,9 +130,10 @@ void Peek_LinkedStack_NotEmpty_returnInteger() {
 	list_t* p = NULL;
 	p = Push_LinkedStack(p, 1);
 	assert(Peek_LinkedStack(p) == 1);
+	p = Pop_LinkedStack(p);
 }
 
-void Peek_LinkedStack_Empty_returnInteger() {
+void Peek_LinkedStack_Empty_returnERROR() {
 	list_t* p = NULL;
 	assert(Peek_LinkedStack(p) == ERROR);
 }
@@ -148,10 +151,10 @@ void test() {
 	Pop_ArrayStack_Integer_returnValidVal();
 	Pop_ArrayStack_Empty_returnValidVal();
 	Peek_ArrayStack_NotEmpty_returnInteger();
-	Peek_ArrayStack_Empty_returnInteger();
+	Peek_ArrayStack_Empty_returnERROR();
 	Push_LinkedStack_Integer_returnValidVal();
 	Pop_LinkedStack_NotEmptyStack_returnValidVal();
 	Pop_LinkedStack_EmptyStack_returnNull();
 	Peek_LinkedStack_NotEmpty_returnInteger();
-	Peek_LinkedStack_Empty_returnInteger();
+	Peek_LinkedStack_Empty_returnERROR();
 }
