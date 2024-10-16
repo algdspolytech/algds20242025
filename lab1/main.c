@@ -22,24 +22,22 @@ int main() {
     push(&l2, s);
   }
 
-  sortList(&l1);
-  sortList(&l2);
-
   fclose(f1);
   fclose(f2);
 
   merge(&l1, &l2);
-  // showList(&l1);
+
   Node *cur = l1.next;
   while (cur != NULL) {
     fprintf(outp, "%s\n", cur->val);
     cur = cur->next;
   }
   fclose(outp);
-  destroyList(&l1);
-  destroyList(&l2);
 
   runAllTests();
+
+  destroyList(&l1);
+  destroyList(&l2);
 
   return 0;
 }

@@ -16,8 +16,6 @@ void pop(Node *head, char *st);
 
 int compareWords(char *a, char *b);
 
-void sortList(Node *head);
-
 void insertAfter(Node *goal, char *val);
 
 void merge(Node *h1, Node *h2);

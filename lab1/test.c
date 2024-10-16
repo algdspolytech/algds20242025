@@ -6,14 +6,16 @@ void runAllTests() {
   compareWords_LeftLowwer_return1();
   compareWords_LeftEmpty_returnMinus1();
 
-  push_Standart_InsertHelloWorld();
+  push_Standart_CorretctInsert();
+
   pop_Standart_InsertHelloWorld();
   pop_ListWithOnlyHeader_InsertTerminator();
 
   insertAfter_Standart_CorrectNext();
   insertAfter_Standart_CorrectPrevious();
 
-  sortList_Standart_IsertSortedList();
+  merge_Standart_SortedFirstList();
+  merge_LeftEmpty_SortedFirstList();
 }
 
 void compareWords_LeftBigger_returnMinus1() {
@@ -32,18 +34,23 @@ void compareWords_LeftEmpty_returnMinus1() {
   assert(compareWords("", "apple") == -1);
 }
 
-void push_Standart_InsertHelloWorld() {
-  Node head = {NULL, NULL};
-  char str[20] = "Hello world\0";
-  push(&head, str);
-  assert(strcmp(head.next->val, str) == 0);
+void push_Standart_CorretctInsert() {
+
+  Node c = {"c", NULL};
+  Node a = {"a", &c};
+
+  Node head = {NULL, &a};
+  push(&head, "b");
+  assert(strcmp(a.next->val, "b") == 0);
 }
 
 void pop_Standart_InsertHelloWorld() {
   Node head = {NULL, NULL};
   char str[20] = "Hello world\0";
-  Node next = {str, NULL};
-  head.next = &next;
+
+  head.next = (Node *)malloc(sizeof(Node));
+  head.next->val = strdup(str);
+  head.next->next = NULL;
   char res[20];
   pop(&head, res);
   assert(strcmp(res, str) == 0);
@@ -74,21 +81,29 @@ void insertAfter_Standart_CorrectPrevious() {
   assert(A.next->next == &C);
 }
 
-void sortList_Standart_IsertSortedList() {
+void merge_Standart_SortedFirstList() {
+  Node c = {"c", NULL};
+  Node a = {"a", &c};
+  Node h1 = {NULL, &a};
 
-  Node C = {"C", NULL};
-  Node D = {"D", &C};
-  Node A = {"A", &D};
-  Node B = {"B", &A};
+  Node *b = malloc(sizeof(Node));
+  b->val = strdup("b");
+  b->next = NULL;
+  Node h2 = {NULL, b};
 
-  Node head = {NULL, &B};
-  sortList(&head);
-  char result[4] = "";
-  result[0] = head.next->val[0];
-  result[1] = head.next->next->val[0];
-  result[2] = head.next->next->next->val[0];
-  result[3] = head.next->next->next->next->val[0];
+  merge(&h1, &h2);
+  assert(strcmp(h1.next->next->val, "b") == 0);
+}
 
-  char *tocomp = "ABCD";
-  assert(strcmp(result, tocomp) == 0);
+void merge_LeftEmpty_SortedFirstList() {
+
+  Node h1 = {NULL, NULL};
+
+  Node h2 = {NULL, NULL};
+  h2.next = malloc(sizeof(Node));
+  h2.next->val = "a";
+  h2.next->next = malloc(sizeof(Node));
+  h2.next->next->val = "b";
+  merge(&h1, &h2);
+  assert(strcmp(h1.next->next->val, "b") == 0);
 }

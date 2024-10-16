@@ -3,13 +3,39 @@
 void push(Node *head, char *element) {
   Node *cur = head;
 
-  while (cur->next != NULL) {
-    cur = cur->next;
-  }
-  cur->next = (Node *)malloc(sizeof(Node));
+  int flag = 1;
+  while (flag) {
 
-  cur->next->val = strdup(element);
-  cur->next->next = NULL;
+    if (cur == head && cur->next == NULL) {
+      flag = 0;
+      cur->next = (Node *)malloc(sizeof(Node));
+      cur->next->val = strdup(element);
+      cur->next->next = NULL;
+    }
+
+    if (flag) {
+      if (cur != head) {
+        if (cur->next != NULL) {
+          if (compareWords(cur->val, element) == -1 &&
+              compareWords(element, cur->next->val) != 1) {
+            insertAfter(cur, element);
+            flag = 0;
+          }
+        } else {
+          insertAfter(cur, element);
+          flag = 0;
+        }
+      } else {
+        if (compareWords(element, cur->next->val) != 1) {
+          insertAfter(cur, element);
+          flag = 0;
+        }
+      }
+    }
+
+    if (flag)
+      cur = cur->next;
+  }
 }
 
 void pop(Node *head, char *st) {
@@ -22,8 +48,6 @@ void pop(Node *head, char *st) {
   if (cur != head) {
     strcpy(st, cur->val);
 
-    free(cur->next);
-    free(cur->val);
     free(cur);
 
     if (prev != NULL) {
@@ -103,12 +127,10 @@ void showList(Node *head) {
 }
 
 void destroyList(Node *head) {
-  Node *cur = head;
-  while (cur->next != NULL) {
+  Node *cur = head->next;
+  while (cur != NULL) {
     Node *prev = cur;
     cur = cur->next;
     free(prev);
   }
-
-  free(cur);
 }
