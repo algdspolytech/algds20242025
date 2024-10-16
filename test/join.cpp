@@ -7,7 +7,7 @@ extern "C"
 }
 
 
-TEST(join_check, normal_case)
+TEST(join_check, normal_case_n1)
 {
     List* list = initList();
     addToList(list, "What");
@@ -19,7 +19,7 @@ TEST(join_check, normal_case)
     ASSERT_EQ(strcmp(exp, res), 0);
 }
 
-TEST(join_check, eq_strings)
+TEST(join_check, eq_strings_n2)
 {
     List* list = initList();
     addToList(list, "Hello ");
@@ -29,7 +29,7 @@ TEST(join_check, eq_strings)
     ASSERT_EQ(strcmp(exp, res), 0);
 }
 
-TEST(join_check, empty_list)
+TEST(join_check, empty_list_n3)
 {
     List* list = initList();
     char exp[] = "";
@@ -37,7 +37,7 @@ TEST(join_check, empty_list)
     ASSERT_EQ(strcmp(exp, res), 0);
 }
 
-TEST(join_check, one_string)
+TEST(join_check, one_string_n4)
 {
     List* list = initList();
     addToList(list, "Hello");
@@ -46,7 +46,7 @@ TEST(join_check, one_string)
     ASSERT_EQ(strcmp(exp, res), 0);
 }
 
-TEST(join_check, empty_string)
+TEST(join_check, empty_string_n5)
 {
     List* list = initList();
     addToList(list, "");
@@ -55,7 +55,7 @@ TEST(join_check, empty_string)
     ASSERT_EQ(strcmp(exp, res), 0);
 }
 
-TEST(join_check, empty_strings)
+TEST(join_check, empty_strings_n6)
 {
     List* list = initList();
     addToList(list, "");
@@ -65,7 +65,7 @@ TEST(join_check, empty_strings)
     ASSERT_EQ(strcmp(exp, res), 0);
 }
 
-TEST(join_check, special_symbols)
+TEST(join_check, special_symbols_n7)
 {
     List* list = initList();
     addToList(list, "!@#$%^&*(){}|/~`");
@@ -75,7 +75,7 @@ TEST(join_check, special_symbols)
     ASSERT_EQ(strcmp(exp, res), 0);
 }
 
-TEST(join_check, different_lens)
+TEST(join_check, different_lens_n8)
 {
     List* list = initList();
     addToList(list, "Hello");
@@ -85,7 +85,7 @@ TEST(join_check, different_lens)
     ASSERT_EQ(strcmp(exp, res), 0);
 }
 
-TEST(join_check, long_strings)
+TEST(join_check, long_strings_n9)
 {
     List* list = initList();
     addToList(list, "!@#$%^&*(){}|/~`!@#$%^&*(){}|/~`!@#$%^&*(){}|/~`!@#$%^&*(){}|/~`!@#$%^&*(){}|/~`!@#$%^&*(){}|/~`!@#$%^&*(){}|/~`!@#$%^&*(){}|/~`!@#$%^&*(){}|/~`!@#$%^&*(){}|/~`!@#$%^&*(){}|/~`!@#$%^&*(){}|/~`!@#$%^&*(){}|/~`!@#$%^&*(){}|/~`!@#$%^&*(){}|/~`!@#$%^&*(){}|/~`!@#$%^&*(){}|/~`!@#$%^&*(){}|/~`");
@@ -95,7 +95,7 @@ TEST(join_check, long_strings)
     ASSERT_EQ(strcmp(exp, res), 0);
 }
 
-TEST(join_check, many_strings)
+TEST(join_check, many_strings_n10)
 {
     List* list = initList();
     std::string exp1 = "";
