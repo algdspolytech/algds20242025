@@ -10,39 +10,36 @@ int StringComparison(const char *first, const char *second) // returns 1 if firs
     return first[i] > second[i] ? 1 : 0;
 }
 
-list *ListAdd(list *first, char *string)
+void ListAdd(list **first, char *string)
 {
-    if (first != NULL)
+    if (*first)
     {
-        while (first->next != NULL)
+        while ((*first)->next != NULL)
         {
-            first = first->next;
+            *first = (*first)->next;
         }
         list *addition = (list *)malloc(sizeof(list));
         addition->next = NULL;
         addition->str = string;
-        first->next = addition;
-        return first;
+        (*first)->next = addition;
     }
     else
     {
-        list *tmp = (list *)malloc(sizeof(list));
-        tmp->next = NULL;
-        tmp->str = string;
-        return tmp;
+        *first = (list *)malloc(sizeof(list));
+        (*first)->next = NULL;
+        (*first)->str = string;
     }
 }
 
-list *ListDestr(list *first)
+void ListDestr(list **first)
 {
-    while (first)
+    while (*first)
     {
-        list *tmp = first;
-        first = first->next;
+        list *tmp = *first;
+        *first = (*first)->next;
         free(tmp->str);
         free(tmp);
     }
-    return NULL;
 }
 
 void ListSort(list *first)
@@ -103,7 +100,7 @@ list *ListFromFile(const char *filename)
         }
         else
         {
-            first = ListAdd(first, string);
+            ListAdd(&first, string);
         }
         len += ++strlen;
         c = getc(file);

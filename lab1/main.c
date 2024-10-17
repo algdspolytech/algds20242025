@@ -33,7 +33,7 @@ int Test_StringComparison_no2(void)
 int Test_AddToEmptyList_no3(void)
 {
     list *tmp = NULL;
-    tmp = ListAdd(tmp, "abc");
+    ListAdd(&tmp, "abc");
     int status = 1;
 
     status *= ASSERT_PTR_NE(NULL, tmp, "tmp must be !NULL", "Test_AddToEmptyList_no3");
@@ -49,7 +49,7 @@ int Test_AddToNotEmptyList_no4(void)
     list *tmp = (list *)malloc(sizeof(list));
     tmp->str = "abc";
     tmp->next = NULL;
-    tmp = ListAdd(tmp, "def");
+    ListAdd(&tmp, "def");
     int status = 1;
 
     status *= ASSERT_PTR_EQ(NULL, tmp->next->next, "tmp->next->next must be NULL", "Test_AddToNotEmptyList_no4");
@@ -65,7 +65,7 @@ int Test_ListDestr_no5(void)
     list *tmp = (list *)malloc(sizeof(list));
     tmp->str = "abc";
     tmp->next = NULL;
-    tmp = ListDestr(tmp);
+    ListDestr(&tmp);
     int status = 1;
 
     status *= ASSERT_PTR_EQ(NULL, tmp, "tmp must be NULL", "Test_ListDestr_no5");
@@ -97,7 +97,7 @@ int Test_SortOnSingleElement_no7(void)
     status *= ASSERT_PTR_EQ(NULL, tmp->next, "tmp->next must be NULL", "Test_SortOnSingleElement_no7");
     status *= ASSERT_STR_EQ("abc", tmp->str, "tmp->str must be abc", "Test_SortOnSingleElement_no7");
 
-    tmp = ListDestr(tmp);
+    ListDestr(&tmp);
     testing_result(status, "Test_SortOnSingleElement_no7");
     return status;
 }
@@ -116,7 +116,7 @@ int Test_SortOnNormalList_no8(void)
     status *= ASSERT_STR_EQ("abc", tmp->str, "tmp->str must be abc", "Test_SortOnNormalList_no8");
     status *= ASSERT_STR_EQ("abd", tmp->next->str, "tmp->next->str must be abd", "Test_SortOnNormalList_no8");
 
-    tmp = ListDestr(tmp);
+    ListDestr(&tmp);
     testing_result(status, "Test_SortOnNormalList_no8");
     return status;
 }
@@ -129,7 +129,7 @@ int Test_ListFromEmptyFile_no9(void)
     status *= ASSERT_PTR_EQ(NULL, tmp->next, "tmp->next must be NULL", "Test_SortOnSingleElement_no7");
     status *= ASSERT_STR_EQ("", tmp->str, "tmp->str must be empty string", "Test_SortOnSingleElement_no7");
 
-    tmp = ListDestr(tmp);
+    ListDestr(&tmp);
     testing_result(status, "Test_ListFromEmptyFile_no9");
     return status;
 }
@@ -143,7 +143,7 @@ int Test_ListFromNonEmptyFile_no10(void)
     status *= ASSERT_STR_EQ("abc", tmp->str, "tmp->str must be abc", "ListFromNonEmptyFile_no104");
     status *= ASSERT_STR_EQ("def", tmp->next->str, "tmp->next->str must be def", "ListFromNonEmptyFile_no10");
 
-    tmp = ListDestr(tmp);
+    ListDestr(&tmp);
     testing_result(status, "ListFromNonEmptyFile_no10");
     return status;
 }

@@ -9,7 +9,7 @@ typedef struct list
 } list;
 
 int StringComparison(const char *first, const char *second);
-list *ListAdd(list *first, char *string);
-list *ListDestr(list *first);
+void ListAdd(list **first, char *string);
+void ListDestr(list **first);
 void ListSort(list *first);
 list *ListFromFile(const char *filename);
