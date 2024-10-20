@@ -4,13 +4,12 @@
 #include <locale.h>
 #include <string.h>
 
-
-//Функция считывания строки в файле
+//Г”ГіГ­ГЄГ¶ГЁГї Г±Г·ГЁГІГ»ГўГ Г­ГЁГї Г±ГІГ°Г®ГЄГЁ Гў ГґГ Г©Г«ГҐ
 char* Read_line(FILE* file) {
     char* line = malloc(sizeof(char));
     if (line == NULL) {
         free(line);
-        printf("Ошибка выделения памяти");
+        printf("ГЋГёГЁГЎГЄГ  ГўГ»Г¤ГҐГ«ГҐГ­ГЁГї ГЇГ Г¬ГїГІГЁ");
         return NULL;
     }
     char c;
@@ -24,7 +23,7 @@ char* Read_line(FILE* file) {
         line = realloc(line, i * sizeof(char));
         if (line == NULL) {
             free(line);
-            printf("Ошибка выделения памяти");
+            printf("ГЋГёГЁГЎГЄГ  ГўГ»Г¤ГҐГ«ГҐГ­ГЁГї ГЇГ Г¬ГїГІГЁ");
             return NULL;
         }
     }
@@ -32,7 +31,7 @@ char* Read_line(FILE* file) {
     return line;
 }
 
-// Функция для освобождения памяти, выделенной под матрицу
+// Г”ГіГ­ГЄГ¶ГЁГї Г¤Г«Гї Г®Г±ГўГ®ГЎГ®Г¦Г¤ГҐГ­ГЁГї ГЇГ Г¬ГїГІГЁ, ГўГ»Г¤ГҐГ«ГҐГ­Г­Г®Г© ГЇГ®Г¤ Г¬Г ГІГ°ГЁГ¶Гі
 void Free_Matrix_adj(int** Matrix, int vertices) {
     for (int i = 0; i < vertices; i++) {
         free(Matrix[i]);
@@ -42,18 +41,18 @@ void Free_Matrix_adj(int** Matrix, int vertices) {
     Matrix = NULL;
 }
 
-// Функция для определения количества вершин (по количеству строк в файле)
+// Г”ГіГ­ГЄГ¶ГЁГї Г¤Г«Гї Г®ГЇГ°ГҐГ¤ГҐГ«ГҐГ­ГЁГї ГЄГ®Г«ГЁГ·ГҐГ±ГІГўГ  ГўГҐГ°ГёГЁГ­ (ГЇГ® ГЄГ®Г«ГЁГ·ГҐГ±ГІГўГі Г±ГІГ°Г®ГЄ Гў ГґГ Г©Г«ГҐ)
 int Count_Vertices(const char* filename) {
     FILE* file = fopen(filename, "r");
     if (file == NULL) {
-        printf("Ошибка открытия файла\n");
+        printf("ГЋГёГЁГЎГЄГ  Г®ГІГЄГ°Г»ГІГЁГї ГґГ Г©Г«Г \n");
         return -1;
     }
 
     int vertices = 0;
     int u;
 
-    // Считаем количество строк с помощью fscanf
+    // Г‘Г·ГЁГІГ ГҐГ¬ ГЄГ®Г«ГЁГ·ГҐГ±ГІГўГ® Г±ГІГ°Г®ГЄ Г± ГЇГ®Г¬Г®Г№ГјГѕ fscanf
     while (1) {
         char* line = Read_line(file);
         if (line[0] == '\0') {
@@ -68,7 +67,7 @@ int Count_Vertices(const char* filename) {
     return vertices;
 }
 
-// Функция для создания матрицы смежности и инициализации её нулями
+// Г”ГіГ­ГЄГ¶ГЁГї Г¤Г«Гї Г±Г®Г§Г¤Г Г­ГЁГї Г¬Г ГІГ°ГЁГ¶Г» Г±Г¬ГҐГ¦Г­Г®Г±ГІГЁ ГЁ ГЁГ­ГЁГ¶ГЁГ Г«ГЁГ§Г Г¶ГЁГЁ ГҐВё Г­ГіГ«ГїГ¬ГЁ
 int** Create_Matrix_adj(int vertices) {
     int** Matrix_adj = (int**)malloc(vertices * sizeof(int*));
     if (Matrix_adj == NULL) {
@@ -83,7 +82,7 @@ int** Create_Matrix_adj(int vertices) {
         }
         if (flag == 0) {
             for (int j = 0; j < vertices; j++) {
-                Matrix_adj[i][j] = 0; // Инициализируем нулями
+                Matrix_adj[i][j] = 0; // Г€Г­ГЁГ¶ГЁГ Г«ГЁГ§ГЁГ°ГіГҐГ¬ Г­ГіГ«ГїГ¬ГЁ
             }
         }  
     }
@@ -94,11 +93,11 @@ int** Create_Matrix_adj(int vertices) {
     return Matrix_adj;
 }
 
-// Функция для заполнения матрицы смежности на основе файла
+// Г”ГіГ­ГЄГ¶ГЁГї Г¤Г«Гї Г§Г ГЇГ®Г«Г­ГҐГ­ГЁГї Г¬Г ГІГ°ГЁГ¶Г» Г±Г¬ГҐГ¦Г­Г®Г±ГІГЁ Г­Г  Г®Г±Г­Г®ГўГҐ ГґГ Г©Г«Г 
 void Parsing_Matrix_adj(const char* filename, int** Matrix_adj, int vertices) {
     FILE* file = fopen(filename, "r");
     if (file == NULL) {
-        printf("Ошибка открытия файла\n");
+        printf("ГЋГёГЁГЎГЄГ  Г®ГІГЄГ°Г»ГІГЁГї ГґГ Г©Г«Г \n");
         return;
     }
 
@@ -113,19 +112,19 @@ void Parsing_Matrix_adj(const char* filename, int** Matrix_adj, int vertices) {
         char* line_cp = line;
         char* token;
 
-        // Первым считываем вершину (номер перед двоеточием)
+        // ГЏГҐГ°ГўГ»Г¬ Г±Г·ГЁГІГ»ГўГ ГҐГ¬ ГўГҐГ°ГёГЁГ­Гі (Г­Г®Г¬ГҐГ° ГЇГҐГ°ГҐГ¤ Г¤ГўГ®ГҐГІГ®Г·ГЁГҐГ¬)
         sscanf(line, "%d:", &j);
 
-        // Получаем список смежных вершин (разделённых пробелами)
+        // ГЏГ®Г«ГіГ·Г ГҐГ¬ Г±ГЇГЁГ±Г®ГЄ Г±Г¬ГҐГ¦Г­Г»Гµ ГўГҐГ°ГёГЁГ­ (Г°Г Г§Г¤ГҐГ«ВёГ­Г­Г»Гµ ГЇГ°Г®ГЎГҐГ«Г Г¬ГЁ)
         token = strtok(
-            line, " "); // Первым токеном будет номер вершины j, его пропускаем
-        token = strtok(NULL, " "); // Следующие токены — это смежные вершины
+            line, " "); // ГЏГҐГ°ГўГ»Г¬ ГІГ®ГЄГҐГ­Г®Г¬ ГЎГіГ¤ГҐГІ Г­Г®Г¬ГҐГ° ГўГҐГ°ГёГЁГ­Г» j, ГҐГЈГ® ГЇГ°Г®ГЇГіГ±ГЄГ ГҐГ¬
+        token = strtok(NULL, " "); // Г‘Г«ГҐГ¤ГіГѕГ№ГЁГҐ ГІГ®ГЄГҐГ­Г» вЂ” ГЅГІГ® Г±Г¬ГҐГ¦Г­Г»ГҐ ГўГҐГ°ГёГЁГ­Г»
 
         while (token != NULL) {
-            i = atoi(token); // Преобразуем строку в число
+            i = atoi(token); // ГЏГ°ГҐГ®ГЎГ°Г Г§ГіГҐГ¬ Г±ГІГ°Г®ГЄГі Гў Г·ГЁГ±Г«Г®
             Matrix_adj[j][i] = 1;
             Matrix_adj[i][j] = 1;
-            token = strtok(NULL, " "); // Переходим к следующему токену
+            token = strtok(NULL, " "); // ГЏГҐГ°ГҐГµГ®Г¤ГЁГ¬ ГЄ Г±Г«ГҐГ¤ГіГѕГ№ГҐГ¬Гі ГІГ®ГЄГҐГ­Гі
         }
         free(line_cp);
     }
@@ -133,7 +132,7 @@ void Parsing_Matrix_adj(const char* filename, int** Matrix_adj, int vertices) {
     fclose(file);
 }
 
-// Функция для вывода квадратной матрицы 
+// Г”ГіГ­ГЄГ¶ГЁГї Г¤Г«Гї ГўГ»ГўГ®Г¤Г  ГЄГўГ Г¤Г°Г ГІГ­Г®Г© Г¬Г ГІГ°ГЁГ¶Г» 
 void Print_Matrix(int** Matrix, int n) {
     for (int i = 0; i < n; i++) {
         for (int j = 0; j < n; j++) {
