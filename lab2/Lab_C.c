@@ -4,12 +4,12 @@
 #include <locale.h>
 #include <string.h>
 
-//Ôóíêöèÿ ñ÷èòûâàíèÿ ñòðîêè â ôàéëå
+//Функция считывания строки в файле
 char* Read_line(FILE* file) {
     char* line = malloc(sizeof(char));
     if (line == NULL) {
         free(line);
-        printf("Îøèáêà âûäåëåíèÿ ïàìÿòè");
+        printf("Ошибка выделения памяти");
         return NULL;
     }
     char c;
@@ -23,7 +23,7 @@ char* Read_line(FILE* file) {
         line = realloc(line, i * sizeof(char));
         if (line == NULL) {
             free(line);
-            printf("Îøèáêà âûäåëåíèÿ ïàìÿòè");
+            printf("Ошибка выделения памяти");
             return NULL;
         }
     }
@@ -31,7 +31,7 @@ char* Read_line(FILE* file) {
     return line;
 }
 
-// Ôóíêöèÿ äëÿ îñâîáîæäåíèÿ ïàìÿòè, âûäåëåííîé ïîä ìàòðèöó
+// Функция для освобождения памяти, выделенной под матрицу
 void Free_Matrix_adj(int** Matrix, int vertices) {
     for (int i = 0; i < vertices; i++) {
         free(Matrix[i]);
@@ -41,18 +41,17 @@ void Free_Matrix_adj(int** Matrix, int vertices) {
     Matrix = NULL;
 }
 
-// Ôóíêöèÿ äëÿ îïðåäåëåíèÿ êîëè÷åñòâà âåðøèí (ïî êîëè÷åñòâó ñòðîê â ôàéëå)
+// Функция для определения количества вершин (по количеству строк в файле)
 int Count_Vertices(const char* filename) {
     FILE* file = fopen(filename, "r");
     if (file == NULL) {
-        printf("Îøèáêà îòêðûòèÿ ôàéëà\n");
+        printf("Ошибка открытия файла\n");
         return -1;
     }
 
     int vertices = 0;
     int u;
 
-    // Ñ÷èòàåì êîëè÷åñòâî ñòðîê ñ ïîìîùüþ fscanf
     while (1) {
         char* line = Read_line(file);
         if (line[0] == '\0') {
@@ -67,7 +66,7 @@ int Count_Vertices(const char* filename) {
     return vertices;
 }
 
-// Ôóíêöèÿ äëÿ ñîçäàíèÿ ìàòðèöû ñìåæíîñòè è èíèöèàëèçàöèè å¸ íóëÿìè
+// Функция для создания матрицы смежности и инициализации её нулями
 int** Create_Matrix_adj(int vertices) {
     int** Matrix_adj = (int**)malloc(vertices * sizeof(int*));
     if (Matrix_adj == NULL) {
@@ -82,7 +81,7 @@ int** Create_Matrix_adj(int vertices) {
         }
         if (flag == 0) {
             for (int j = 0; j < vertices; j++) {
-                Matrix_adj[i][j] = 0; // Èíèöèàëèçèðóåì íóëÿìè
+                Matrix_adj[i][j] = 0; // Инициализируем нулями
             }
         }  
     }
@@ -93,11 +92,11 @@ int** Create_Matrix_adj(int vertices) {
     return Matrix_adj;
 }
 
-// Ôóíêöèÿ äëÿ çàïîëíåíèÿ ìàòðèöû ñìåæíîñòè íà îñíîâå ôàéëà
+// Функция для заполнения матрицы смежности на основе файла
 void Parsing_Matrix_adj(const char* filename, int** Matrix_adj, int vertices) {
     FILE* file = fopen(filename, "r");
     if (file == NULL) {
-        printf("Îøèáêà îòêðûòèÿ ôàéëà\n");
+        printf("Ошибка открытия файла\n");
         return;
     }
 
@@ -112,19 +111,19 @@ void Parsing_Matrix_adj(const char* filename, int** Matrix_adj, int vertices) {
         char* line_cp = line;
         char* token;
 
-        // Ïåðâûì ñ÷èòûâàåì âåðøèíó (íîìåð ïåðåä äâîåòî÷èåì)
+        // Первым считываем вершину (номер перед двоеточием)
         sscanf(line, "%d:", &j);
 
-        // Ïîëó÷àåì ñïèñîê ñìåæíûõ âåðøèí (ðàçäåë¸ííûõ ïðîáåëàìè)
+        // Получаем список смежных вершин (разделённых пробелами)
         token = strtok(
-            line, " "); // Ïåðâûì òîêåíîì áóäåò íîìåð âåðøèíû j, åãî ïðîïóñêàåì
-        token = strtok(NULL, " "); // Ñëåäóþùèå òîêåíû — ýòî ñìåæíûå âåðøèíû
+            line, " "); // Первым токеном будет номер вершины j, его пропускаем
+        token = strtok(NULL, " "); // Следующие токены — это смежные вершины
 
         while (token != NULL) {
-            i = atoi(token); // Ïðåîáðàçóåì ñòðîêó â ÷èñëî
+            i = atoi(token); // Преобразуем строку в число
             Matrix_adj[j][i] = 1;
             Matrix_adj[i][j] = 1;
-            token = strtok(NULL, " "); // Ïåðåõîäèì ê ñëåäóþùåìó òîêåíó
+            token = strtok(NULL, " "); // Переходим к следующему токену
         }
         free(line_cp);
     }
@@ -132,7 +131,7 @@ void Parsing_Matrix_adj(const char* filename, int** Matrix_adj, int vertices) {
     fclose(file);
 }
 
-// Ôóíêöèÿ äëÿ âûâîäà êâàäðàòíîé ìàòðèöû 
+// Функция для вывода квадратной матрицы 
 void Print_Matrix(int** Matrix, int n) {
     for (int i = 0; i < n; i++) {
         for (int j = 0; j < n; j++) {
