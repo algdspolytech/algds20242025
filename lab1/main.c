@@ -13,7 +13,7 @@ int main() {
     FILE* output_file = fopen("../output.txt", "w");
 
     if (!input_file || !output_file) {
-        perror("Ошибка открытия файла\n");
+        perror("РћС€РёР±РєР° РѕС‚РєСЂС‹С‚РёСЏ С„Р°Р№Р»Р°\n");
         exit(1);
     }
 
