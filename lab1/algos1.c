@@ -13,7 +13,7 @@
 Node* create_node(const char* name) {
     Node* new_node = (Node*)malloc(sizeof(Node));
     if (new_node == NULL) {
-        printf("Ошибка при выделении памяти\n");
+        printf("РћС€РёР±РєР° РІС‹РґРµР»РµРЅРёСЏ РїР°РјСЏС‚Рё\n");
         exit(1);
     }
     strncpy(new_node->name, name, MAX_NAME_LENGTH - 1);
@@ -26,7 +26,7 @@ int add_path(Node* root, const char* path) {
     char* folder_name;
     char* path_copy = (char*)malloc(256 * sizeof(char));
     if (path_copy == NULL) {
-        printf("Ошибка при выделении памяти\n");
+        printf("РћС€РёР±РєР° РІС‹РґРµР»РµРЅРёСЏ РїР°РјСЏС‚Рё\n");
         exit(1);
     }
     strcpy(path_copy, path);
