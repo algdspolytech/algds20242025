@@ -1,125 +1,384 @@
 #include "pch.h"
 #include <stdio.h>
 #include <stdlib.h>
-#include "UnrolledLinkedList.h"
-#include "C:\Users\nasty\source\repos\Lab_1\UnrolledLinkedList\UnrolledLinkedList.c"
+#include "Labyrinth.h"
+#include "C:\Users\nasty\source\repos\Lab2\Labyrinth\Labyrinth.c"
 
-TEST(AddTest, add_to_empty_no1) {
-	ULList_t A;
-	A.count = 0;
-	A.next = NULL;
-	Add(&A, 1);
-	EXPECT_EQ(A.data[0], 1);
-}
-
-TEST(AddTest, add_to_full_no2) {
-	int data[4] = { 1, 2, 3, 4 };
-	ULList_t A = Create(4, data, NULL);
-	Add(&A, 5);
-	EXPECT_EQ(A.next->data[0], 5);
-}
-
-TEST(AddTest, normal_no3) {
-	int data[3] = { 1, 2, 3 };
-	ULList_t A = Create(3, data, NULL);
-	Add(&A, 4);
-	EXPECT_EQ(A.data[3], 4);
-}
-
-TEST(IndexTest, element_found_no4) {
-	int dataB[1] = { 3 };
-	int dataA[2] = { 1, 2 };
-	ULList_t B = Create(1, dataB, NULL);
-	ULList_t A = Create(2, dataA, &B);
-	EXPECT_EQ(Index(&A, 3), 2);
-}
-
-TEST(IndexTest, element_not_found_no5) {
-	int dataB[1] = { 3 };
-	int dataA[2] = { 1, 2 };
-	ULList_t B = Create(1, dataB, NULL);
-	ULList_t A = Create(2, dataA, &B);
-	EXPECT_EQ(Index(&A, 10), -1);
-}
-
-TEST(ElementTest, index_in_range_no6) {
-	int dataB[3] = { 3, 4, 5 };
-	int dataA[2] = { 1, 2 };
-	ULList_t B = Create(3, dataB, NULL);
-	ULList_t A = Create(2, dataA, &B);
-	Element_t elem = Element(&A, 3);
-	EXPECT_EQ(elem.list->data[elem.index], 4);
-}
-
-TEST(ElementTest, index_out_of_range_no7) {
-	int dataB[3] = { 3, 4, 5 };
-	int dataA[2] = { 1, 2 };
-	ULList_t B = Create(3, dataB, NULL);
-	ULList_t A = Create(2, dataA, &B);
-	Element_t elem = Element(&A, 10);
-	EXPECT_EQ(elem.list, (ULList_t*)NULL);
-	EXPECT_EQ(elem.index, -1);
-}
-
-TEST(DeleteTest, index_in_range_no8) {
-	int dataA[4] = { 1, 2, 3, 4 };
-	ULList_t A = Create(4, dataA, NULL);
-	Delete(&A, 1);
-	int arr[3] = { 1, 3, 4 };
-	for (int i = 0; i < 3; i++) {
-		EXPECT_EQ(A.data[i], arr[i]);
+TEST(FindExitTestReturn, no_exit_return_0_no1) {
+	Square_t** squares = (Square_t**)malloc(sizeof(Square_t*) * 2);
+	for (int i = 0; i < 2; i++) {
+		squares[i] = (Square_t*)malloc(sizeof(Square_t) * 2);
 	}
+	squares[0][0] = CreateSquare(NO, NO, YES, YES);
+	squares[0][1] = CreateSquare(YES, NO, NO, NO);
+	squares[1][0] = CreateSquare(NO, YES, YES, NO);
+	squares[1][1] = CreateSquare(YES, NO, NO, NO);
+	Labyrinth_t lab = { 2, 2, squares };
+
+	Direction_t* path = (Direction_t*)malloc(sizeof(Direction_t) * 4);
+	int pathsize = 0;
+
+	int exit = FindExit(lab, 0, 0, path, &pathsize);
+	EXPECT_EQ(exit, 0);
+
+	for (int i = 0; i < 2; i++) {
+		free(squares[i]);
+	}
+	free(squares);
+	free(path);
 }
 
-TEST(DeleteTest, index_out_of_range_no9) {
-	int dataA[4] = { 1, 2, 3, 4 };
-	ULList_t A = Create(4, dataA, NULL);
-	Delete(&A, 8);
+TEST(FindExitTestReturn, normal_return_1_no2) {
+	Square_t** squares = (Square_t**)malloc(sizeof(Square_t*) * 2);
+	for (int i = 0; i < 2; i++) {
+		squares[i] = (Square_t*)malloc(sizeof(Square_t) * 2);
+	}
+	squares[0][0] = CreateSquare(NO, NO, YES, YES);
+	squares[0][1] = CreateSquare(YES, NO, NO, NO);
+	squares[1][0] = CreateSquare(NO, YES, YES, NO);
+	squares[1][1] = CreateSquare(YES, NO, NO, NO);
+	Labyrinth_t lab = { 2, 2, squares };
+	lab.squares[1][1].exit = YES;
+
+	Direction_t* path = (Direction_t*)malloc(sizeof(Direction_t) * 4);
+	int pathsize = 0;
+
+	int exit = FindExit(lab, 0, 0, path, &pathsize);
+	EXPECT_EQ(exit, 1);
+
+	for (int i = 0; i < 2; i++) {
+		free(squares[i]);
+	}
+	free(squares);
+	free(path);
+}
+
+TEST(FindExitTestPathsize, no_exit_pathsize_value_not_changed_no3) {
+	Square_t** squares = (Square_t**)malloc(sizeof(Square_t*) * 2);
+	for (int i = 0; i < 2; i++) {
+		squares[i] = (Square_t*)malloc(sizeof(Square_t) * 2);
+	}
+	squares[0][0] = CreateSquare(NO, NO, YES, YES);
+	squares[0][1] = CreateSquare(YES, NO, NO, NO);
+	squares[1][0] = CreateSquare(NO, YES, YES, NO);
+	squares[1][1] = CreateSquare(YES, NO, NO, NO);
+	Labyrinth_t lab = { 2, 2, squares };
+
+	Direction_t* path = (Direction_t*)malloc(sizeof(Direction_t) * 4);
+	int pathsize = 1;
+
+	int exit = FindExit(lab, 0, 0, path, &pathsize);
+	EXPECT_EQ(pathsize, 1);
+
+	for (int i = 0; i < 2; i++) {
+		free(squares[i]);
+	}
+	free(squares);
+	free(path);
+}
+
+TEST(FindExitTestPathsize, normal_pathsize_contains_number_of_steps_no4) {
+	Square_t** squares = (Square_t**)malloc(sizeof(Square_t*) * 2);
+	for (int i = 0; i < 2; i++) {
+		squares[i] = (Square_t*)malloc(sizeof(Square_t) * 2);
+	}
+	squares[0][0] = CreateSquare(NO, NO, YES, YES);
+	squares[0][1] = CreateSquare(YES, NO, NO, NO);
+	squares[1][0] = CreateSquare(NO, YES, YES, NO);
+	squares[1][1] = CreateSquare(YES, NO, NO, NO);
+	Labyrinth_t lab = { 2, 2, squares };
+	lab.squares[1][1].exit = YES;
+
+	Direction_t* path = (Direction_t*)malloc(sizeof(Direction_t) * 4);
+	int pathsize = 0;
+
+	int exit = FindExit(lab, 0, 0, path, &pathsize);
+	EXPECT_EQ(pathsize, 2);
+
+	for (int i = 0; i < 2; i++) {
+		free(squares[i]);
+	}
+	free(squares);
+	free(path);
+}
+
+TEST(FindExitTestPath, no_exit_path_unchanged_no5) {
+	Square_t** squares = (Square_t**)malloc(sizeof(Square_t*) * 2);
+	for (int i = 0; i < 2; i++) {
+		squares[i] = (Square_t*)malloc(sizeof(Square_t) * 2);
+	}
+	squares[0][0] = CreateSquare(NO, NO, YES, YES);
+	squares[0][1] = CreateSquare(YES, NO, NO, NO);
+	squares[1][0] = CreateSquare(NO, YES, YES, NO);
+	squares[1][1] = CreateSquare(YES, NO, NO, NO);
+	Labyrinth_t lab = { 2, 2, squares };
+
+	Direction_t* path = (Direction_t*)malloc(sizeof(Direction_t) * 4);
 	for (int i = 0; i < 4; i++) {
-		EXPECT_EQ(A.data[i], i + 1);
+		path[i] = LEFT;
 	}
+	int pathsize = 0;
+
+	int exit = FindExit(lab, 0, 0, path, &pathsize);
+	
+	for (int i = 0; i < 4; i++) {
+		EXPECT_EQ(path[i], LEFT);
+	}
+
+	for (int i = 0; i < 2; i++) {
+		free(squares[i]);
+	}
+	free(squares);
+	free(path);
 }
 
-TEST(ElementCountTest, normal_no10) {
-	int dataB[3] = { 3, 4, 5 };
-	int dataA[2] = { 1, 2 };
-	ULList_t B = Create(3, dataB, NULL);
-	ULList_t A = Create(2, dataA, &B);
-	EXPECT_EQ(ElementCount(&A), 5);
+TEST(FindExitTestPath, normal_path_contains_steps_to_exit_in_reversed_order_no6) {
+	Square_t** squares = (Square_t**)malloc(sizeof(Square_t*) * 2);
+	for (int i = 0; i < 2; i++) {
+		squares[i] = (Square_t*)malloc(sizeof(Square_t) * 2);
+	}
+	squares[0][0] = CreateSquare(NO, NO, YES, YES);
+	squares[0][1] = CreateSquare(YES, NO, NO, NO);
+	squares[1][0] = CreateSquare(NO, YES, YES, NO);
+	squares[1][1] = CreateSquare(YES, NO, NO, NO);
+	Labyrinth_t lab = { 2, 2, squares };
+	lab.squares[1][1].exit = YES;
+
+	Direction_t* path = (Direction_t*)malloc(sizeof(Direction_t) * 4);
+	int pathsize = 0;
+
+	int exit = FindExit(lab, 0, 0, path, &pathsize);
+	
+	Direction_t correctPath[2] = {RIGHT, DOWN};
+
+	for (int i = 0; i < pathsize; i++) {
+		EXPECT_EQ(path[i], correctPath[i]);
+	}
+
+	for (int i = 0; i < 2; i++) {
+		free(squares[i]);
+	}
+	free(squares);
+	free(path);
 }
 
-TEST(ElementCountTest, empty_ullist_no11) {
-	ULList_t A;
-	A.count = 0;
-	A.next = NULL;
-	EXPECT_EQ(ElementCount(&A), 0);
+TEST(FindExitTestFlags, normal_visited_square_flags_except_exit_square_changed_to_YES_no7) {
+	Square_t** squares = (Square_t**)malloc(sizeof(Square_t*) * 2);
+	for (int i = 0; i < 2; i++) {
+		squares[i] = (Square_t*)malloc(sizeof(Square_t) * 2);
+	}
+	squares[0][0] = CreateSquare(NO, NO, YES, YES);
+	squares[0][1] = CreateSquare(YES, NO, NO, NO);
+	squares[1][0] = CreateSquare(NO, YES, YES, NO);
+	squares[1][1] = CreateSquare(YES, NO, NO, NO);
+	Labyrinth_t lab = { 2, 2, squares };
+	lab.squares[1][1].exit = YES;
+
+	Direction_t* path = (Direction_t*)malloc(sizeof(Direction_t) * 4);
+	int pathsize = 0;
+
+	int exit = FindExit(lab, 0, 0, path, &pathsize);
+
+	for (int i = 0; i < 2; i++) {
+		for (int j = 0; j < 2; j++) {
+			if (lab.squares[i][j].exit == NO) {
+				EXPECT_EQ(lab.squares[i][j].flag, YES);
+			}
+		}
+	}
+
+	for (int i = 0; i < 2; i++) {
+		free(squares[i]);
+	}
+	free(squares);
+	free(path);
 }
 
-TEST(NextTest, normal_no12) {
-	int dataA[4] = { 1, 2, 3, 4 };
-	ULList_t A = Create(4, dataA, NULL);
-	Element_t elem = { &A, 1 };
-	Element_t next = Next(elem);
-	EXPECT_EQ(next.list, elem.list);
-	EXPECT_EQ(next.list->data[next.index], 3);
+TEST(ClearFlagsTest, all_flags_changed_back_to_NO_no8) {
+	Square_t** squares = (Square_t**)malloc(sizeof(Square_t*) * 2);
+	for (int i = 0; i < 2; i++) {
+		squares[i] = (Square_t*)malloc(sizeof(Square_t) * 2);
+	}
+	squares[0][0] = CreateSquare(NO, NO, YES, YES);
+	squares[0][1] = CreateSquare(YES, NO, NO, NO);
+	squares[1][0] = CreateSquare(NO, YES, YES, NO);
+	squares[1][1] = CreateSquare(YES, NO, NO, NO);
+	Labyrinth_t lab = { 2, 2, squares };
+	lab.squares[1][1].exit = YES;
+
+	for (int i = 0; i < lab.rows; i++) {
+		for (int j = 0; j < lab.cols; j++) {
+			lab.squares[i][j].flag = YES;
+		}
+	}
+
+	ClearFlags(lab);
+
+	for (int i = 0; i < 2; i++) {
+		for (int j = 0; j < 2; j++) {
+			EXPECT_EQ(lab.squares[i][j].flag, NO);
+		}
+	}
+
+
+	for (int i = 0; i < 2; i++) {
+		free(squares[i]);
+	}
+	free(squares);
 }
 
-TEST(NextTest, next_element_is_in_next_block_no13) {
-	int dataB[3] = { 3, 4, 5 };
-	int dataA[2] = { 1, 2 };
-	ULList_t B = Create(3, dataB, NULL);
-	ULList_t A = Create(2, dataA, &B);
-	Element_t elem = { &A, 1 };
-	Element_t next = Next(elem);
-	EXPECT_EQ(next.list, elem.list->next);
-	EXPECT_EQ(next.list->data[next.index], 3);
+TEST(ExitPathTestReturn, no_exit_return_0_no9) {
+	Square_t** squares = (Square_t**)malloc(sizeof(Square_t*) * 2);
+	for (int i = 0; i < 2; i++) {
+		squares[i] = (Square_t*)malloc(sizeof(Square_t) * 2);
+	}
+	squares[0][0] = CreateSquare(NO, NO, YES, YES);
+	squares[0][1] = CreateSquare(YES, NO, NO, NO);
+	squares[1][0] = CreateSquare(NO, YES, YES, NO);
+	squares[1][1] = CreateSquare(YES, NO, NO, NO);
+	Labyrinth_t lab = { 2, 2, squares };
+
+	Direction_t* path = (Direction_t*)malloc(sizeof(Direction_t) * 4);
+
+	int pathsize = ExitPath(lab, 0, 0, path);
+
+	EXPECT_EQ(pathsize, 0);
+
+	for (int i = 0; i < 2; i++) {
+		free(squares[i]);
+	}
+	free(squares);
+	free(path);
 }
 
-TEST(NextTest, next_element_does_not_exist_no14) {
-	int dataA[3] = { 1, 2, 3 };
-	ULList_t A = Create(3, dataA, NULL);
-	Element_t elem = { &A, 2 };
-	Element_t next = Next(elem);
-	EXPECT_EQ(next.list, (ULList_t*)NULL);
-	EXPECT_EQ(next.index, -1);
+TEST(ExitPathTestReturn, normal_return_pathsize_no10) {
+	Square_t** squares = (Square_t**)malloc(sizeof(Square_t*) * 2);
+	for (int i = 0; i < 2; i++) {
+		squares[i] = (Square_t*)malloc(sizeof(Square_t) * 2);
+	}
+	squares[0][0] = CreateSquare(NO, NO, YES, YES);
+	squares[0][1] = CreateSquare(YES, NO, NO, NO);
+	squares[1][0] = CreateSquare(NO, YES, YES, NO);
+	squares[1][1] = CreateSquare(YES, NO, NO, NO);
+	Labyrinth_t lab = { 2, 2, squares };
+	lab.squares[1][1].exit = YES;
+
+	Direction_t* path = (Direction_t*)malloc(sizeof(Direction_t) * 4);
+
+	int pathsize = ExitPath(lab, 0, 0, path);
+	
+	EXPECT_EQ(pathsize, 2);
+
+	for (int i = 0; i < 2; i++) {
+		free(squares[i]);
+	}
+	free(squares);
+	free(path);
+}
+
+TEST(ExitPathTestPath, normal_path_contains_steps_to_exit_in_reversed_order_no11) {
+	Square_t** squares = (Square_t**)malloc(sizeof(Square_t*) * 2);
+	for (int i = 0; i < 2; i++) {
+		squares[i] = (Square_t*)malloc(sizeof(Square_t) * 2);
+	}
+	squares[0][0] = CreateSquare(NO, NO, YES, YES);
+	squares[0][1] = CreateSquare(YES, NO, NO, NO);
+	squares[1][0] = CreateSquare(NO, YES, YES, NO);
+	squares[1][1] = CreateSquare(YES, NO, NO, NO);
+	Labyrinth_t lab = { 2, 2, squares };
+	lab.squares[1][1].exit = YES;
+
+	Direction_t* path = (Direction_t*)malloc(sizeof(Direction_t) * 4);
+
+	int pathsize = ExitPath(lab, 0, 0, path);
+
+	Direction_t correctPath[2] = { RIGHT, DOWN };
+
+	for (int i = 0; i < pathsize; i++) {
+		EXPECT_EQ(path[i], correctPath[i]);
+	}
+
+	for (int i = 0; i < 2; i++) {
+		free(squares[i]);
+	}
+	free(squares);
+	free(path);
+}
+
+TEST(ExitPathTestFlags, all_flags_changed_back_to_NO_no12) {
+	Square_t** squares = (Square_t**)malloc(sizeof(Square_t*) * 2);
+	for (int i = 0; i < 2; i++) {
+		squares[i] = (Square_t*)malloc(sizeof(Square_t) * 2);
+	}
+	squares[0][0] = CreateSquare(NO, NO, YES, YES);
+	squares[0][1] = CreateSquare(YES, NO, NO, NO);
+	squares[1][0] = CreateSquare(NO, YES, YES, NO);
+	squares[1][1] = CreateSquare(YES, NO, NO, NO);
+	Labyrinth_t lab = { 2, 2, squares };
+	lab.squares[1][1].exit = YES;
+
+	Direction_t* path = (Direction_t*)malloc(sizeof(Direction_t) * 4);
+
+	int pathsize = ExitPath(lab, 0, 0, path);
+
+	for (int i = 0; i < 2; i++) {
+		for (int j = 0; j < 2; j++) {
+			EXPECT_EQ(lab.squares[i][j].flag, NO);
+		}
+	}
+
+	for (int i = 0; i < 2; i++) {
+		free(squares[i]);
+	}
+	free(squares);
+	free(path);
+}
+
+TEST(PrintPath, no_exit_no_steps_printed_no13) {
+	Square_t** squares = (Square_t**)malloc(sizeof(Square_t*) * 2);
+	for (int i = 0; i < 2; i++) {
+		squares[i] = (Square_t*)malloc(sizeof(Square_t) * 2);
+	}
+	squares[0][0] = CreateSquare(NO, NO, YES, YES);
+	squares[0][1] = CreateSquare(YES, NO, NO, NO);
+	squares[1][0] = CreateSquare(NO, YES, YES, NO);
+	squares[1][1] = CreateSquare(YES, NO, NO, NO);
+	Labyrinth_t lab = { 2, 2, squares };
+
+	Direction_t* path = (Direction_t*)malloc(sizeof(Direction_t) * 4);
+
+	int pathsize = ExitPath(lab, 0, 0, path);
+
+	PrintPath(path, pathsize);
+
+	for (int i = 0; i < 2; i++) {
+		free(squares[i]);
+	}
+	free(squares);
+	free(path);
+}
+
+TEST(PrintPath, normal_print_steps_no14) {
+	Square_t** squares = (Square_t**)malloc(sizeof(Square_t*) * 2);
+	for (int i = 0; i < 2; i++) {
+		squares[i] = (Square_t*)malloc(sizeof(Square_t) * 2);
+	}
+	squares[0][0] = CreateSquare(NO, NO, YES, YES);
+	squares[0][1] = CreateSquare(YES, NO, NO, NO);
+	squares[1][0] = CreateSquare(NO, YES, YES, NO);
+	squares[1][1] = CreateSquare(YES, NO, NO, NO);
+	Labyrinth_t lab = { 2, 2, squares };
+	lab.squares[1][1].exit = YES;
+
+	Direction_t* path = (Direction_t*)malloc(sizeof(Direction_t) * 4);
+
+	int pathsize = ExitPath(lab, 0, 0, path);
+
+	PrintPath(path, pathsize);
+
+	for (int i = 0; i < 2; i++) {
+		free(squares[i]);
+	}
+	free(squares);
+	free(path);
 }
