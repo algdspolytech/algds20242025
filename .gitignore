@@ -1,0 +1,14 @@
+lab1/lab1.vcxproj*
+lab1.sln
+.vs/
+lab1/x64/
+x64/
+packages/
+lab1Test/
+lab1/.vs/
+lab1/*.o
+lab1/lab1Test.vcxproj*
+lab1/makefile.bat
+lab1/packages.config
+lab1/pch.*
+lab1/test.exe
