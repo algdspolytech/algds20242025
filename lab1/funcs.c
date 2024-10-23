@@ -1,126 +1,137 @@
 #include "funcs.h"
 
+char *fullname(char *surname, char *name) {
 
+  char *fullname = (char *)malloc(sizeof(char) * 40);
+  sprintf_s(fullname, 40, "%s %s", surname, name);
 
-char* fullname(char* surname, char* name) {
-
-	char* fullname = (char*) malloc(sizeof(char)*40);
-	sprintf_s(fullname, 40, "%s %s", surname, name);
-
-	return fullname;
+  return fullname;
 }
 
+Node *add_sort_list(Node *head, Node *New) {
 
-void add_sort_list(Node** head, Node* new) {
+  if (!New)
+    return NULL;
 
-	if ((*head) == NULL) {
-		(*head) = new;
-		(*head)->next = NULL;
-	}
+  int cmp = 0;
+  char *new_fullname = fullname(New->surname, New->name);
+  if (head) {
+    char *head_fullname = fullname(head->surname, head->name);
+    cmp = strcmp(head_fullname, new_fullname);
+    free(head_fullname);
+  }
 
-	else if (new->hours < (*head)->hours) {
-		new->next = (*head);
-		(*head) = new;
-	}
+  if (head == NULL || New->hours < head->hours ||
+      (head->hours == New->hours && cmp > 0)) {
+    New->next = head;
+    head = New;
+  }
 
-	else {
+  else {
 
-		Node* p = (*head);
+    Node *p;
 
-		while ((p->next) && (p->next->hours < new->hours)) {
-			p = p->next;
-		}
-
-		new->next = p->next;
-		p->next = new;
-
-	}
-
+    p = head;
+    char *pn_fullname = (char *)malloc(sizeof(char) * 40);
+    if (p->next) {
+      pn_fullname = fullname(head->next->surname, head->next->name);
+      cmp = strcmp(pn_fullname, new_fullname);
+    }
+    while ((p->next) && (p->next->hours < New->hours ||
+                         (p->next->hours == New->hours && cmp < 0))) {
+      p = p->next;
+      pn_fullname = fullname(p->surname, p->name);
+      cmp = strcmp(pn_fullname, new_fullname);
+    }
+    New->next = p->next;
+    p->next = New;
+    free(pn_fullname);
+  }
+  free(new_fullname);
+  return head;
 }
 
-Node* find_by_hours(Node* head, int value) {
+Node *parse_line(char *line) {
 
-	Node *p = head;
+  Node *New = (Node *)malloc(sizeof(Node));
+  int parsed =
+      sscanf_s(line, "%d.%d.%d %s %s %d\n", &New->date.day, &New->date.month,
+               &New->date.year, &New->surname, 20, &New->name, 20, &New->hours);
 
-	while (p) {
-		if (p->hours == value)
-			return p;
-		p = p->next;
-	}
-	
+  if (parsed != 6) {
+    return NULL;
+    free(New);
+  }
+
+  return New;
 }
 
-void add_sort_entries(Entry** head, Entry* new) {
+Node *read_file(char *filename) {
 
-	if ((*head) == NULL) {
-		(*head) = new;
-		(*head)->next = NULL;
-	}
+  FILE *file;
+  Node *Head = NULL;
+  char line[100];
 
-	else if (strcmp(fullname(new->surname, new->name), fullname((*head)->surname, (*head)->name)) < 0) {
-		new->next = (*head);
-		(*head) = new;
-	}
+  fopen_s(&file, filename, "r");
+  while (fgets(line, sizeof(line), file)) {
+    Node *New = parse_line(line);
+    Head = add_sort_list(Head, New);
+  }
 
-	else {
-
-		Entry* p = (*head);
-
-		while ((p->next) && (strcmp(fullname(p->surname, p->name), fullname(new->surname, new->name)) < 0)) {
-			p = p->next;
-		}
-
-		new->next = p->next;
-		p->next = new;
-
-	}
+  fclose(file);
+  return Head;
 }
 
-Node* read_file(char* filename) {
+HourCounter *count_hours(Node *head, int *count) {
 
-	FILE* file;
-	Node* Head = NULL;
-	char line[100];
+  HourCounter *counter = NULL;
+  (*count) = 0;
+  Node *p = head;
 
-	fopen_s(&file, filename, "r");
-	while (fgets(line, sizeof(line), file)) {
+  while (p) {
 
-		int hours;
-		Entry* Person = (Entry*) malloc(sizeof(Entry));
-		sscanf_s(line, "%d.%d.%d %s %s %d\n", &Person->date.day, &Person->date.month, &Person->date.year, &Person->surname, 20, &Person->name, 20, &hours);
-		Person->total_hours = 0;
+    int found = 0;
+    for (int i = 0; i < *count; i++) {
+      char *counter_fullname = fullname(counter[i].surname, counter[i].name);
+      char *p_fullname = fullname(p->surname, p->name);
+      int cmp = strcmp(counter_fullname, p_fullname);
+      free(counter_fullname);
+      free(p_fullname);
+      if (cmp == 0) {
+        counter[i].total += p->hours;
+        found = 1;
+        break;
+      }
+    }
 
-		Node* Found = find_by_hours(Head, hours);
-		if (Found)
-			add_sort_entries(&Found->head, Person);
-		else {
+    if (!found && head) {
+      counter = realloc(counter, (*count + 1) * sizeof(HourCounter));
+      counter[*count] = (HourCounter){p->date, p->name, p->surname, p->hours};
+      (*count)++;
+    }
 
-			Node* New = (Node*) malloc(sizeof(Node));
-			New->head = Person;
-			New->hours = hours;
-			New->head->next = NULL;
-			add_sort_list(&Head, New);
-
-		}
-	}
-
-	fclose(file);
-	return Head;
+    p = p->next;
+  }
+  return counter;
 }
 
-void print_list(Node** head) {
+void print_filtered_list(Node *head, int N) {
 
-	Node* p = (*head);
-	while (p) {
+  int length;
+  HourCounter *counter = count_hours(head, &length);
 
-		Entry* m = p->head;
+  for (int i = 0; i < length; i++) {
+    if (counter[i].total > N)
+      printf("%s %02d.%02d.%04d\n", counter[i].surname, counter[i].date.day,
+             counter[i].date.month, counter[i].date.year);
+  }
+  free(counter);
+}
 
-		while (m) {
-			printf("%d.%d.%d %s %s %d\n", m->date.day, m->date.month, m->date.year, m->surname, m->name, p->hours);
-			m = m->next;
-		}
-
-		p = p->next;
-
-	};
+void free_all(Node **head) {
+  while ((*head)) {
+    Node *p = (*head);
+    (*head) = (*head)->next;
+    free(p);
+  }
 }
