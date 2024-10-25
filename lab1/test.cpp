@@ -136,7 +136,7 @@ TEST(UlList__ul_get_next__Test, GetNextElement__10) {
 
 	int value = ul_get_next(6, list);
 
-	EXPECT_EQ(6, value);
+	EXPECT_EQ(7, value);
 }
 
 

@@ -21,7 +21,6 @@ typedef struct {
 } ul_list;
 
 
-
 ul_list* ul_create_list(int max_length); // Создание пустого списка
 ul_list* ul_add_item(ul_list* list, int item); // Добавление элемента в список
 int ul_get_item(ul_list* list, int index); // Получение элемента по индексу
