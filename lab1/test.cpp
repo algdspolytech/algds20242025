@@ -1,17 +1,17 @@
 #include "pch.h"
-#include "../LabA/LabA.cpp" // Здесь *.cpp а не *.h потому что, при сборке,
-							// линкер почему то не может найти нужные функции в этом файле
-							// (такой костыль найден на StackOverflow, другого решения проблемы найти не удалось)
+#include "../LabA/LabA.cpp" // Р—РґРµСЃСЊ *.cpp Р° РЅРµ *.h РїРѕС‚РѕРјСѓ С‡С‚Рѕ, РїСЂРё СЃР±РѕСЂРєРµ,
+							// Р»РёРЅРєРµСЂ РїРѕС‡РµРјСѓ С‚Рѕ РЅРµ РјРѕР¶РµС‚ РЅР°Р№С‚Рё РЅСѓР¶РЅС‹Рµ С„СѓРЅРєС†РёРё РІ СЌС‚РѕРј С„Р°Р№Р»Рµ
+							// (С‚Р°РєРѕР№ РєРѕСЃС‚С‹Р»СЊ РЅР°Р№РґРµРЅ РЅР° StackOverflow, РґСЂСѓРіРѕРіРѕ СЂРµС€РµРЅРёСЏ РїСЂРѕР±Р»РµРјС‹ РЅР°Р№С‚Рё РЅРµ СѓРґР°Р»РѕСЃСЊ)
 
 
-// Тест если максимальный размер массива в одном узле равен 0, тогда список должен быть NULL так как такого списка быть не может
+// РўРµСЃС‚ РµСЃР»Рё РјР°РєСЃРёРјР°Р»СЊРЅС‹Р№ СЂР°Р·РјРµСЂ РјР°СЃСЃРёРІР° РІ РѕРґРЅРѕРј СѓР·Р»Рµ СЂР°РІРµРЅ 0, С‚РѕРіРґР° СЃРїРёСЃРѕРє РґРѕР»Р¶РµРЅ Р±С‹С‚СЊ NULL С‚Р°Рє РєР°Рє С‚Р°РєРѕРіРѕ СЃРїРёСЃРєР° Р±С‹С‚СЊ РЅРµ РјРѕР¶РµС‚
 TEST(UlList__ul_create_list__Test, CreateListZeroMaxlength___1) {
 	ul_list* list = ul_create_list(0);
 	int eq = list == NULL;
 	EXPECT_EQ(1, eq);
 }
 
-// Тест если максимальный размер массива в одном узле равен 5
+// РўРµСЃС‚ РµСЃР»Рё РјР°РєСЃРёРјР°Р»СЊРЅС‹Р№ СЂР°Р·РјРµСЂ РјР°СЃСЃРёРІР° РІ РѕРґРЅРѕРј СѓР·Р»Рµ СЂР°РІРµРЅ 5
 TEST(UlList__ul_create_list__Test, CreateListFiveMaxlength___2) {
 	ul_list* list = ul_create_list(5);
 
@@ -22,7 +22,7 @@ TEST(UlList__ul_create_list__Test, CreateListFiveMaxlength___2) {
 	EXPECT_EQ(1, eq);
 }
 
-// Попробуем добавить в список 3 элемента (числа от 1 до 3)
+// РџРѕРїСЂРѕР±СѓРµРј РґРѕР±Р°РІРёС‚СЊ РІ СЃРїРёСЃРѕРє 3 СЌР»РµРјРµРЅС‚Р° (С‡РёСЃР»Р° РѕС‚ 1 РґРѕ 3)
 TEST(UlList__ul_add_item__Test, AddThreeElements___3) {
 	ul_list* list = ul_create_list(5);
 
@@ -36,8 +36,8 @@ TEST(UlList__ul_add_item__Test, AddThreeElements___3) {
 	EXPECT_EQ(1, eq);
 }
 
-// Попробуем добавить в список 7 элементов (числа от 1 до 7)
-// в такой ситуации (т.к. максимальное число элементов в node равно 5) должен быть создан еще один node)
+// РџРѕРїСЂРѕР±СѓРµРј РґРѕР±Р°РІРёС‚СЊ РІ СЃРїРёСЃРѕРє 7 СЌР»РµРјРµРЅС‚РѕРІ (С‡РёСЃР»Р° РѕС‚ 1 РґРѕ 7)
+// РІ С‚Р°РєРѕР№ СЃРёС‚СѓР°С†РёРё (С‚.Рє. РјР°РєСЃРёРјР°Р»СЊРЅРѕРµ С‡РёСЃР»Рѕ СЌР»РµРјРµРЅС‚РѕРІ РІ node СЂР°РІРЅРѕ 5) РґРѕР»Р¶РµРЅ Р±С‹С‚СЊ СЃРѕР·РґР°РЅ РµС‰Рµ РѕРґРёРЅ node)
 TEST(UlList__ul_add_item__Test, AddSevenElements__4) {
 	ul_list* list = ul_create_list(5);
 
@@ -51,7 +51,7 @@ TEST(UlList__ul_add_item__Test, AddSevenElements__4) {
 	EXPECT_EQ(1, eq);
 }
 
-// Попробуем удалить из списка 1 элемент (по индексу) из последнего node
+// РџРѕРїСЂРѕР±СѓРµРј СѓРґР°Р»РёС‚СЊ РёР· СЃРїРёСЃРєР° 1 СЌР»РµРјРµРЅС‚ (РїРѕ РёРЅРґРµРєСЃСѓ) РёР· РїРѕСЃР»РµРґРЅРµРіРѕ node
 TEST(UlList__ul_del_item__Test, DelOneElementFromLastNode__5) {
 	ul_list* list = ul_create_list(5);
 
@@ -66,7 +66,7 @@ TEST(UlList__ul_del_item__Test, DelOneElementFromLastNode__5) {
 	EXPECT_EQ(1, eq);
 }
 
-// Попробуем удалить из списка 1 элемент (по индексу) из первого node
+// РџРѕРїСЂРѕР±СѓРµРј СѓРґР°Р»РёС‚СЊ РёР· СЃРїРёСЃРєР° 1 СЌР»РµРјРµРЅС‚ (РїРѕ РёРЅРґРµРєСЃСѓ) РёР· РїРµСЂРІРѕРіРѕ node
 TEST(UlList__ul_del_item__Test, DelOneElementFromFirstNode__6) {
 	ul_list* list = ul_create_list(5);
 
@@ -81,7 +81,7 @@ TEST(UlList__ul_del_item__Test, DelOneElementFromFirstNode__6) {
 	EXPECT_EQ(1, eq);
 }
 
-// Попробуем удалить из списка все элементы определенного node (тогда такой node должен быть полностью уничтожен)
+// РџРѕРїСЂРѕР±СѓРµРј СѓРґР°Р»РёС‚СЊ РёР· СЃРїРёСЃРєР° РІСЃРµ СЌР»РµРјРµРЅС‚С‹ РѕРїСЂРµРґРµР»РµРЅРЅРѕРіРѕ node (С‚РѕРіРґР° С‚Р°РєРѕР№ node РґРѕР»Р¶РµРЅ Р±С‹С‚СЊ РїРѕР»РЅРѕСЃС‚СЊСЋ СѓРЅРёС‡С‚РѕР¶РµРЅ)
 TEST(UlList__ul_del_item__Test, DelAllElemntsFromOneNode__7) {
 	ul_list* list = ul_create_list(5);
 
@@ -98,7 +98,7 @@ TEST(UlList__ul_del_item__Test, DelAllElemntsFromOneNode__7) {
 	EXPECT_EQ(1, eq);
 }
 
-// Попробуем удалить из списка элемент которого там нет (удаляем 13-ый элемент, а длинна списка 7)
+// РџРѕРїСЂРѕР±СѓРµРј СѓРґР°Р»РёС‚СЊ РёР· СЃРїРёСЃРєР° СЌР»РµРјРµРЅС‚ РєРѕС‚РѕСЂРѕРіРѕ С‚Р°Рј РЅРµС‚ (СѓРґР°Р»СЏРµРј 13-С‹Р№ СЌР»РµРјРµРЅС‚, Р° РґР»РёРЅРЅР° СЃРїРёСЃРєР° 7)
 TEST(UlList__ul_del_item__Test, DelOneNonExistentElement__8) {
 	ul_list* list = ul_create_list(5);
 
@@ -113,7 +113,7 @@ TEST(UlList__ul_del_item__Test, DelOneNonExistentElement__8) {
 	EXPECT_EQ(1, eq);
 }
 
-// Попробуем удалить из пустого списка один элемент
+// РџРѕРїСЂРѕР±СѓРµРј СѓРґР°Р»РёС‚СЊ РёР· РїСѓСЃС‚РѕРіРѕ СЃРїРёСЃРєР° РѕРґРёРЅ СЌР»РµРјРµРЅС‚
 TEST(UlList__ul_del_item__Test, DelOneElementFromEmptyList__9) {
 	ul_list* list = ul_create_list(5);
 
@@ -127,7 +127,7 @@ TEST(UlList__ul_del_item__Test, DelOneElementFromEmptyList__9) {
 }
 
 
-// Пробуем получить следующий элемент
+// РџСЂРѕР±СѓРµРј РїРѕР»СѓС‡РёС‚СЊ СЃР»РµРґСѓСЋС‰РёР№ СЌР»РµРјРµРЅС‚
 TEST(UlList__ul_get_next__Test, GetNextElement__10) {
 	ul_list* list = ul_create_list(5);
 
@@ -140,7 +140,7 @@ TEST(UlList__ul_get_next__Test, GetNextElement__10) {
 }
 
 
-// Пробуем получить следующий элемент которого нет
+// РџСЂРѕР±СѓРµРј РїРѕР»СѓС‡РёС‚СЊ СЃР»РµРґСѓСЋС‰РёР№ СЌР»РµРјРµРЅС‚ РєРѕС‚РѕСЂРѕРіРѕ РЅРµС‚
 TEST(UlList__ul_get_next__Test, GetEmptyNextElement__11) {
 	ul_list* list = ul_create_list(5);
 
@@ -153,7 +153,7 @@ TEST(UlList__ul_get_next__Test, GetEmptyNextElement__11) {
 }
 
 
-// Пробуем получить длинну списка
+// РџСЂРѕР±СѓРµРј РїРѕР»СѓС‡РёС‚СЊ РґР»РёРЅРЅСѓ СЃРїРёСЃРєР°
 TEST(UlList__ul_length__Test, GetLengthFromSevenElementsList__12) {
 	ul_list* list = ul_create_list(5);
 
