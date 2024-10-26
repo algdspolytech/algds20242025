@@ -136,7 +136,7 @@ int main() {
     //Unit tests
     test_append_empty_list(); //проверка добавления в пустой список
     test_append_nonempty_list(); //проверка добавления в непустой список
-    test_bubbleSort(); //проверка сортировки для обычного списка
+    test_bubbleSort(); //проверка сортировки для обычного (рандомного) списка
     test_bubbleSort_empty_list(); //empty_list пустой список
     test_bubbleSort_sorted_list(); //sorted_list список отсортированный
     test_bubbleSort_cosorted_list(); //cosorted_list список отсортированный в обратном порядке
