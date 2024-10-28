@@ -14,3 +14,4 @@
 *.db-shm
 *.db-wal
 *.sqlite
+*.opendb
