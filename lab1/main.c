@@ -1,45 +1,38 @@
-#define _CRT_SECURE_NO_WARNINGS
 
-#include <stdio.h>  
-#include <stdlib.h>  
-#include <locale.h>  
-#include "algos1/algos1.h"  
-#include <string.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include "Lab_C.h"
 
 int main() {
-    setlocale(LC_ALL, "RUS");
+    int rows, cols;
+    int** matrix = readMatrix("input.txt", &rows, &cols);
 
-    FILE* input_file = fopen("../input.txt", "r");
-    FILE* output_file = fopen("../output.txt", "w");
-
-    if (!input_file || !output_file) {
-        perror("РћС€РёР±РєР° РѕС‚РєСЂС‹С‚РёСЏ С„Р°Р№Р»Р°\n");
-        exit(1);
-    }
-
-    int N;
-    fscanf(input_file, "%d\n", &N);
-
-    Node* tree = create_node("");
-
-    for (int i = 0; i < N; i++) {
-        char path[256];
-        fgets(path, sizeof(path), input_file);
-
-        for (int pos = 0; path[pos] != '\0'; pos++) {
-            if (path[pos] == '\n') {
-                path[pos] = '\0';
-                break;
-            }
+    for (int i = 0; i < rows; i++) {
+        for (int j = 0; j < cols; j++) {
+            printf("%d ", matrix[i][j]);
         }
-        add_path(tree, path);
+        printf("\n");
     }
 
-    print_tree(tree, 0, output_file);
+    if (matrix == NULL) {
+        return 1;
+    }
 
-    fclose(input_file);
-    fclose(output_file);
+    int* adjacencySizes;
+    int** adjacencyList = createAdjacencyList(matrix, rows, cols, &adjacencySizes);
 
-    free_tree(tree);
+    // Записываем список смежности в файл output.txt
+    writeAdjacencyListToFile("output.txt", adjacencyList, adjacencySizes, rows);
+
+    // Освобождаем выделенную память
+    for (int i = 0; i < rows; i++) {
+        free(matrix[i]);
+        free(adjacencyList[i]);
+    }
+    free(matrix);
+    free(adjacencyList);
+    free(adjacencySizes);
+
+    printf("Adjacency list has been written to output.txt\n");
     return 0;
 }
