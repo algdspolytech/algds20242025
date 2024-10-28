@@ -14,3 +14,6 @@
 *.db-shm
 *.db-wal
 *.sqlite
+*.opendb
+/lab1/algos1.h
+/lab1/algos1.c
