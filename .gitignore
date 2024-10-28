@@ -1,0 +1,17 @@
+﻿################################################################################
+# Данный GITIGNORE-файл был автоматически создан Microsoft(R) Visual Studio.
+################################################################################
+
+/.vs/algds20242025/v17/Browse.VC.opendb
+/.vs/algds20242025/FileContentIndex/13f74672-2ecf-4bca-9e95-3441bfd62581.vsidx
+/.vs/algds20242025/FileContentIndex/3e67e9a9-83e3-4810-a21b-8ac2f4ad6acf.vsidx
+/.vs/algds20242025/FileContentIndex/05f2e037-81a2-4b1e-a8a0-8b54d849ddf7.vsidx
+*.vsidx
+*.ipch
+*.json
+*.db
+*.wsuo
+*.db-shm
+*.db-wal
+*.sqlite
+*.opendb
