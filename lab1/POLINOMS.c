@@ -8,6 +8,11 @@
 void InitQueue(struct Queue* q)
 {
 	q->first = q->last = malloc(sizeof(struct monom));
+	if (q->first == NULL)
+	{
+		printf("Ошибка: не удалось выделить память.\n");
+		return;
+	}
 	q->first = q->last = NULL;
 }
 //добавление в очередь
@@ -16,6 +21,11 @@ void Add2Queue(struct Queue* q, int coef, int pow)
 	struct monom* p;
 
 	p = malloc(sizeof(struct monom));
+	if (p == NULL)
+	{
+		printf("Ошибка: не удалось выделить память.\n");
+		return;
+	}
 	p->coef = coef;
 	p->pow = pow;
 	p->next = NULL;
@@ -40,6 +50,12 @@ int atoistr(char* buf)
 	char* buf1 = malloc(3 * sizeof(char));
 	int i = 0;
 	int j;
+
+	if (buf1 == NULL)
+	{
+		printf("Ошибка: не удалось выделить память.\n");
+		return;
+	}
 
 	while (buf[i] != '^')
 	{
@@ -69,6 +85,12 @@ void ReadPol(FILE* F, struct Queue* q)
 	int i = 0;
 	int j = 0;
 	char ch;
+
+	if (buf == NULL)
+	{
+		printf("Ошибка: не удалось выделить память.\n");
+		return;
+	}
 
 	do
 	{
