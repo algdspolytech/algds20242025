@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include "lab1.h"
 
-// Ðåàëèçàöèÿ î÷åðåäè íà ñâÿçíîì ñïèñêå
+// ÃÃ¥Ã Ã«Ã¨Ã§Ã Ã¶Ã¨Ã¿ Ã®Ã·Ã¥Ã°Ã¥Ã¤Ã¨ Ã­Ã  Ã±Ã¢Ã¿Ã§Ã­Ã®Ã¬ Ã±Ã¯Ã¨Ã±ÃªÃ¥
 
 LinkedQueue* createLinkedQueue() {
     LinkedQueue* q = (LinkedQueue*)malloc(sizeof(LinkedQueue));
@@ -27,7 +27,7 @@ void enqueueLinked(LinkedQueue* q, int value) {
 }
 
 int dequeueLinked(LinkedQueue* q) {
-    if (isEmptyLinked(q)) return -1; // Îøèáêà: î÷åðåäü ïóñòà
+    if (isEmptyLinked(q)) return -1; // ÃŽÃ¸Ã¨Ã¡ÃªÃ : Ã®Ã·Ã¥Ã°Ã¥Ã¤Ã¼ Ã¯Ã³Ã±Ã²Ã 
     Node* temp = q->front;
     int value = temp->data;
     q->front = q->front->next;
@@ -47,14 +47,14 @@ void destroyLinkedQueue(LinkedQueue* q) {
     free(q);
 }
 
-// Ðåàëèçàöèÿ î÷åðåäè íà ìàññèâå
+// ÃÃ¥Ã Ã«Ã¨Ã§Ã Ã¶Ã¨Ã¿ Ã®Ã·Ã¥Ã°Ã¥Ã¤Ã¨ Ã­Ã  Ã¬Ã Ã±Ã±Ã¨Ã¢Ã¥
 
 ArrayQueue* createArrayQueue(int capacity) {
     ArrayQueue* q = (ArrayQueue*)malloc(sizeof(ArrayQueue));
     q->capacity = capacity;
     q->front = 0;
-    q->size = 0; //íà÷àëüíûé ðàçìåð 
-    q->rear = capacity - 1; //ïîñëåäíèé ýëåìåíò
+    q->size = 0; //Ã­Ã Ã·Ã Ã«Ã¼Ã­Ã»Ã© Ã°Ã Ã§Ã¬Ã¥Ã° 
+    q->rear = capacity - 1; //Ã¯Ã®Ã±Ã«Ã¥Ã¤Ã­Ã¨Ã© Ã½Ã«Ã¥Ã¬Ã¥Ã­Ã²
     q->arr = (int*)malloc(q->capacity * sizeof(int));
     return q;
 }
@@ -69,21 +69,21 @@ int isEmpty(ArrayQueue* q) {
 
 void enqueueArray(ArrayQueue* q, int item) {
     if (isFull(q)) {
-        printf("Îøèáêà: î÷åðåäü ïåðåïîëíåíà\n");
+        printf("ÃŽÃ¸Ã¨Ã¡ÃªÃ : Ã®Ã·Ã¥Ã°Ã¥Ã¤Ã¼ Ã¯Ã¥Ã°Ã¥Ã¯Ã®Ã«Ã­Ã¥Ã­Ã \n");
         return;
     }
-    q->rear = (q->rear + 1) % q->capacity; // öèêëè÷åñêàÿ î÷åðåäü
+    q->rear = (q->rear + 1) % q->capacity; // Ã¶Ã¨ÃªÃ«Ã¨Ã·Ã¥Ã±ÃªÃ Ã¿ Ã®Ã·Ã¥Ã°Ã¥Ã¤Ã¼
     q->arr[q->rear] = item;
     q->size++;
 }
 
 int dequeueArray(ArrayQueue* q) {
     if (isEmpty(q)) {
-        printf("Îøèáêà: î÷åðåäü ïóñòà\n");
-        return -1; // âîçâðàò çíà÷åíèÿ îøèáêè
+        printf("ÃŽÃ¸Ã¨Ã¡ÃªÃ : Ã®Ã·Ã¥Ã°Ã¥Ã¤Ã¼ Ã¯Ã³Ã±Ã²Ã \n");
+        return -1; // Ã¢Ã®Ã§Ã¢Ã°Ã Ã² Ã§Ã­Ã Ã·Ã¥Ã­Ã¨Ã¿ Ã®Ã¸Ã¨Ã¡ÃªÃ¨
     }
     int item = q->arr[q->front];
-    q->front = (q->front + 1) % q->capacity; // öèêëè÷åñêàÿ î÷åðåäü
+    q->front = (q->front + 1) % q->capacity; // Ã¶Ã¨ÃªÃ«Ã¨Ã·Ã¥Ã±ÃªÃ Ã¿ Ã®Ã·Ã¥Ã°Ã¥Ã¤Ã¼
     q->size--;
     return item;
 }
