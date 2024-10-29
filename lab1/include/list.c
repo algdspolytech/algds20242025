@@ -3,6 +3,8 @@
 #include <stdbool.h>
 #include <string.h>
 
+#define FILENAME "../input.txt"
+
 typedef struct Node{
     size_t countChars;
     char* chars;
@@ -75,10 +77,7 @@ void printNode(const Node* node){
     printf("\"%s\"\n", node->chars);
 }
 
-void printLongerWords(const List* list, const size_t len){
-    if(!len)
-        return;
-
+void printWordsLongerThan(const List* list, const size_t len){
     Node* tmp=list->head;
     while(tmp && tmp->countChars<=len){
         tmp=tmp->next;
@@ -87,4 +86,43 @@ void printLongerWords(const List* list, const size_t len){
         printNode(tmp);
         tmp=tmp->next;
     }
+}
+
+Node* getWordOfLength(const List* list,const size_t len){
+    if(!len)
+        return NULL;
+    Node* tmp = list->head;
+    while(tmp){
+        if(tmp->countChars==len) return tmp;
+        tmp=tmp->next;
+    }
+    return NULL;
+}
+
+bool hasWordOfLength(const List* list,const size_t len){
+    if (!getWordOfLength(list,len))
+        return false;
+    return true;
+}
+
+void printWordsOfLength(const List* list,const size_t len){
+    Node* tmp=getWordOfLength(list, len);
+    while(tmp && tmp->countChars==len){
+        printNode(tmp);
+        tmp=tmp->next;
+    }
+}
+
+void readWordsFromFile(List* list, const char* filename) {
+    FILE* file = fopen(filename, "r");
+    if (!file) {
+        perror("file not found");
+        return;
+    }
+
+    char buffer[256];
+    while (fscanf(file, "%255s", buffer) == 1) {
+        addSorted(list, buffer);
+    }
+    fclose(file);
 }

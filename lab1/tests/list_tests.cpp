@@ -17,9 +17,8 @@ TEST(nodeTest, initNodeEmptyStringReturnsNull_no3) {
     printNode(node);
     List* list = (List*)malloc(sizeof(List));
     list->head = NULL;
-    addSorted(list,"aaa");
-    addSorted(list,"b");
-    addSorted(list,"baa");
-    printLongerWords(list,1);
+    readWordsFromFile(list,"../input.txt");
+    printWordsLongerThan(list,0);
+
     EXPECT_EQ(initNode("", NULL), nullptr);
 }
