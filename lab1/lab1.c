@@ -118,7 +118,7 @@ int main() {
         free_all(&head);
     }
     else {
-        printf("Ошибка чтения файла.\n");
+        printf("Error.\n");
     }
     return 0;
 }
