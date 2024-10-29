@@ -17,14 +17,14 @@ typedef struct ArrayQueue {
     int capacity;
 } ArrayQueue;
 
-// Функции для очереди на связном списке
+// Г”ГіГ­ГЄГ¶ГЁГЁ Г¤Г«Гї Г®Г·ГҐГ°ГҐГ¤ГЁ Г­Г  Г±ГўГїГ§Г­Г®Г¬ Г±ГЇГЁГ±ГЄГҐ
 LinkedQueue* createLinkedQueue();
 void enqueueLinked(LinkedQueue* q, int value);
 int dequeueLinked(LinkedQueue* q);
 int isEmptyLinked(LinkedQueue* q);
 void destroyLinkedQueue(LinkedQueue* q);
 
-// Функции для очереди на массиве
+// Г”ГіГ­ГЄГ¶ГЁГЁ Г¤Г«Гї Г®Г·ГҐГ°ГҐГ¤ГЁ Г­Г  Г¬Г Г±Г±ГЁГўГҐ
 ArrayQueue* createArrayQueue(int capacity);
 void enqueueArray(ArrayQueue* q, int value);
 int dequeueArray(ArrayQueue* q);
