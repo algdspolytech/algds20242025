@@ -7,7 +7,7 @@
 void readDataFromFile(const char* filename, PriorityQueue* pq) {
     FILE* file = fopen(filename, "r");
     if (file == NULL) {
-        printf("Ошибка: не удалось открыть файл %s.\n", filename);
+        printf("ГЋГёГЁГЎГЄГ : Г­ГҐ ГіГ¤Г Г«Г®Г±Гј Г®ГІГЄГ°Г»ГІГј ГґГ Г©Г« %s.\n", filename);
         return;
     }
 
@@ -22,18 +22,18 @@ void readDataFromFile(const char* filename, PriorityQueue* pq) {
 void executeAlgorithm(const char* outputFilename) {
     PriorityQueue* pq = createPriorityQueue();
 
-    // Считываем данные из input.txt
+    // Г‘Г·ГЁГІГ»ГўГ ГҐГ¬ Г¤Г Г­Г­Г»ГҐ ГЁГ§ input.txt
     readDataFromFile("input.txt", pq);
 
-    // Записываем содержимое очереди и результат удаления в output.txt
+    // Г‡Г ГЇГЁГ±Г»ГўГ ГҐГ¬ Г±Г®Г¤ГҐГ°Г¦ГЁГ¬Г®ГҐ Г®Г·ГҐГ°ГҐГ¤ГЁ ГЁ Г°ГҐГ§ГіГ«ГјГІГ ГІ ГіГ¤Г Г«ГҐГ­ГЁГї Гў output.txt
     FILE* outputFile = fopen(outputFilename, "w");
     if (outputFile == NULL) {
-        printf("Ошибка: не удалось открыть файл на запись %s.\n", outputFilename);
+        printf("ГЋГёГЁГЎГЄГ : Г­ГҐ ГіГ¤Г Г«Г®Г±Гј Г®ГІГЄГ°Г»ГІГј ГґГ Г©Г« Г­Г  Г§Г ГЇГЁГ±Гј %s.\n", outputFilename);
         freeQueue(pq);
         return;
     }
 
-    fprintf(outputFile, "Содержимое очереди:\n");
+    fprintf(outputFile, "Г‘Г®Г¤ГҐГ°Г¦ГЁГ¬Г®ГҐ Г®Г·ГҐГ°ГҐГ¤ГЁ:\n");
     Node* current = pq->head;
     while (current != NULL) {
         fprintf(outputFile, "Data: %d, Priority: %d\n", current->data, current->priority);
@@ -41,9 +41,9 @@ void executeAlgorithm(const char* outputFilename) {
     }
 
     int removedData = dequeue(pq);
-    fprintf(outputFile, "Удаляем элемент: %d\n", removedData);
+    fprintf(outputFile, "Г“Г¤Г Г«ГїГҐГ¬ ГЅГ«ГҐГ¬ГҐГ­ГІ: %d\n", removedData);
 
-    fprintf(outputFile, "Содержимое очереди после удаления:\n");
+    fprintf(outputFile, "Г‘Г®Г¤ГҐГ°Г¦ГЁГ¬Г®ГҐ Г®Г·ГҐГ°ГҐГ¤ГЁ ГЇГ®Г±Г«ГҐ ГіГ¤Г Г«ГҐГ­ГЁГї:\n");
     current = pq->head;
     while (current != NULL) {
         fprintf(outputFile, "Data: %d, Priority: %d\n", current->data, current->priority);
@@ -54,7 +54,7 @@ void executeAlgorithm(const char* outputFilename) {
     freeQueue(pq);
 }
 
-// Внешний интерфейс для вызова функций
+// Г‚Г­ГҐГёГ­ГЁГ© ГЁГ­ГІГҐГ°ГґГҐГ©Г± Г¤Г«Гї ГўГ»Г§Г®ГўГ  ГґГіГ­ГЄГ¶ГЁГ©
 void processPriorityQueue() {
     executeAlgorithm("output.txt");
 }
