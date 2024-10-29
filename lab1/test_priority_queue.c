@@ -23,14 +23,14 @@ void TestAddMultipleElements_HappyPath_no2() {
 void TestEmptyQueueDequeue_no3() {
     PriorityQueue* pq = createPriorityQueue();
     int data = dequeue(pq);
-    printf("Test 3 = %s\n", (data == -1) ? "PASSED" : "FAILED"); /* Печатаем -1 при пустой очереди */
+    printf("Test 3 = %s\n", (data == -1) ? "PASSED" : "FAILED"); /* ГЏГҐГ·Г ГІГ ГҐГ¬ -1 ГЇГ°ГЁ ГЇГіГ±ГІГ®Г© Г®Г·ГҐГ°ГҐГ¤ГЁ */
     freeQueue(pq);
 }
 
 void TestAddSamePriority_no4() {
     PriorityQueue* pq = createPriorityQueue();
     enqueue(pq, 10, 2);
-    enqueue(pq, 20, 2); // Тот же приоритет
+    enqueue(pq, 20, 2); // Г’Г®ГІ Г¦ГҐ ГЇГ°ГЁГ®Г°ГЁГІГҐГІ
     int data1 = dequeue(pq);
     int data2 = dequeue(pq);
     printf("Test 4 = %s\n", (data1 == 10 && data2 == 20) ? "PASSED" : "FAILED");
@@ -43,7 +43,7 @@ void TestPrioritizeLowerValue_no5() {
     enqueue(pq, 20, 1);
     enqueue(pq, 15, 2);
     int data1 = dequeue(pq);
-    printf("Test 5 = %s\n", (data1 == 20) ? "PASSED" : "FAILED"); // Должен быть 20 с приоритетом 1
+    printf("Test 5 = %s\n", (data1 == 20) ? "PASSED" : "FAILED"); // Г„Г®Г«Г¦ГҐГ­ ГЎГ»ГІГј 20 Г± ГЇГ°ГЁГ®Г°ГЁГІГҐГІГ®Г¬ 1
     freeQueue(pq);
 }
 
@@ -67,7 +67,7 @@ void TestOrderPreservation_no7() {
 
     int data1 = dequeue(pq);
     int data2 = dequeue(pq);
-    printf("Test 7 = %s\n", (data1 == 5 && data2 == 10) ? "PASSED" : "FAILED"); // Должны быть 5 и 10
+    printf("Test 7 = %s\n", (data1 == 5 && data2 == 10) ? "PASSED" : "FAILED"); // Г„Г®Г«Г¦Г­Г» ГЎГ»ГІГј 5 ГЁ 10
     freeQueue(pq);
 }
 
@@ -76,8 +76,8 @@ void TestQuickEnqueueDequeue_no8() {
     enqueue(pq, 10, 2);
     enqueue(pq, 5, 1);
 
-    int data1 = dequeue(pq); // Должен быть 5
-    int data2 = dequeue(pq); // Должен быть 10
+    int data1 = dequeue(pq); // Г„Г®Г«Г¦ГҐГ­ ГЎГ»ГІГј 5
+    int data2 = dequeue(pq); // Г„Г®Г«Г¦ГҐГ­ ГЎГ»ГІГј 10
     printf("Test 8 = %s\n", (data1 == 5 && data2 == 10) ? "PASSED" : "FAILED");
     freeQueue(pq);
 }
@@ -86,7 +86,7 @@ void TestFreeQueue_no9() {
     PriorityQueue* pq = createPriorityQueue();
     enqueue(pq, 10, 1);
     enqueue(pq, 20, 2);
-    freeQueue(pq); // Проверим, чтобы не было утечки памяти
+    freeQueue(pq); // ГЏГ°Г®ГўГҐГ°ГЁГ¬, Г·ГІГ®ГЎГ» Г­ГҐ ГЎГ»Г«Г® ГіГІГҐГ·ГЄГЁ ГЇГ Г¬ГїГІГЁ
     printf("Test 9 = PASSED\n");
 }
 
@@ -100,7 +100,7 @@ void TestMultipleSamePriorityDequeue_no10() {
     int data2 = dequeue(pq);
     int data3 = dequeue(pq);
 
-    // Поскольку порядок вставки был 10, 20, 30, то должны быть в этом порядке
+    // ГЏГ®Г±ГЄГ®Г«ГјГЄГі ГЇГ®Г°ГїГ¤Г®ГЄ ГўГ±ГІГ ГўГЄГЁ ГЎГ»Г« 10, 20, 30, ГІГ® Г¤Г®Г«Г¦Г­Г» ГЎГ»ГІГј Гў ГЅГІГ®Г¬ ГЇГ®Г°ГїГ¤ГЄГҐ
     printf("Test 10 = %s\n", (data1 == 10 && data2 == 20 && data3 == 30) ? "PASSED" : "FAILED");
     freeQueue(pq);
 }
