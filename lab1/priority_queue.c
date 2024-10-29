@@ -33,7 +33,7 @@ void enqueue(PriorityQueue* pq, int data, int priority) {
 
 int dequeue(PriorityQueue* pq) {
     if (pq->head == NULL) {
-        printf("Î÷åğåäü ïóñòà.\n");
+        printf("ÃÃ·Ã¥Ã°Ã¥Ã¤Ã¼ Ã¯Ã³Ã±Ã²Ã .\n");
         return -1;
     }
     int data = pq->head->data;
