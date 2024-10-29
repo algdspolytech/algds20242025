@@ -59,13 +59,32 @@ void addSorted(List* list,const char* word){
         return;
     }
 
-    Node* tmp= list->head;
+    Node* tmp = list->head;
     Node* prevTmp=NULL;
     while(tmp && (tmp->countChars < newNode->countChars || (tmp->countChars==newNode->countChars && strcmp(tmp->chars,newNode->chars)))){
         prevTmp=tmp;
         tmp=tmp->next;
     }
 
-    tmp->next=tmp;
-    prevTmp->next=newNode;
+    newNode->next=tmp;
+    if(prevTmp)prevTmp->next=newNode;
+    else list->head=newNode;
+}
+
+void printNode(const Node* node){
+    printf("\"%s\"\n", node->chars);
+}
+
+void printLongerWords(const List* list, const size_t len){
+    if(!len)
+        return;
+
+    Node* tmp=list->head;
+    while(tmp && tmp->countChars<=len){
+        tmp=tmp->next;
+    }
+    while(tmp){
+        printNode(tmp);
+        tmp=tmp->next;
+    }
 }
