@@ -66,3 +66,60 @@ void printStack(Stack *stack) {
     }
     printf("\n");
 }
+
+ArrayStack *createArrayStack(int capacity) {
+    ArrayStack *newStack = malloc(sizeof(ArrayStack));
+    if (newStack == NULL) {
+        printf("Ошибка выделения памяти!\n");
+        exit(1);
+    }
+    newStack->data = malloc(capacity * sizeof(int));
+    if (newStack->data == NULL) {
+        printf("Ошибка выделения памяти!\n");
+        exit(1);
+    }
+    newStack->top = -1;
+    newStack->capacity = capacity;
+    return newStack;
+}
+
+int isEmptyArrayStack(ArrayStack *stack) {
+    return stack->top == -1;
+}
+
+void pushArrayStack(ArrayStack *stack, int data) {
+    if (stack->top == stack->capacity - 1) {
+        printf("Стек переполнен!\n");
+        return;
+    }
+    stack->top++;
+    stack->data[stack->top] = data;
+}
+
+int popArrayStack(ArrayStack *stack) {
+    if (isEmptyArrayStack(stack)) {
+        return -1;
+    }
+    int data = stack->data[stack->top];
+    stack->top--;
+    return data;
+}
+
+int peekArrayStack(ArrayStack *stack) {
+    if (isEmptyArrayStack(stack)) {
+        return -1;
+    }
+    return stack->data[stack->top];
+}
+
+void printArrayStack(ArrayStack *stack) {
+    if (isEmptyArrayStack(stack)) {
+        printf("Стек пуст!\n");
+        return;
+    }
+    printf("Стек: ");
+    for (int i = stack->top; i >= 0; i--) {
+        printf("%d ", stack->data[i]);
+    }
+    printf("\n");
+}
