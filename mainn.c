@@ -6,7 +6,7 @@
 #include "Libr.h"
 
 
-// Тест для создания узла
+// Г’ГҐГ±ГІ Г¤Г«Гї Г±Г®Г§Г¤Г Г­ГЁГї ГіГ§Г«Г 
 void test_no1() {
     Node* node = createNode("test");
     if (strcmp(node->data, "test") == 0 && node->next == NULL) {
@@ -19,7 +19,7 @@ void test_no1() {
     free(node);
 }
 
-// Тест для добавления узла в конец списка
+// Г’ГҐГ±ГІ Г¤Г«Гї Г¤Г®ГЎГ ГўГ«ГҐГ­ГЁГї ГіГ§Г«Г  Гў ГЄГ®Г­ГҐГ¶ Г±ГЇГЁГ±ГЄГ 
 void test_no2() {
     Node* head = NULL;
     append(&head, "first");
@@ -34,7 +34,7 @@ void test_no2() {
         printf("append test failed\n");
     }
 
-    // Освобождение памяти
+   
     if (head != NULL) {
         if (head->next != NULL) {
             free(head->next->data);
@@ -57,7 +57,7 @@ void test_no3() {
         printf("append test failed\n");
     }
 
-    // Освобождение памяти
+
     free(head->next->next->data);
     free(head->next->next->next);
     free(head->next->data);
@@ -66,7 +66,7 @@ void test_no3() {
     free(head);
 }
 
-// Тест для добавления узла в начало списка
+// Г’ГҐГ±ГІ Г¤Г«Гї Г¤Г®ГЎГ ГўГ«ГҐГ­ГЁГї ГіГ§Г«Г  Гў Г­Г Г·Г Г«Г® Г±ГЇГЁГ±ГЄГ 
 void test_no4() {
     Node* head = NULL;
     append_forward(&head, "second");
@@ -79,7 +79,7 @@ void test_no4() {
         printf("append_forward test failed\n");
     }
 
-    // Освобождение памяти
+    // ГЋГ±ГўГ®ГЎГ®Г¦Г¤ГҐГ­ГЁГҐ ГЇГ Г¬ГїГІГЁ
     free(head->next->data);
     free(head->next);
     free(head->data);
@@ -98,7 +98,7 @@ void test_no5() {
         printf("append_forward test failed\n");
     }
 
-    // Освобождениеv памяти
+    // ГЋГ±ГўГ®ГЎГ®Г¦Г¤ГҐГ­ГЁГҐv ГЇГ Г¬ГїГІГЁ
     free(head->next->next->data);
     free(head->next->next);
     free(head->next->data);
@@ -107,7 +107,7 @@ void test_no5() {
     free(head);
 }
 
-// Тест для работы с пустой строкой
+// Г’ГҐГ±ГІ Г¤Г«Гї Г°Г ГЎГ®ГІГ» Г± ГЇГіГ±ГІГ®Г© Г±ГІГ°Г®ГЄГ®Г©
 void test_no6(){
     Node* head = NULL;
     append(&head, "");
@@ -119,12 +119,12 @@ void test_no6(){
         printf("empty string append test passed\n");
     }
 
-    // Освобождение памяти
+    // ГЋГ±ГўГ®ГЎГ®Г¦Г¤ГҐГ­ГЁГҐ ГЇГ Г¬ГїГІГЁ
     free(head->data);
     free(head);
 }
 
-// Тест для разделения списка
+// Г’ГҐГ±ГІ Г¤Г«Гї Г°Г Г§Г¤ГҐГ«ГҐГ­ГЁГї Г±ГЇГЁГ±ГЄГ 
 void test_no7() {
     Node* head = NULL;
     append(&head, "1");
@@ -137,7 +137,7 @@ void test_no7() {
 
     split(head, &firstHalf, &secondHalf);
 
-    // Проверка правильности разделения
+    // ГЏГ°Г®ГўГҐГ°ГЄГ  ГЇГ°Г ГўГЁГ«ГјГ­Г®Г±ГІГЁ Г°Г Г§Г¤ГҐГ«ГҐГ­ГЁГї
     if (firstHalf != NULL && secondHalf != NULL &&
         strcmp(firstHalf->data, "1") == 0 &&
         strcmp(firstHalf->next->data, "2") == 0 &&
@@ -149,7 +149,7 @@ void test_no7() {
         printf("split test failed\n");
     }
 
-    // Освобождение памяти для первой половины
+    // ГЋГ±ГўГ®ГЎГ®Г¦Г¤ГҐГ­ГЁГҐ ГЇГ Г¬ГїГІГЁ Г¤Г«Гї ГЇГҐГ°ГўГ®Г© ГЇГ®Г«Г®ГўГЁГ­Г»
     if (firstHalf != NULL) {
         free(firstHalf->next->data);
         free(firstHalf->next);
@@ -157,7 +157,7 @@ void test_no7() {
         free(firstHalf);
     }
 
-    // Освобождение памяти для второй половины
+    // ГЋГ±ГўГ®ГЎГ®Г¦Г¤ГҐГ­ГЁГҐ ГЇГ Г¬ГїГІГЁ Г¤Г«Гї ГўГІГ®Г°Г®Г© ГЇГ®Г«Г®ГўГЁГ­Г»
     if (secondHalf != NULL) {
         free(secondHalf->next->data);
         free(secondHalf->next);
@@ -166,7 +166,7 @@ void test_no7() {
     }
 }
 
-// Тест для слияния списков
+// Г’ГҐГ±ГІ Г¤Г«Гї Г±Г«ГЁГїГ­ГЁГї Г±ГЇГЁГ±ГЄГ®Гў
 void test_no8() {
     Node* a = createNode("apple");
     append(&a, "cereal");
@@ -184,7 +184,7 @@ void test_no8() {
         printf("merge test failed\n");
     }
 
-    // Освобождение памяти
+    // ГЋГ±ГўГ®ГЎГ®Г¦Г¤ГҐГ­ГЁГҐ ГЇГ Г¬ГїГІГЁ
     while (merged != NULL) {
         Node* temp = merged;
         merged = merged->next;
@@ -193,7 +193,7 @@ void test_no8() {
     }
 }
 
-// Тест для сортировки списка
+// Г’ГҐГ±ГІ Г¤Г«Гї Г±Г®Г°ГІГЁГ°Г®ГўГЄГЁ Г±ГЇГЁГ±ГЄГ 
 void test_no9() {
     Node* head = NULL;
     append(&head, "3");
@@ -218,7 +218,7 @@ void test_no9() {
         printf("mergeSort test failed: list is empty or not properly sorted\n");
     }
 
-    // Освобождение памяти
+    // ГЋГ±ГўГ®ГЎГ®Г¦Г¤ГҐГ­ГЁГҐ ГЇГ Г¬ГїГІГЁ
     while (head != NULL) {
         Node* temp = head;
         head = head->next;
@@ -227,11 +227,11 @@ void test_no9() {
     }
 }
 
-// Тест для работы с пустым списком
+// Г’ГҐГ±ГІ Г¤Г«Гї Г°Г ГЎГ®ГІГ» Г± ГЇГіГ±ГІГ»Г¬ Г±ГЇГЁГ±ГЄГ®Г¬
 void test_no10() {
     Node* head = NULL;
 
-    split(head, &head, &head); // Разделение пустого списка
+    split(head, &head, &head); // ГђГ Г§Г¤ГҐГ«ГҐГ­ГЁГҐ ГЇГіГ±ГІГ®ГЈГ® Г±ГЇГЁГ±ГЄГ 
 
     if (head == NULL) {
         printf("empty list split test passed\n");
@@ -244,7 +244,7 @@ void test_no10() {
 
 void test_no11() {
     Node* head = NULL;
-    mergeSort(&head); // Сортировка пустого списка
+    mergeSort(&head); // Г‘Г®Г°ГІГЁГ°Г®ГўГЄГ  ГЇГіГ±ГІГ®ГЈГ® Г±ГЇГЁГ±ГЄГ 
 
     if (head == NULL) {
         printf("empty list mergeSort test passed\n");
