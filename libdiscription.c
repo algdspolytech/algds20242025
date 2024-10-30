@@ -3,16 +3,16 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-// Ôóíêöèÿ äëÿ ñîçäàíèÿ íîâîãî óçëà
+// Ã”Ã³Ã­ÃªÃ¶Ã¨Ã¿ Ã¤Ã«Ã¿ Ã±Ã®Ã§Ã¤Ã Ã­Ã¨Ã¿ Ã­Ã®Ã¢Ã®Ã£Ã® Ã³Ã§Ã«Ã 
 Node* createNode(const char* data) {
     Node* newNode = (Node*)malloc(sizeof(Node));
-    newNode->data = (char*)malloc(strlen(data) + 1); // +1 äëÿ '\0'
-    strcpy(newNode->data, data); // Êîïèðóåì ñòðîêó
-    newNode->next = NULL; // Èçíà÷àëüíî ñëåäóþùèé óçåë NULL
+    newNode->data = (char*)malloc(strlen(data) + 1); // +1 Ã¤Ã«Ã¿ '\0'
+    strcpy(newNode->data, data); 
+    newNode->next = NULL; 
     return newNode;
 }
 
-// Ôóíêöèÿ äëÿ äîáàâëåíèÿ óçëà â êîíåö ñïèñêà
+// Ã”Ã³Ã­ÃªÃ¶Ã¨Ã¿ Ã¤Ã«Ã¿ Ã¤Ã®Ã¡Ã Ã¢Ã«Ã¥Ã­Ã¨Ã¿ Ã³Ã§Ã«Ã  Ã¢ ÃªÃ®Ã­Ã¥Ã¶ Ã±Ã¯Ã¨Ã±ÃªÃ 
 void append(Node** head, const char* str) {
     Node* new_node = createNode(str);
     if (*head == NULL) {
@@ -27,19 +27,19 @@ void append(Node** head, const char* str) {
     }
 }
 
-// Ôóíêöèÿ äëÿ äîáàâëåíèÿ óçëà â íà÷àëî ñïèñêà
+// Ã”Ã³Ã­ÃªÃ¶Ã¨Ã¿ Ã¤Ã«Ã¿ Ã¤Ã®Ã¡Ã Ã¢Ã«Ã¥Ã­Ã¨Ã¿ Ã³Ã§Ã«Ã  Ã¢ Ã­Ã Ã·Ã Ã«Ã® Ã±Ã¯Ã¨Ã±ÃªÃ 
 void append_forward(Node** head, const char* data) {
     Node* new = createNode(data);
     new->next = *head;
     *head = new;
 }
 
-// Ôóíêöèÿ äëÿ ðàçäåëåíèÿ ñïèñêà íà äâå ïîëîâèíû
+// Ã”Ã³Ã­ÃªÃ¶Ã¨Ã¿ Ã¤Ã«Ã¿ Ã°Ã Ã§Ã¤Ã¥Ã«Ã¥Ã­Ã¨Ã¿ Ã±Ã¯Ã¨Ã±ÃªÃ  Ã­Ã  Ã¤Ã¢Ã¥ Ã¯Ã®Ã«Ã®Ã¢Ã¨Ã­Ã»
 void split(Node* source, Node** fir, Node** sec) {
     if (source == NULL) {
         *fir = NULL;
         *sec = NULL;
-        return; // Åñëè ñïèñîê ïóñò, íè÷åãî íå äåëàåì
+        return; 
     }
 
     Node* fast;
@@ -47,64 +47,64 @@ void split(Node* source, Node** fir, Node** sec) {
     slow = source;
     fast = source->next;
 
-    // Ñäâèãàåì óêàçàòåëè, ÷òîáû ðàçáèòü ñïèñîê
+    // Ã‘Ã¤Ã¢Ã¨Ã£Ã Ã¥Ã¬ Ã³ÃªÃ Ã§Ã Ã²Ã¥Ã«Ã¨, Ã·Ã²Ã®Ã¡Ã» Ã°Ã Ã§Ã¡Ã¨Ã²Ã¼ Ã±Ã¯Ã¨Ã±Ã®Ãª
     while (fast != NULL) {
-        fast = fast->next; // Ïåðåìåùàåì fast íà 1 óçåë
+        fast = fast->next; 
         if (fast != NULL) {
-            slow = slow->next; // Ïåðåìåùàåì slow íà 1 óçåë
-            fast = fast->next; // Ïåðåìåùàåì fast íà 1 óçåë
+            slow = slow->next; 
+            fast = fast->next; 
         }
     }
 
-    *fir = source; // Ïåðâàÿ ïîëîâèíà
-    *sec = slow->next; // Âòîðàÿ ïîëîâèíà
-    slow->next = NULL; // Ðàçðûâàåì ñâÿçü
+    *fir = source; // ÃÃ¥Ã°Ã¢Ã Ã¿ Ã¯Ã®Ã«Ã®Ã¢Ã¨Ã­Ã 
+    *sec = slow->next; // Ã‚Ã²Ã®Ã°Ã Ã¿ Ã¯Ã®Ã«Ã®Ã¢Ã¨Ã­Ã 
+    slow->next = NULL; // ÃÃ Ã§Ã°Ã»Ã¢Ã Ã¥Ã¬ Ã±Ã¢Ã¿Ã§Ã¼
 }
 
-// Ôóíêöèÿ äëÿ ñëèÿíèÿ äâóõ îòñîðòèðîâàííûõ ñïèñêîâ
+// Ã”Ã³Ã­ÃªÃ¶Ã¨Ã¿ Ã¤Ã«Ã¿ Ã±Ã«Ã¨Ã¿Ã­Ã¨Ã¿ Ã¤Ã¢Ã³Ãµ Ã®Ã²Ã±Ã®Ã°Ã²Ã¨Ã°Ã®Ã¢Ã Ã­Ã­Ã»Ãµ Ã±Ã¯Ã¨Ã±ÃªÃ®Ã¢
 Node* merge(Node* a, Node* b) {
     Node* result = NULL;
 
-    // Áàçîâûé ñëó÷àé
+    // ÃÃ Ã§Ã®Ã¢Ã»Ã© Ã±Ã«Ã³Ã·Ã Ã©
     if (a == NULL)
         return b;
     else if (b == NULL)
         return a;
 
-    // Âûáèðàåì ìåíüøèé ýëåìåíò
+    // Ã‚Ã»Ã¡Ã¨Ã°Ã Ã¥Ã¬ Ã¬Ã¥Ã­Ã¼Ã¸Ã¨Ã© Ã½Ã«Ã¥Ã¬Ã¥Ã­Ã²
     if (strcmp(a->data, b->data) <= 0) {
         result = a;
-        result->next = merge(a->next, b); // Ðåêóðñèâíûé âûçîâ
+        result->next = merge(a->next, b); 
     }
     else {
         result = b;
-        result->next = merge(a, b->next); // Ðåêóðñèâíûé âûçîâ
+        result->next = merge(a, b->next);
     }
     return result;
 }
 
-// Ôóíêöèÿ ñîðòèðîâêè ñïèñêà
+// Ã”Ã³Ã­ÃªÃ¶Ã¨Ã¿ Ã±Ã®Ã°Ã²Ã¨Ã°Ã®Ã¢ÃªÃ¨ Ã±Ã¯Ã¨Ã±ÃªÃ 
 void mergeSort(Node** headRef) {
     Node* head = *headRef;
     Node* a;
     Node* b;
 
-    // Áàçîâûé ñëó÷àé
+  
     if (head == NULL || head->next == NULL) {
         return;
     }
-    // Ðàçäåëÿåì ñïèñêè
+   
     split(head, &a, &b);
 
-    // Ñîðòèðóåì îáå ïîëîâèíû
+    
     mergeSort(&a);
     mergeSort(&b);
 
-    // Ñëèâàåì îòñîðòèðîâàííûå ïîëîâèíû
+    // Ã‘Ã«Ã¨Ã¢Ã Ã¥Ã¬ Ã®Ã²Ã±Ã®Ã°Ã²Ã¨Ã°Ã®Ã¢Ã Ã­Ã­Ã»Ã¥ Ã¯Ã®Ã«Ã®Ã¢Ã¨Ã­Ã»
     *headRef = merge(a, b);
 }
 
-// Ôóíêöèÿ äëÿ âûâîäà ñïèñêà
+// Ã”Ã³Ã­ÃªÃ¶Ã¨Ã¿ Ã¤Ã«Ã¿ Ã¢Ã»Ã¢Ã®Ã¤Ã  Ã±Ã¯Ã¨Ã±ÃªÃ 
 void printList(Node* node) {
     while (node != NULL) {
         printf("%s\n", node->data);
