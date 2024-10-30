@@ -56,9 +56,9 @@ void split(Node* source, Node** fir, Node** sec) {
         }
     }
 
-    *fir = source; // Ïåðâàÿ ïîëîâèíà
-    *sec = slow->next; // Âòîðàÿ ïîëîâèíà
-    slow->next = NULL; // Ðàçðûâàåì ñâÿçü
+    *fir = source; 
+    *sec = slow->next; 
+    slow->next = NULL;
 }
 
 // Ôóíêöèÿ äëÿ ñëèÿíèÿ äâóõ îòñîðòèðîâàííûõ ñïèñêîâ
@@ -100,7 +100,7 @@ void mergeSort(Node** headRef) {
     mergeSort(&a);
     mergeSort(&b);
 
-    // Ñëèâàåì îòñîðòèðîâàííûå ïîëîâèíû
+    
     *headRef = merge(a, b);
 }
 
