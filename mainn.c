@@ -79,7 +79,6 @@ void test_no4() {
         printf("append_forward test failed\n");
     }
 
-    // Îñâîáîæäåíèå ïàìÿòè
     free(head->next->data);
     free(head->next);
     free(head->data);
@@ -98,7 +97,6 @@ void test_no5() {
         printf("append_forward test failed\n");
     }
 
-    // Îñâîáîæäåíèåv ïàìÿòè
     free(head->next->next->data);
     free(head->next->next);
     free(head->next->data);
@@ -119,7 +117,6 @@ void test_no6(){
         printf("empty string append test passed\n");
     }
 
-    // Îñâîáîæäåíèå ïàìÿòè
     free(head->data);
     free(head);
 }
@@ -137,7 +134,6 @@ void test_no7() {
 
     split(head, &firstHalf, &secondHalf);
 
-    // Ïðîâåðêà ïðàâèëüíîñòè ðàçäåëåíèÿ
     if (firstHalf != NULL && secondHalf != NULL &&
         strcmp(firstHalf->data, "1") == 0 &&
         strcmp(firstHalf->next->data, "2") == 0 &&
@@ -149,7 +145,6 @@ void test_no7() {
         printf("split test failed\n");
     }
 
-    // Îñâîáîæäåíèå ïàìÿòè äëÿ ïåðâîé ïîëîâèíû
     if (firstHalf != NULL) {
         free(firstHalf->next->data);
         free(firstHalf->next);
@@ -157,7 +152,6 @@ void test_no7() {
         free(firstHalf);
     }
 
-    // Îñâîáîæäåíèå ïàìÿòè äëÿ âòîðîé ïîëîâèíû
     if (secondHalf != NULL) {
         free(secondHalf->next->data);
         free(secondHalf->next);
@@ -184,7 +178,7 @@ void test_no8() {
         printf("merge test failed\n");
     }
 
-    // Îñâîáîæäåíèå ïàìÿòè
+    
     while (merged != NULL) {
         Node* temp = merged;
         merged = merged->next;
@@ -193,7 +187,7 @@ void test_no8() {
     }
 }
 
-// Òåñò äëÿ ñîðòèðîâêè ñïèñêà
+
 void test_no9() {
     Node* head = NULL;
     append(&head, "3");
@@ -218,7 +212,7 @@ void test_no9() {
         printf("mergeSort test failed: list is empty or not properly sorted\n");
     }
 
-    // Îñâîáîæäåíèå ïàìÿòè
+  
     while (head != NULL) {
         Node* temp = head;
         head = head->next;
@@ -231,7 +225,7 @@ void test_no9() {
 void test_no10() {
     Node* head = NULL;
 
-    split(head, &head, &head); // Ðàçäåëåíèå ïóñòîãî ñïèñêà
+    split(head, &head, &head);
 
     if (head == NULL) {
         printf("empty list split test passed\n");
@@ -244,7 +238,7 @@ void test_no10() {
 
 void test_no11() {
     Node* head = NULL;
-    mergeSort(&head); // Ñîðòèðîâêà ïóñòîãî ñïèñêà
+    mergeSort(&head);
 
     if (head == NULL) {
         printf("empty list mergeSort test passed\n");
