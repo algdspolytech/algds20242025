@@ -86,7 +86,7 @@ TEST(FuncTests, TreeWithUnbalancedTree_no8) {
   EXPECT_EQ(result->num_of_children, 3);
 }
 
-TEST(FuncTests, TreeRandomTree_no10) {
+TEST(FuncTests, RandomTree_no9) {
   Node *root = CreateTree(1);
   for (int i = 2; i < 6; i++) {
     AddNode(root, i);
@@ -107,6 +107,28 @@ TEST(FuncTests, TreeRandomTree_no10) {
   EXPECT_EQ(result->data, 5);
   EXPECT_EQ(result->num_of_children, 6);
 }
+
+TEST(PrintTests, PrintRandomTree_no10) {
+  Node *root = CreateTree(1);
+  cout << "This test simply shows the output \"in the form of Norton\", while the tree is output completely from the parent and across all descendants\n";
+  for (int i = 2; i < 6; i++) {
+    AddNode(root, i);
+  }
+  for (int i = 6; i < 9; i++) {
+    AddNode(root->nodes[0], i);
+  }
+  for (int i = 9; i < 11; i++) {
+    AddNode(root->nodes[1], i);
+  }
+  for (int i = 11; i < 12; i++) {
+    AddNode(root->nodes[2], i);
+  }
+  for (int i = 12; i < 18; i++) {
+    AddNode(root->nodes[3], i);
+  }
+  PrintTreeFromCurrentNode(root);
+}
+
 
 int main(int argc, char **argv) {
   ::testing::InitGoogleTest(&argc, argv);
