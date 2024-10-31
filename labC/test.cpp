@@ -5,19 +5,6 @@
 
 using namespace std;
 
-int vertex_in_adj_list(Node *adj_list, int vertex) {
-
-  Node *p = adj_list;
-
-  while (p) {
-    if (p->vertex == vertex) {
-      return 1;
-    }
-    p = p->next;
-  }
-  return 0;
-}
-
 TEST(_add_edge, CheckStructure) { /*all return True*/
 
   Graph *graph = create_graph(5);
