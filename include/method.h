@@ -2,6 +2,6 @@
 #define METHOD_H
 #include "matrix.h"
 
-bool dfs(matrix*, unsigned int, unsigned int);
+void dfs(matrix*, unsigned int, unsigned int, int*, bool*);
 
 #endif 

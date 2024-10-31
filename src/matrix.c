@@ -2,7 +2,6 @@
 
 #define START 100
 #define ILENGTH 100
-#include <stdbool.h>
 
 
 #define for_elems(f, s) for(int i = 0; i < f; ++i) for(int j = 0; j < s; ++j)
@@ -181,14 +180,14 @@ matrix* Parse(const char* str)
 static void extend_str(char* str, unsigned int* size)
 {
     *size *= 2;
-    str = realloc(str, size);
+    str = realloc(str, *size);
 }
 
 
 matrix* ReadFile(const char* filename)
 {
     FILE *fptr;
-    fptr = fopen("/home/egor/alg/algds20242025/matrix.txt", "r+");
+    fptr = fopen(filename, "r+");
     char buffer[START];
     char* res = malloc(START);
     unsigned int size = 0;
