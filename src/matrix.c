@@ -66,6 +66,16 @@ static void delete_table(int** table, unsigned int height)
     free(table);
 }
 
+
+void Destroy(matrix* matrix)
+{
+    for (unsigned int i = 0; i < matrix->height; ++i)
+    {
+        free(matrix->elems[i]);
+    }
+    free(matrix);
+}
+
 matrix* Create(unsigned int height, unsigned int width)
 {
     matrix* ma = (matrix*)malloc(sizeof(matrix));
@@ -77,6 +87,53 @@ matrix* Create(unsigned int height, unsigned int width)
         ma->elems[i] = (double*)malloc(sizeof(double) * width);
     }
     return ma;
+}
+
+static int to_str(char* buffer, double num, bool is_last)
+{
+    if (is_last) sprintf(buffer, "%f", num);
+    else sprintf(buffer, "%f, ", num);
+    return strlen(buffer);
+}
+
+static void concatinate(char* str, const char* buffer, int index)
+{
+    int i = 0;
+    while (buffer[i] != '\0')
+    {
+        str[index + i] = buffer[i];
+        ++i;
+    }
+}
+
+char* Format(matrix* mat)
+{
+    char* res = malloc(ILENGTH * mat->height * mat->width + 2 + mat->height * 4 - 2 + mat->width * 2 - 2 * mat->height + 1);
+    res[0] = '{';
+    unsigned int k = 1;
+    for (int i = 0; i < mat->height; ++i)
+    {
+        res[k] = '{';
+        ++k;
+        for (int j = 0; j < mat->width; ++j)
+        {
+            char buffer[ILENGTH];
+            int len = to_str(buffer, mat->elems[i][j], j == mat->width - 1);
+            concatinate(res, buffer, k);
+            k += len;
+        }
+        res[k] = '}';
+        k++;
+        if (i < mat->height - 1)
+        {
+            res[k] = ',';
+            res[k + 1] = ' ';
+            k += 2;
+        }
+    }
+    res[k] = '}';
+    res[k + 1] = '\0';
+    return res;
 }
 
 matrix* Parse(const char* str)
@@ -128,21 +185,22 @@ static void extend_str(char* str, unsigned int* size)
 }
 
 
-char* ReadFile(const char* filename)
+matrix* ReadFile(const char* filename)
 {
     FILE *fptr;
-    errno_t err = fopen_s(&fptr, filename, 'rw');
-    if(err == 0) return NULL;
-    char* buffer[START];
+    fptr = fopen("/home/egor/alg/algds20242025/matrix.txt", "r+");
+    char buffer[START];
     char* res = malloc(START);
     unsigned int size = 0;
     unsigned int capacity = START;
-    while(fgets(buffer, START, &fptr))
+    while(fgets(buffer, sizeof(buffer), fptr) != NULL)
     {
-        if(capacity - size <= START) extend_str(res, &capacity);
+        if(capacity - size < START) extend_str(res, &capacity);
         strcat(res, buffer);
         size += START;
     }
-    fclose(&fptr);
-    return res;
+    fclose(fptr);
+    matrix* mat = Parse(res);
+    free(res);
+    return mat;
 }

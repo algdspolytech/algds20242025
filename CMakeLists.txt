@@ -2,11 +2,11 @@ cmake_minimum_required(VERSION 3.8)
 project(tests_lab1)
 
 set(CMAKE_CXX_STANDARD 11)
-
+set(CMAKE_C_STANDARD 11)
 
 
 include_directories("${PROJECT_SOURCE_DIR}/include")
-include_directories("C:/Users/Egor/Documents/desktop/algos/algds20242025/build/vcpkg_installed/x64-windows/include")
+include_directories("${PROJECT_SOURCE_DIR}/build/vcpkg_installed/x64-linux")
 
 find_package(GTest CONFIG REQUIRED)
 

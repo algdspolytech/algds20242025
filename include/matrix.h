@@ -12,7 +12,7 @@ typedef struct
 }matrix;
 
 matrix* Parse(const char*);
-char* ReadFile(const char*);
-
+matrix* ReadFile(const char*);
+char* Format(matrix* mat);
 
 #endif 
