@@ -1,0 +1,10 @@
+labC/labC.vcxproj*
+labC/labC.sln
+labC/vs/
+labC/x64/
+labC/packages/
+labC/*.o
+LabC/makefile.bat
+labC/pch.*
+labC/test.exe
+labCTest/
