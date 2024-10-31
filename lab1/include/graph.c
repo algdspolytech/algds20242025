@@ -1,4 +1,5 @@
 #include <stdlib.h>
+#include <stdbool.h>
 #include <stdio.h>
 
 typedef struct Node {
@@ -43,4 +44,54 @@ Node* initNode(const int vertexNum, const size_t countVertices, const int* verti
 
     node->next=NULL;
     return node;
+}
+
+void freeNode(Node* node) {
+    if (node) {
+        free(node->vertices);
+        free(node);
+    }
+}
+
+bool addNode(AdjacencyList* list,Node* node){
+    if(!list || !node)
+           return false;
+
+    if(!list->head){
+        list->head=node;
+        return true;
+    }
+
+    Node* tmp = list->head;
+    while(tmp)
+        tmp=tmp->next;
+    tmp->next=node;
+    return true;
+}
+
+int** readAdjacencyMatrix(const char* filename, size_t* size) {
+    FILE* file = fopen(filename, "r");
+    if (!file)
+        return NULL;
+
+    fscanf(file, "%zu", size);
+
+    int** matrix = (int**)malloc((*size) * sizeof(int*));
+    for (size_t i = 0; i < *size; ++i)
+        matrix[i] = (int*)malloc((*size) * sizeof(int));
+
+    for (size_t i = 0; i < *size; ++i) {
+        for (size_t j = 0; j < *size; ++j)
+            fscanf(file, "%d", &matrix[i][j]);
+    }
+
+    fclose(file);
+    return matrix;
+}
+
+void freeMatrix(int** matrix, size_t size) {
+    for (size_t i = 0; i < size; i++) {
+        free(matrix[i]);
+    }
+    free(matrix);
 }
