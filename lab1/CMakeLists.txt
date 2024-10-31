@@ -1,17 +1,17 @@
 cmake_minimum_required(VERSION 3.28)
-project(LabA)
+project(LabC)
 
 set(CMAKE_C_STANDARD 11)
 
-add_library(LabA main.c
-        labA.h)
+add_library(LabC main.c
+        labC.h)
 
 add_subdirectory(./googletest GTEST)
 include_directories(googletest/googletest/include)
 
 enable_testing()
 
-add_executable(labATEST tests.cxx)
-target_link_libraries(labATEST GTest::gtest_main LabA)
+add_executable(labCTEST tests.cxx)
+target_link_libraries(labCTEST GTest::gtest_main LabC)
 include(GoogleTest)
-gtest_discover_tests(labATEST)
+gtest_discover_tests(labCTEST)

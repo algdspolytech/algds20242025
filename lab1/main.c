@@ -1,125 +1,82 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include "labC.h"
 
-#include "labA.h"
+#define MAX_VERTICES 50
 
-Node *createNode(int data) {
-    Node *newNode = malloc(sizeof(Node));
-    if (newNode == NULL) {
-        printf("Ошибка выделения памяти!\n");
-        exit(1);
-    }
-    newNode->data = data;
-    newNode->next = NULL;
-    return newNode;
+Graph* createGraph(int num_vertices) {
+  Graph* graph = malloc(sizeof(Graph));
+  graph->num_vertices = num_vertices;
+  for (int i = 0; i < num_vertices; i++) {
+    graph->vertices[i].degree = 0;
+  }
+  return graph;
 }
 
-Stack *createStack() {
-    Stack *newStack = malloc(sizeof(Stack));
-    if (newStack == NULL) {
-        printf("Ошибка выделения памяти!\n");
-        exit(1);
-    }
-    newStack->top = NULL;
-    return newStack;
+void addEdge(Graph* graph, int source, int destination) {
+  graph->vertices[source].adj[graph->vertices[source].degree++] = destination;
+  graph->vertices[destination].adj[graph->vertices[destination].degree++] = source;
 }
 
+Graph* readGraphFromFile(const char* filename) {
+  FILE* fp = fopen(filename, "r");
+  if (fp == NULL) {
+    printf("Ошибка открытия файла.\n");
+    return NULL;
+  }
 
-int isEmpty(Stack *stack) {
-    return stack->top == NULL;
+  int num_vertices;
+  fscanf(fp, "%d", &num_vertices);
+
+  Graph* graph = createGraph(num_vertices);
+
+  int source;
+  int destination;
+  while (fscanf(fp, "%d %d", &source, &destination) != EOF) {
+    addEdge(graph, source, destination);
+  }
+
+  fclose(fp);
+  return graph;
 }
 
-void push(Stack *stack, int data) {
-    Node *newNode = createNode(data);
-    newNode->next = stack->top;
-    stack->top = newNode;
-}
+int* findShortestPath(Graph* graph, int start, int end) {
+  int visited[MAX_VERTICES] = {0};
+  int distance[MAX_VERTICES] = {0};
+  int previous[MAX_VERTICES] = {-1};
+  int queue[MAX_VERTICES];
+  int front = 0;
+  int rear = 0;
 
-int pop(Stack *stack) {
-    if (isEmpty(stack)) {
-        return -1;
-    }
-    Node *temp = stack->top;
-    int data = temp->data;
-    stack->top = temp->next;
-    free(temp);
-    return data;
-}
+  queue[rear++] = start;
+  visited[start] = 1;
 
-int peek(Stack *stack) {
-    if (isEmpty(stack)) {
-        return -1;
-    }
-    return stack->top->data;
-}
+  while (front != rear) {
+    int current = queue[front++];
 
-void printStack(Stack *stack) {
-    if (isEmpty(stack)) {
-        printf("Стек пуст!\n");
-        return;
-    }
-    Node *temp = stack->top;
-    printf("Стек: ");
-    while (temp != NULL) {
-        printf("%d ", temp->data);
-        temp = temp->next;
-    }
-    printf("\n");
-}
+    if (current == end) {
+      int* path = malloc(sizeof(int) * MAX_VERTICES);
+      int path_index = 0;
+      int node = end;
 
-ArrayStack *createArrayStack(int capacity) {
-    ArrayStack *newStack = malloc(sizeof(ArrayStack));
-    if (newStack == NULL) {
-        printf("Ошибка выделения памяти!\n");
-        exit(1);
-    }
-    newStack->data = malloc(capacity * sizeof(int));
-    if (newStack->data == NULL) {
-        printf("Ошибка выделения памяти!\n");
-        exit(1);
-    }
-    newStack->top = -1;
-    newStack->capacity = capacity;
-    return newStack;
-}
+      while (node != -1) {
+        path[path_index++] = node;
+        node = previous[node];
+      }
 
-int isEmptyArrayStack(ArrayStack *stack) {
-    return stack->top == -1;
-}
+      return path;
+    }
 
-void pushArrayStack(ArrayStack *stack, int data) {
-    if (stack->top == stack->capacity - 1) {
-        printf("Стек переполнен!\n");
-        return;
+    for (int i = 0; i < graph->vertices[current].degree; i++) {
+      int neighbor = graph->vertices[current].adj[i];
+      if (!visited[neighbor]) {
+        visited[neighbor] = 1;
+        distance[neighbor] = distance[current] + 1;
+        previous[neighbor] = current;
+        queue[rear++] = neighbor;
+      }
     }
-    stack->top++;
-    stack->data[stack->top] = data;
-}
+  }
 
-int popArrayStack(ArrayStack *stack) {
-    if (isEmptyArrayStack(stack)) {
-        return -1;
-    }
-    int data = stack->data[stack->top];
-    stack->top--;
-    return data;
-}
-
-int peekArrayStack(ArrayStack *stack) {
-    if (isEmptyArrayStack(stack)) {
-        return -1;
-    }
-    return stack->data[stack->top];
-}
-
-void printArrayStack(ArrayStack *stack) {
-    if (isEmptyArrayStack(stack)) {
-        printf("Стек пуст!\n");
-        return;
-    }
-    printf("Стек: ");
-    for (int i = stack->top; i >= 0; i--) {
-        printf("%d ", stack->data[i]);
-    }
-    printf("\n");
+  return NULL;
 }

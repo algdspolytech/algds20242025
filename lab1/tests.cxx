@@ -1,195 +1,214 @@
 #include <gtest/gtest.h>
 
 extern "C" {
-#include "labA.h"
+#include "labC.h"
 }
 
-TEST(LabATests, IsEmptyStack) {
-    Stack *stack = createStack();
-    ASSERT_TRUE(isEmpty(stack));
-    free(stack);
+TEST(LabCTEST, CreateGraph_ValidArguments_Valid) {
+    //Arrange
+    int num_vertices = 5;
+
+    //Act
+    Graph* graph = createGraph(num_vertices);
+
+    //Assert
+    ASSERT_NE(graph, nullptr);
+    ASSERT_EQ(graph->num_vertices, num_vertices);
+    for (int i = 0; i < num_vertices; i++) {
+        ASSERT_EQ(graph->vertices[i].degree, 0);
+    }
+    free(graph);
 }
 
-TEST(LabATests, EmptyStackPop) {
-    Stack *stack = createStack();
-    ASSERT_EQ(pop(stack), -1);
-    free(stack);
+TEST(LabCTEST, AddEdge_ValidArguments_Correct) {
+    //Arrange
+    Graph* graph = createGraph(4);
+
+    //Act
+    addEdge(graph, 0, 1);
+
+    //Assert
+    ASSERT_EQ(graph->vertices[0].degree, 1);
+    ASSERT_EQ(graph->vertices[0].adj[0], 1);
+    ASSERT_EQ(graph->vertices[1].degree, 1);
+    ASSERT_EQ(graph->vertices[1].adj[0], 0);
+    free(graph);
 }
 
-TEST(LabATests, EmptyStackPeek) {
-    Stack *stack = createStack();
-    ASSERT_EQ(peek(stack), -1);
-    free(stack);
+
+TEST(LabCTEST, findShortestPath_SimplePath_RightAnswer) {
+    //Arrange
+    Graph* graph = createGraph(5);
+    addEdge(graph, 0, 1);
+    addEdge(graph, 1, 2);
+    addEdge(graph, 2, 3);
+    addEdge(graph, 3, 4);
+    int start = 0;
+    int end = 4;
+
+    //Act
+    int* path = findShortestPath(graph, start, end);
+
+    //Assert
+    ASSERT_NE(path, nullptr);
+    ASSERT_EQ(path[0], 4);
+    ASSERT_EQ(path[1], 3);
+    ASSERT_EQ(path[2], 2);
+    ASSERT_EQ(path[3], 1);
+    ASSERT_EQ(path[4], 0);
+    free(path);
+    free(graph);
 }
 
-TEST(LabATests, PushPop) {
-    Stack *stack = createStack();
-    push(stack, 10);
-    ASSERT_FALSE(isEmpty(stack));
-    ASSERT_EQ(peek(stack), 10);
-    ASSERT_EQ(pop(stack), 10);
-    ASSERT_TRUE(isEmpty(stack));
-    free(stack);
+TEST(LabCTEST, findShortestPath_NoPath_Nullptr) {
+    //Arrange
+    Graph* graph = createGraph(5);
+    addEdge(graph, 0, 1);
+    addEdge(graph, 1, 2);
+    addEdge(graph, 3, 4);
+    int start = 0;
+    int end = 4;
+
+    //Act
+    int* path = findShortestPath(graph, start, end);
+
+    //Assert
+    ASSERT_EQ(path, nullptr);
+    free(graph);
 }
 
-TEST(LabATests, MultiplePushPop) {
-    Stack *stack = createStack();
-    push(stack, 10);
-    push(stack, 20);
-    push(stack, 30);
-    ASSERT_EQ(peek(stack), 30);
-    ASSERT_EQ(pop(stack), 30);
-    ASSERT_EQ(peek(stack), 20);
-    ASSERT_EQ(pop(stack), 20);
-    ASSERT_EQ(peek(stack), 10);
-    ASSERT_EQ(pop(stack), 10);
-    ASSERT_TRUE(isEmpty(stack));
-    free(stack);
+TEST(LabCTEST, readGraphFromFile_RightPath_NotNull) {
+    //Arrange
+    const char* filename = "../graph.txt";
+
+    //Act
+    Graph* graph = readGraphFromFile(filename);
+
+    //Assert
+    ASSERT_NE(graph, nullptr);
+    free(graph);
 }
 
-TEST(LabATests, Peek) {
-    Stack *stack = createStack();
-    push(stack, 10);
-    ASSERT_EQ(peek(stack), 10);
-    push(stack, 20);
-    ASSERT_EQ(peek(stack), 20);
-    free(stack);
+TEST(LabCTEST, readGraphFromFile_InvalidPath_Nullptr) {
+    //Arrange
+    const char* filename = "wrong.path.txt"; //Точка написана специально, чтобы файла не могло существовать
+
+    //Act
+    Graph* graph = readGraphFromFile(filename);
+
+    //Assert
+    ASSERT_EQ(graph, nullptr);
+    free(graph);
 }
 
-TEST(LabATests, PushOneElement) {
-    Stack *stack = createStack();
-    push(stack, 5);
-    ASSERT_EQ(peek(stack), 5);
-    free(stack);
+TEST(LabCTEST, findShortestPath_FromFileFile_RightPath) {
+    //Arrange
+    Graph* graph = readGraphFromFile("../graph.txt");
+    ASSERT_NE(graph, nullptr);
+    int start = 0;
+    int end = 3;
+
+    //Act
+    int* path = findShortestPath(graph, start, end);
+
+    //Assert
+    ASSERT_NE(path, nullptr);
+    ASSERT_EQ(path[0], 3);
+    ASSERT_EQ(path[1], 1);
+    ASSERT_EQ(path[2], 0);
+    free(path);
+    free(graph);
 }
 
-TEST(LabATests, PopLastElement) {
-    Stack *stack = createStack();
-    push(stack, 1);
-    push(stack, 2);
-    ASSERT_EQ(pop(stack), 2);
-    ASSERT_EQ(peek(stack), 1);
-    free(stack);
+TEST(LabCTEST, createGraph_SingleVertex_Closure) {
+    //Arrange
+    Graph* graph = createGraph(1);
+    int start = 0;
+    int end = 0;
+
+    //Act
+    int* path = findShortestPath(graph, start, end);
+
+    //Assert
+    ASSERT_NE(path, nullptr);
+    ASSERT_EQ(path[0], 0);
+    free(path);
+    free(graph);
 }
 
-TEST(LabATests, EmptyAfterMultiplePops) {
-    Stack *stack = createStack();
-    push(stack, 1);
-    push(stack, 2);
-    push(stack, 3);
-    pop(stack);
-    pop(stack);
-    pop(stack);
-    ASSERT_TRUE(isEmpty(stack));
-    free(stack);
+TEST(LabCTEST, findShortestPath_EmptyGraph_NullPath) {
+    //Arrange
+    Graph* graph = createGraph(0);
+    int start = 0;
+    int end = 0;
+
+    //Act
+    int* path = findShortestPath(graph, start, end);
+
+    //Assert
+    ASSERT_EQ(*path, NULL);
+    free(graph);
 }
 
-TEST(LabATests, PeekAfterMultiplePushes) {
-    Stack *stack = createStack();
-    push(stack, 1);
-    push(stack, 2);
-    push(stack, 3);
-    ASSERT_EQ(peek(stack), 3);
-    free(stack);
-}
-TEST(LabATests, IsEmptyArrayStack) {
-    ArrayStack *stack = createArrayStack(10);
-    ASSERT_TRUE(isEmptyArrayStack(stack));
-    free(stack->data);
-    free(stack);
+TEST(LabCTEST, findShortestPath_SimpleCycle_RightPath) {
+    //Arrange
+    Graph* graph = createGraph(4);
+    addEdge(graph, 0, 1);
+    addEdge(graph, 1, 2);
+    addEdge(graph, 2, 3);
+    addEdge(graph, 3, 0);
+    int start = 0;
+    int end = 2;
+
+    //Act
+    int* path = findShortestPath(graph, start, end);
+
+    //Assert
+    ASSERT_NE(path, nullptr);
+    ASSERT_EQ(path[0], 2);
+    ASSERT_EQ(path[1], 1);
+    ASSERT_EQ(path[2], 0);
+    free(path);
+    free(graph);
 }
 
-TEST(LabATests, EmptyArrayStackPop) {
-    ArrayStack *stack = createArrayStack(10);
-    ASSERT_EQ(popArrayStack(stack), -1);
-    free(stack->data);
-    free(stack);
+TEST(LabCTEST, findShortestPath_DisconnectedGraph_NoPath) {
+    //Arrange
+    Graph* graph = createGraph(6);
+    addEdge(graph, 0, 1);
+    addEdge(graph, 1, 2);
+    addEdge(graph, 4, 5);
+    int start = 0;
+    int end = 5;
+
+    //Act
+    int* path = findShortestPath(graph, start, end);
+
+    //Assert
+    ASSERT_EQ(path, nullptr);
+    free(graph);
 }
 
-TEST(LabATests, PushArrayPop) {
-  ArrayStack *stack = createArrayStack(10);
-  pushArrayStack(stack, 10);
-  ASSERT_FALSE(isEmptyArrayStack(stack));
-  ASSERT_EQ(peekArrayStack(stack), 10);
-  ASSERT_EQ(popArrayStack(stack), 10);
-  ASSERT_TRUE(isEmptyArrayStack(stack));
-  free(stack->data);
-  free(stack);
-}
+TEST(LabCTEST, findShortestPath_PathWithMultipleEdges_ShortestPath) {
+    //Arrange
+    Graph* graph = createGraph(5);
+    addEdge(graph, 0, 1);
+    addEdge(graph, 0, 2);
+    addEdge(graph, 1, 3);
+    addEdge(graph, 2, 3);
+    addEdge(graph, 3, 4);
+    int start = 0;
+    int end = 4;
 
-TEST(LabATests, MultiplePushArrayPop) {
-  ArrayStack *stack = createArrayStack(10);
-  pushArrayStack(stack, 10);
-  pushArrayStack(stack, 20);
-  pushArrayStack(stack, 30);
-  ASSERT_EQ(peekArrayStack(stack), 30);
-  ASSERT_EQ(popArrayStack(stack), 30);
-  ASSERT_EQ(peekArrayStack(stack), 20);
-  ASSERT_EQ(popArrayStack(stack), 20);
-  ASSERT_EQ(peekArrayStack(stack), 10);
-  ASSERT_EQ(popArrayStack(stack), 10);
-  ASSERT_TRUE(isEmptyArrayStack(stack));
-  free(stack->data);
-  free(stack);
-}
+    //Act
+    int* path = findShortestPath(graph, start, end);
 
-TEST(LabATests, PeekArray) {
-  ArrayStack *stack = createArrayStack(10);
-  pushArrayStack(stack, 10);
-  ASSERT_EQ(peekArrayStack(stack), 10);
-  pushArrayStack(stack, 20);
-  ASSERT_EQ(peekArrayStack(stack), 20);
-  free(stack->data);
-  free(stack);
-}
-
-TEST(LabATests, PushOneElementArray) {
-  ArrayStack *stack = createArrayStack(10);
-  pushArrayStack(stack, 5);
-  ASSERT_EQ(peekArrayStack(stack), 5);
-  free(stack->data);
-  free(stack);
-}
-
-TEST(LabATests, PopLastElementArray) {
-  ArrayStack *stack = createArrayStack(10);
-  pushArrayStack(stack, 1);
-  pushArrayStack(stack, 2);
-  ASSERT_EQ(popArrayStack(stack), 2);
-  ASSERT_EQ(peekArrayStack(stack), 1);
-  free(stack->data);
-  free(stack);
-}
-
-TEST(LabATests, EmptyAfterMultiplePopsArray) {
-  ArrayStack *stack = createArrayStack(10);
-  pushArrayStack(stack, 1);
-  pushArrayStack(stack, 2);
-  pushArrayStack(stack, 3);
-  popArrayStack(stack);
-  popArrayStack(stack);
-  popArrayStack(stack);
-  ASSERT_TRUE(isEmptyArrayStack(stack));
-  free(stack->data);
-  free(stack);
-}
-
-TEST(LabATests, PeekAfterMultiplePushesArray) {
-  ArrayStack *stack = createArrayStack(10);
-  pushArrayStack(stack, 1);
-  pushArrayStack(stack, 2);
-  pushArrayStack(stack, 3);
-  ASSERT_EQ(peekArrayStack(stack), 3);
-  free(stack->data);
-  free(stack);
-}
-
-TEST(LabATests, ArrayStackOverflow) {
-  ArrayStack *stack = createArrayStack(3);
-  pushArrayStack(stack, 1);
-  pushArrayStack(stack, 2);
-  pushArrayStack(stack, 3);
-  pushArrayStack(stack, 4);
-  free(stack->data);
-  free(stack);
+    ///Assert
+    ASSERT_NE(path, nullptr);
+    ASSERT_EQ(path[0], 4);
+    ASSERT_EQ(path[1], 3);
+    ASSERT_EQ(path[2], 1);
+    ASSERT_EQ(path[3], 0);
+    free(path);
+    free(graph);
 }
