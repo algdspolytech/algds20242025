@@ -2,11 +2,11 @@
 
 Node *create_node(int v) {
 
-  Node *newNode = malloc(sizeof(Node));
-  newNode->vertex = v;
-  newNode->next = NULL;
+  Node *New = malloc(sizeof(Node));
+  New->vertex = v;
+  New->next = NULL;
 
-  return newNode;
+  return New;
 }
 
 Graph *create_graph(int vertices) {
