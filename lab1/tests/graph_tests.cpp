@@ -6,6 +6,7 @@
 #include <graph.c>
 #include <gtest/gtest.h>
 
+#define FILENAME "../input.txt"
 #define SIZE 1
 
 TEST(nodeTest, initNodeNullCountVertReturnsNull_no1) {
@@ -18,7 +19,15 @@ TEST(nodeTest, initNodeEmptyArrayReturnsNull_no2) {
     EXPECT_EQ(initNode(1,SIZE,NULL),nullptr);
 }
 
-TEST(nodeTest, initNodeArrayReturnsPtr_no3) {
+TEST(nodeTest, freeNodeNormalNodeNoMemLeaks_no3) {
+    int* vertices=(int*)malloc(SIZE*sizeof(int));
+    vertices[0]=1;
+    Node* node=initNode(1,SIZE,vertices);
+    freeNode(node);
+    SUCCEED();
+}
+
+TEST(nodeTest, initNodeArrayReturnsPtr_no4) {
     int* vertices=(int*)malloc(SIZE*sizeof(int));
     vertices[0]=1;
     Node* node=initNode(1,SIZE,vertices);
@@ -28,14 +37,14 @@ TEST(nodeTest, initNodeArrayReturnsPtr_no3) {
     freeNode(node);
 }
 
-TEST(listTest, addNodeNullPtrNodeReturnsFalse_no4) {
+TEST(listTest, addNodeNullPtrNodeReturnsFalse_no5) {
     AdjacencyList* list=(AdjacencyList*)malloc(sizeof(AdjacencyList));
     list->head=NULL;
     EXPECT_FALSE(addNode(list,NULL));
     free(list);
 }
 
-TEST(listTest, addNodeNullListReturnsFalse_no5) {
+TEST(listTest, addNodeNullListReturnsFalse_no6) {
     int* vertices=(int*)malloc(SIZE*sizeof(int));
     vertices[0]=1;
     Node* node=initNode(1,SIZE,vertices);
@@ -43,7 +52,7 @@ TEST(listTest, addNodeNullListReturnsFalse_no5) {
     freeNode(node);
 }
 
-TEST(listTest, addNodeNormalNodeReturnsTrue_no6) {
+TEST(listTest, addNodeNormalNodeReturnsTrue_no7) {
     AdjacencyList* list=(AdjacencyList*)malloc(sizeof(AdjacencyList));
     list->head=NULL;
     int* vertices=(int*)malloc(SIZE*sizeof(int));
@@ -54,7 +63,34 @@ TEST(listTest, addNodeNormalNodeReturnsTrue_no6) {
     freeNode(node);
 }
 
-TEST(readFileTest, readAdjacencyMatrixNonexistentPathReturnsNull_no7) {
+TEST(listTest, addNodeAddNodesReturnsTrue_no8) {
+    AdjacencyList* list=(AdjacencyList*)malloc(sizeof(AdjacencyList));
+    list->head=NULL;
+    int* vertices=(int*)malloc(SIZE*sizeof(int));
+    vertices[0]=1;
+    Node* node=initNode(1,SIZE,vertices);
+    Node* node_2=initNode(2,SIZE,vertices);
+    EXPECT_TRUE(addNode(list,node));
+    EXPECT_TRUE(addNode(list,node_2));
+    free(list);
+    freeNode(node);
+    freeNode(node_2);
+}
+
+TEST(readFileTest, readAdjacencyMatrixNonexistentPathReturnsNull_no9) {
     size_t size;
     EXPECT_EQ(readAdjacencyMatrix("null",&size),nullptr);
+}
+
+TEST(matrixTest, freeMatrixNormalMatrixNoMemLeaks_no10) {
+    size_t size;
+    int** matrix = readAdjacencyMatrix(FILENAME,&size);
+    freeMatrix(matrix,size);
+    SUCCEED();
+}
+
+TEST(graphTest, freeGraphNormalGraphNoMemLeaks_no11) {
+    Graph* gr=initGraph(FILENAME);
+    freeGraph(gr);
+    SUCCEED();
 }
