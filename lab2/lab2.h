@@ -1,3 +1,5 @@
+#ifndef LAB2_H  
+#define LAB2_H
 #include <stdio.h>
 #include <stdlib.h>
 #define MAX_TOPs 1000
@@ -50,3 +52,5 @@ int DFS(int top, int goal) {
     }
     return 0;
 }
+
+#endif 
