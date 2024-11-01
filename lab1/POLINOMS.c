@@ -10,7 +10,7 @@ void InitQueue(struct Queue* q)
 	q->first = q->last = malloc(sizeof(struct monom));
 	if (q->first == NULL)
 	{
-		printf("Ошибка: не удалось выделить память.\n");
+		printf("Error: failed to allocate memory.\n");
 		return;
 	}
 	q->first = q->last = NULL;
@@ -23,7 +23,7 @@ void Add2Queue(struct Queue* q, int coef, int pow)
 	p = malloc(sizeof(struct monom));
 	if (p == NULL)
 	{
-		printf("Ошибка: не удалось выделить память.\n");
+		printf("Error: failed to allocate memory.\n");
 		return;
 	}
 	p->coef = coef;
@@ -53,7 +53,7 @@ int atoistr(char* buf)
 
 	if (buf1 == NULL)
 	{
-		printf("Ошибка: не удалось выделить память.\n");
+		printf("Error: failed to allocate memory.\n");
 		return;
 	}
 
@@ -88,7 +88,7 @@ void ReadPol(FILE* F, struct Queue* q)
 
 	if (buf == NULL)
 	{
-		printf("Ошибка: не удалось выделить память.\n");
+		printf("Error: failed to allocate memory.\n");
 		return;
 	}
 
@@ -205,6 +205,13 @@ void Sort(struct Queue* q)
 	}
 	//массив для хранения указателей на элементы очереди
 	struct monom* arr = malloc(size * sizeof(struct monom));
+
+	if (arr == NULL)
+	{
+		printf("Error: failed to allocate memory.\n");
+		return;
+	}
+
 	p = q->first;
 	//заполняем массив указателями на элементы очереди
 	for (i = 0; i < size; i++)
