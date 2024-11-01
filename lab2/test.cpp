@@ -5,14 +5,14 @@ extern "C" {
 #include "../algosi2/head.h"
 }
 
-TEST(GraphTest, CreateNode) {
+TEST(CreateNodeTest, Create_no1) {
     Node* node = createNode(1);
     ASSERT_NE(nullptr, node);
     ASSERT_EQ(1, node->vertex);
     ASSERT_EQ(nullptr, node->next);
 }
 
-TEST(GraphTest, CreateEmptyGraph) {
+TEST(CreateGraphTest, CreateEmptyGraph_no2) {
     int matrix[MAX_VERTICES][MAX_VERTICES] = { 0 };
     Graph* graph = createGraph(matrix, 3);
     ASSERT_NE(nullptr, graph);
@@ -22,7 +22,7 @@ TEST(GraphTest, CreateEmptyGraph) {
     }
 }
 
-TEST(GraphTest, CreateGraphWithEdges) {
+TEST(CreateGraphTest, CreateGraphSucces_no3) {
     int matrix[MAX_VERTICES][MAX_VERTICES] = {
         {0, 1, 0},
         {1, 0, 1},
@@ -48,7 +48,7 @@ TEST(GraphTest, CreateGraphWithEdges) {
 
     free(graph);
 }
-TEST(ReadMatrixFromFileTest, ValidFile) {
+TEST(ReadMatrixFromFileTest, ValidFile_no4) {
     int matrix[MAX_VERTICES][MAX_VERTICES];
     int numVertices;
 
@@ -72,7 +72,7 @@ TEST(ReadMatrixFromFileTest, ValidFile) {
     remove("test_matrix.txt");
 }
 
-TEST(ReadMatrixFromFileTest, InvalidFile) {
+TEST(ReadMatrixFromFileTest, InvalidFile_no5) {
     int matrix[MAX_VERTICES][MAX_VERTICES];
     int numVertices;
 
@@ -80,7 +80,7 @@ TEST(ReadMatrixFromFileTest, InvalidFile) {
         1);
 }
 
-TEST(ReadMatrixFromFileTest, IncorrectSize) {
+TEST(ReadMatrixFromFileTest, IncorrectSize_no6) {
     int matrix[MAX_VERTICES][MAX_VERTICES];
     int numVertices;
 
@@ -93,7 +93,7 @@ TEST(ReadMatrixFromFileTest, IncorrectSize) {
     remove("test_matrix.txt");
 }
 
-TEST(ReadMatrixFromFileTest, IncorrectData) {
+TEST(ReadMatrixFromFileTest, InvalidData_no7) {
     int matrix[MAX_VERTICES][MAX_VERTICES];
     int numVertices;
 
@@ -106,7 +106,7 @@ TEST(ReadMatrixFromFileTest, IncorrectData) {
     remove("test_matrix.txt");
 }
 
-TEST(ReadMatrixFromFileTest, InvalidMatrixSize) {
+TEST(ReadMatrixFromFileTest, InvalidMatrix_no8) {
     int matrix[MAX_VERTICES][MAX_VERTICES];
     int numVertices;
 
@@ -119,7 +119,7 @@ TEST(ReadMatrixFromFileTest, InvalidMatrixSize) {
     remove("test_matrix.txt");
 }
 
-TEST(GraphTest, AdjacencyExists) {
+TEST(IsAdjacencyTest, AdjacencyExists_no9) {
     int matrix[MAX_VERTICES][MAX_VERTICES] = {
         {0, 1, 0},
         {1, 0, 1},
@@ -131,7 +131,7 @@ TEST(GraphTest, AdjacencyExists) {
     ASSERT_EQ(graph->adjacencyList[0]->vertex, 1);
 }
 
-TEST(GraphTest, AdjacencyDoesNotExists) {
+TEST(IsAdjacencyTest, AdjacencyDoesNotExists_no10) {
     int matrix[MAX_VERTICES][MAX_VERTICES] = {
         {0, 1, 0},
         {1, 0, 1},
