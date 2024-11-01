@@ -1,0 +1,8 @@
+/build
+
+CMakeLists.txt
+CMakePresets.json
+matrix.txt
+vcpkg-configuration.json
+vcpkg.json
+/.vscode
