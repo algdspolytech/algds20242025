@@ -1,316 +1,271 @@
-#include <stdio.h>
 #include <gtest/gtest.h>
+#include <cstdio>
+#include <cstdlib>
+#include <cstring>
 
 extern "C" {
-#include <long_numbers.h>
+    #include "graph.h"
 }
 
-TEST(LM_InitLNumber, GensValidNUmbers) {
-    const char* a = "44444444444444444";
-    const char* b = "132323234444";
-    const char* b_alt = "000132323234444";
-    const char* zero = "0";
+FILE* CreateTempFile(const char* content) {
+    FILE* file = fopen("tmp.txt", "w");
+    if (file == nullptr) {
+        exit(EXIT_FAILURE);
+    }
+    fputs(content, file);
+    rewind(file);
+    fclose(file);
 
-    lNumber_t aNum = LM_InitLNumber(1, a);
-    lNumber_t bNum = LM_InitLNumber(0, b_alt);
-    lNumber_t zNum = LM_InitLNumber(1, zero);
+    file = fopen("tmp.txt", "r");
+    if (file == nullptr) {
+        exit(EXIT_FAILURE);
+    }
 
-    char* res1Str = LM_GetLNumberString(aNum);
-    char* res2Str = LM_GetLNumberString(bNum);
-    char* res3Str = LM_GetLNumberString(zNum);
-
-    ASSERT_TRUE(aNum.isPositive);
-    ASSERT_STREQ(res1Str, a);
-    ASSERT_FALSE(bNum.isPositive);
-    ASSERT_STREQ(res2Str, b);
-    ASSERT_STREQ(res3Str, zero);
-
-    LM_DisposeLNumber(aNum);
-    LM_DisposeLNumber(bNum);
-    LM_DisposeLNumber(zNum);
-
-    free(res1Str);
-    free(res2Str);
-    free(res3Str);
+    return file;
 }
 
+TEST(GR_GetAssociationListTest, BasicFunctionality) {
+    const char* content = "3\n"
+                          "1 2\n"
+                          "1 3\n"
+                          "0\n";
+    FILE* file = CreateTempFile(content);
 
-TEST(LM_Add, ZeroPlusNum) {
-    const char* z = "0";
-    const char* n = "132323234444";
+    int n;
+    GR_Node_t* list = GR_GetAssociationList(file, &n);
 
-    lNumber_t zero = LM_InitLNumber(1, z);
-    lNumber_t num = LM_InitLNumber(1, n);
+    ASSERT_EQ(n, 3);
+    ASSERT_EQ(list[0].connectionCnt, 1);
+    ASSERT_EQ(list[0].connectedTo[0], 2);
+    ASSERT_EQ(list[1].connectionCnt, 1);
+    ASSERT_EQ(list[1].connectedTo[0], 3);
+    ASSERT_EQ(list[2].connectionCnt, 0);
 
-    lNumber_t result1 = LM_Add(zero, num);
-    lNumber_t result2 = LM_Add(num, zero);
-
-    char* res1str = LM_GetLNumberString(result1);
-    char* res2str = LM_GetLNumberString(result2);
-
-    ASSERT_STREQ(res1str, n);
-    ASSERT_STREQ(res2str, n);
-
-    LM_DisposeLNumber(result1);
-    LM_DisposeLNumber(result2);
-    LM_DisposeLNumber(zero);
-    LM_DisposeLNumber(num);
-
-    free(res1str);
-    free(res2str);
+    GR_DeleteAssociationList(list, n);
+    fclose(file);
 }
 
-TEST(LM_Add, NumPlusNumGivesPos) {
-    const char* a = "44444444444444444";
-    const char* b = "132323234444";
+TEST(GR_WriteAssociationListTest, BasicWrite) {
+    FILE* file = fopen("tmp.txt", "w");
 
-    lNumber_t aNum = LM_InitLNumber(1, a);
-    lNumber_t bNum = LM_InitLNumber(1, b);
+    GR_Node_t list[2];
+    list[0].connectionCnt = 2;
+    list[0].connectedTo = new int[2]{2, 3};
+    list[1].connectionCnt = 0;
 
-    lNumber_t result = LM_Add(aNum, bNum);
+    GR_WriteAssociationList(file, list, 2);
 
-    char* resStr = LM_GetLNumberString(result);
+    rewind(file);
+    fclose(file);
 
-    ASSERT_EQ(1, result.isPositive);
-    ASSERT_STREQ(resStr, "44444576767678888");
+    file = fopen("tmp.txt", "r");
 
-    LM_DisposeLNumber(result);
-    LM_DisposeLNumber(aNum);
-    LM_DisposeLNumber(bNum);
+    char buffer[256];
+    fgets(buffer, sizeof(buffer), file);
+    ASSERT_STREQ(buffer, "2\n");
 
-    free(resStr);
+    fgets(buffer, sizeof(buffer), file);
+    ASSERT_STREQ(buffer, "2 2 3 \n");
+
+    fgets(buffer, sizeof(buffer), file);
+    ASSERT_STREQ(buffer, "0 \n");
+
+    delete[] list[0].connectedTo;
+    fclose(file);
 }
 
-TEST(LM_Add, NumPlusNegNumGivesPos) {
-    const char *a = "44444444444444444";
-    const char *b = "132323234444";
-    const char *c = "55555556";
+TEST(GR_WriteAssociationListTest, WriteEmpty) {
+    FILE* file = fopen("tmp.txt", "w");
 
-    lNumber_t aNum = LM_InitLNumber(1, a);
-    lNumber_t bNum = LM_InitLNumber(0, b);
-    lNumber_t cNum = LM_InitLNumber(0, c);
+    GR_Node_t list[0];
 
-    lNumber_t result1 = LM_Add(aNum, bNum);
-    lNumber_t result2 = LM_Add(cNum, aNum);
+    GR_WriteAssociationList(file, list, 0);
 
-    char* res1Str = LM_GetLNumberString(result1);
-    char* res2Str = LM_GetLNumberString(result2);
+    rewind(file);
+    fclose(file);
 
-    ASSERT_STREQ(res1Str, "44444312121210000");
-    ASSERT_STREQ(res2Str, "44444444388888888");
+    file = fopen("tmp.txt", "r");
 
-    LM_DisposeLNumber(result1);
-    LM_DisposeLNumber(result2);
-    LM_DisposeLNumber(aNum);
-    LM_DisposeLNumber(bNum);
-    LM_DisposeLNumber(cNum);
+    char buffer[256];
+    fgets(buffer, sizeof(buffer), file);
+    ASSERT_STREQ(buffer, "0\n");
 
-    free(res1Str);
-    free(res2Str);
+    fclose(file);
 }
 
-TEST(LM_Add, NumPlusNegNumGivesNeg) {
-    const char *a = "44444444444444444";
-    const char *b = "132323234444";
-    const char *c = "55555556";
+TEST(GR_AssociationToMatrixTest, ConvertToMatrix) {
+    const char* content = "4\n"
+                          "3 1 2 3\n"
+                          "0\n"
+                          "0\n"
+                          "0\n";
+    // A graph with one outgoing connection from node 1 to nodes 2, 3, and 4
+    FILE* file = CreateTempFile(content);
 
-    lNumber_t aNum = LM_InitLNumber(0, a);
-    lNumber_t bNum = LM_InitLNumber(1, b);
-    lNumber_t cNum = LM_InitLNumber(1, c);
+    int n;
+    GR_Node_t* list = GR_GetAssociationList(file, &n);
 
-    lNumber_t result1 = LM_Add(aNum, bNum);
-    lNumber_t result2 = LM_Add(cNum, aNum);
+    int** matrix = GR_AssociationToMatrix(list, n);
 
-    char* res1Str = LM_GetLNumberString(result1);
-    char* res2Str = LM_GetLNumberString(result2);
+    ASSERT_EQ(matrix[0][1], 1);
+    ASSERT_EQ(matrix[0][2], 1);
+    ASSERT_EQ(matrix[0][3], 1);
+    ASSERT_EQ(matrix[1][0], 0);
 
-    ASSERT_FALSE(result1.isPositive);
-    ASSERT_STREQ(res1Str, "44444312121210000");
-    ASSERT_FALSE(result2.isPositive);
-    ASSERT_STREQ(res2Str, "44444444388888888");
+    for (int i = 0; i < n; ++i) {
+        delete[] matrix[i];
+    }
+    delete[] matrix;
 
-    LM_DisposeLNumber(result1);
-    LM_DisposeLNumber(result2);
-    LM_DisposeLNumber(aNum);
-    LM_DisposeLNumber(bNum);
-    LM_DisposeLNumber(cNum);
-
-    free(res1Str);
-    free(res2Str);
+    GR_DeleteAssociationList(list, n);
+    fclose(file);
 }
 
+TEST(GR_WriteAssociationListTest, WriteEmptyList) {
+    FILE* file = fopen("tmp.txt", "w");
 
-TEST(LM_Multiply, OneMultNum) {
-    const char* o = "1";
-    const char* n = "132323234444";
+    GR_Node_t* list = nullptr;
+    GR_WriteAssociationList(file, list, 0);
 
-    lNumber_t one = LM_InitLNumber(1, o);
-    lNumber_t num = LM_InitLNumber(1, n);
+    rewind(file);
+    fclose(file);
 
-    lNumber_t result1 = LM_Multiply(one, num);
-    lNumber_t result2 = LM_Multiply(num, one);
+    file = fopen("tmp.txt", "r");
 
-    char* res1str = LM_GetLNumberString(result1);
-    char* res2str = LM_GetLNumberString(result2);
+    char buffer[256];
+    fgets(buffer, sizeof(buffer), file);
 
-    ASSERT_STREQ(res1str, n);
-    ASSERT_STREQ(res2str, n);
+    ASSERT_STREQ(buffer, "0\n"); // Expecting a single line indicating zero nodes
 
-    LM_DisposeLNumber(result1);
-    LM_DisposeLNumber(result2);
-    LM_DisposeLNumber(one);
-    LM_DisposeLNumber(num);
-
-    free(res1str);
-    free(res2str);
+    fclose(file);
 }
 
-TEST(LM_Multiply, PosMultPosGivesPos) {
-    const char* a = "44444444444444444";
-    const char* b = "132323234444";
+TEST(GR_AssociationToMatrixTest, NoConnections) {
+    const char* content = "5\n"
+                          "0\n"
+                          "0\n"
+                          "0\n"
+                          "0\n"
+                          "0\n";
+    // Five nodes with no connections
+    FILE* file = CreateTempFile(content);
 
-    lNumber_t aNum = LM_InitLNumber(1, a);
-    lNumber_t bNum = LM_InitLNumber(1, b);
+    int n;
+    GR_Node_t* list = GR_GetAssociationList(file, &n);
 
-    lNumber_t result = LM_Multiply(aNum, bNum);
+    int** matrix = GR_AssociationToMatrix(list, n);
 
-    char* resStr = LM_GetLNumberString(result);
+    for (int i = 0; i < n; ++i) {
+        for (int j = 0; j < n; ++j) {
+            ASSERT_EQ(matrix[i][j], 0); // All should be zero
+        }
+        delete[] matrix[i];
+    }
 
-    ASSERT_EQ(1, result.isPositive);
-    ASSERT_STREQ(resStr, "5881032641955555496745229136");
+    delete[] matrix;
 
-    LM_DisposeLNumber(result);
-    LM_DisposeLNumber(aNum);
-    LM_DisposeLNumber(bNum);
-
-    free(resStr);
+    delete[] list;
+    fclose(file);
 }
 
-TEST(LM_Multiply, NegMultPosGivesNeg) {
-    const char* a = "44444444444444444";
-    const char* b = "132323234444";
+TEST(GR_AssociationToMatrixTest, KnGraph) {
+    const char* content = "5\n"
+                          "4 1 2 3 4\n"
+                          "4 0 2 3 4\n"
+                          "4 0 1 3 4\n"
+                          "4 0 1 2 4\n"
+                          "4 0 1 2 3\n";
+    // Five nodes with no connections
+    FILE* file = CreateTempFile(content);
 
-    lNumber_t aNum = LM_InitLNumber(0, a);
-    lNumber_t bNum = LM_InitLNumber(1, b);
+    int n;
+    GR_Node_t* list = GR_GetAssociationList(file, &n);
 
-    lNumber_t result = LM_Multiply(aNum, bNum);
+    int** matrix = GR_AssociationToMatrix(list, n);
 
-    char* resStr = LM_GetLNumberString(result);
+    for (int i = 0; i < n; ++i) {
+        for (int j = 0; j < n; ++j) {
+            if(i == j)
+                ASSERT_EQ(matrix[i][j], 0); //Kn dont have self loops
+            else
+                ASSERT_EQ(matrix[i][j], 1); // All should be one
+        }
+        delete[] matrix[i];
+    }
 
-    ASSERT_EQ(0, result.isPositive);
-    ASSERT_STREQ(resStr, "5881032641955555496745229136");
+    delete[] matrix;
 
-    LM_DisposeLNumber(result);
-    LM_DisposeLNumber(aNum);
-    LM_DisposeLNumber(bNum);
-
-    free(resStr);
+    delete[] list;
+    fclose(file);
 }
 
-TEST(LM_Multiply, NegMultNegGivesPos) {
-    const char* a = "44444444444444444";
-    const char* b = "132323234444";
+TEST(GR_AssociationToMatrixTest, OneWayConnection) {
+    const char* content = "3\n"
+                          "1 2\n"
+                          "0\n"
+                          "0\n";
+    // Node 1 -> Node 2, not vice versa
+    FILE* file = CreateTempFile(content);
 
-    lNumber_t aNum = LM_InitLNumber(0, a);
-    lNumber_t bNum = LM_InitLNumber(0, b);
+    int n;
+    GR_Node_t* list = GR_GetAssociationList(file, &n);
 
-    lNumber_t result = LM_Multiply(aNum, bNum);
+    int** matrix = GR_AssociationToMatrix(list, n);
 
-    char* resStr = LM_GetLNumberString(result);
+    ASSERT_EQ(matrix[0][2], 1);
+    ASSERT_EQ(matrix[2][0], 0);
 
-    ASSERT_EQ(1, result.isPositive);
-    ASSERT_STREQ(resStr, "5881032641955555496745229136");
+    delete[] matrix;
 
-    LM_DisposeLNumber(result);
-    LM_DisposeLNumber(aNum);
-    LM_DisposeLNumber(bNum);
-
-    free(resStr);
+    delete[] list;
+    fclose(file);
 }
 
+TEST(GR_AssociationToMatrixTest, SelfLoop) {
+    const char* content = "3\n3 0 1 2\n1 1\n0\n";
+    // Node 1 has a self-loop and connections to Node 2 and Node 3
+    FILE* file = CreateTempFile(content);
 
-TEST(LM_Power, BigNumber) {
-    const char* a = "2";
-    const char* b = "300";
+    int n;
+    GR_Node_t* list = GR_GetAssociationList(file, &n);
 
-    lNumber_t aNum = LM_InitLNumber(1, a);
-    lNumber_t bNum = LM_InitLNumber(1, b);
+    int** matrix = GR_AssociationToMatrix(list, n);
 
-    lNumber_t result = LM_Power(aNum, bNum);
+    ASSERT_EQ(matrix[0][0], 1);
+    ASSERT_EQ(matrix[1][1], 1);
 
-    char* resStr = LM_GetLNumberString(result);
+    for (int i = 0; i < n; ++i) {
+        delete[] matrix[i];
+    }
 
-    ASSERT_EQ(1, result.isPositive);
-    ASSERT_STREQ(resStr, "2037035976334486086268445688409378161051468393665936250636140449354381299763336706183397376");
+    delete[] matrix;
 
-    LM_DisposeLNumber(result);
-    LM_DisposeLNumber(aNum);
-    LM_DisposeLNumber(bNum);
-    free(resStr);
+    GR_DeleteAssociationList(list, n);
+    fclose(file);
 }
 
-TEST(LM_Power, NegGivesPos) {
-    const char* a = "2";
-    const char* b = "10";
+TEST(GR_GetAssociationListTest, TwoWaysConnection) {
+    const char* content = "4\n0\n2 2 3\n1 1\n0\n";
+    // Node connections: Node 2 -> Node 3 and Node 4; Node 3 -> Node 2
+    FILE* file = CreateTempFile(content);
 
-    lNumber_t aNum = LM_InitLNumber(0, a);
-    lNumber_t bNum = LM_InitLNumber(1, b);
+    int n;
+    GR_Node_t* list = GR_GetAssociationList(file, &n);
 
-    lNumber_t result = LM_Power(aNum, bNum);
+    ASSERT_EQ(n, 4);
+    ASSERT_EQ(list[0].connectionCnt, 0);
+    ASSERT_EQ(list[1].connectionCnt, 2);
+    ASSERT_EQ(list[1].connectedTo[0], 2);
+    ASSERT_EQ(list[1].connectedTo[1], 3);
+    ASSERT_EQ(list[2].connectionCnt, 1);
+    ASSERT_EQ(list[2].connectedTo[0], 1);
+    ASSERT_EQ(list[3].connectionCnt, 0);
 
-    char* resStr = LM_GetLNumberString(result);
-
-    ASSERT_EQ(1, result.isPositive);
-    ASSERT_STREQ(resStr, "1024");
-
-    LM_DisposeLNumber(result);
-    LM_DisposeLNumber(aNum);
-    LM_DisposeLNumber(bNum);
-    free(resStr);
+    GR_DeleteAssociationList(list, n);
+    fclose(file);
 }
-
-TEST(LM_Power, NegGivesNeg) {
-    const char* a = "2";
-    const char* b = "11";
-
-    lNumber_t aNum = LM_InitLNumber(0, a);
-    lNumber_t bNum = LM_InitLNumber(1, b);
-
-    lNumber_t result = LM_Power(aNum, bNum);
-
-    char* resStr = LM_GetLNumberString(result);
-
-    ASSERT_EQ(0, result.isPositive);
-    ASSERT_STREQ(resStr, "2048");
-
-    LM_DisposeLNumber(result);
-    LM_DisposeLNumber(aNum);
-    LM_DisposeLNumber(bNum);
-    free(resStr);
-}
-
-TEST(LM_Power, NumToZero) {
-    const char* a = "2";
-    const char* b = "0";
-
-    lNumber_t aNum = LM_InitLNumber(0, a);
-    lNumber_t bNum = LM_InitLNumber(1, b);
-
-    lNumber_t result = LM_Power(aNum, bNum);
-
-    char* resStr = LM_GetLNumberString(result);
-
-    ASSERT_EQ(1, result.isPositive);
-    ASSERT_STREQ(resStr, "1");
-
-    LM_DisposeLNumber(result);
-    LM_DisposeLNumber(aNum);
-    LM_DisposeLNumber(bNum);
-    free(resStr);
-}
-
 
 int main(int argc, char **argv) {
-    testing::InitGoogleTest(&argc, argv);
+    ::testing::InitGoogleTest(&argc, argv);
     return RUN_ALL_TESTS();
 }
