@@ -33,7 +33,7 @@ int main()
 	}
 
 	// 2 part
-	printf("Ââåäèòå ïåðâûå áóêâû ÔÈÎ, êîòîðîå õîòèòå íàéòè:\n");
+	printf("Введите первые буквы ФИО, которое хотите найти:\n");
 
 #ifdef _WIN32
 	SetConsoleCP(1251);
@@ -43,7 +43,7 @@ int main()
 	find(people, n);
 
 	// Tests
-	printf("Òåñòû:\n\n");
+	printf("Тесты:\n\n");
 
 	Test_init_file_is_null_No1();
 	Test_adding_count_more_than_const_No2();
