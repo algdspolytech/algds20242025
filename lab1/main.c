@@ -32,8 +32,8 @@ int main()
 		printf("%s\n", people[i].surname);
 	}
 
-	// 2 часть
-	printf("Введите первые буквы ФИО, которое хотите найти:\n");
+	// 2 part
+	printf("Г‚ГўГҐГ¤ГЁГІГҐ ГЇГҐГ°ГўГ»ГҐ ГЎГіГЄГўГ» Г”Г€ГЋ, ГЄГ®ГІГ®Г°Г®ГҐ ГµГ®ГІГЁГІГҐ Г­Г Г©ГІГЁ:\n");
 
 #ifdef _WIN32
 	SetConsoleCP(1251);
@@ -42,8 +42,8 @@ int main()
 
 	find(people, n);
 
-	// Тесты
-	printf("Тесты:\n\n");
+	// Tests
+	printf("Г’ГҐГ±ГІГ»:\n\n");
 
 	Test_init_file_is_null_No1();
 	Test_adding_count_more_than_const_No2();
