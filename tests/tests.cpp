@@ -1,117 +1,159 @@
 #include <gtest/gtest.h>
+#include <cstdio>
+#include <cstdlib>
+#include <cstring>
 
 extern "C" {
-#include "LLStack.h"
-#include "ArrStack.h"
+    #include "dfs.h"
 }
 
-TEST(LLStackTest, CreateStack) {
-    LLStack_t stack = LLStackCreate();
-    EXPECT_TRUE(LLStackEmpty(&stack));
+FILE* MakeTMP(const char* data) {
+    FILE* file = fopen("TMP", "w");
+    fputs(data, file);
+    fclose(file);
+
+    file = fopen("TMP", "r");
+    return file;
 }
 
-TEST(LLStackTest, PushElement) {
-    LLStack_t stack = LLStackCreate();
-    int value = 42;
-    LLStackPush(&stack, &value);
-    EXPECT_FALSE(LLStackEmpty(&stack));
+int** MatrixBypass(const char* content, int* n) {
+    FILE* file = MakeTMP(content);
+    int** matrix = DFS_ReadFromFile(file, n);
+    fclose(file);
+    return matrix;
 }
 
-TEST(LLStackTest, PeekTopElement) {
-    LLStack_t stack = LLStackCreate();
-    int value1 = 42;
-    int value2 = 99;
-    LLStackPush(&stack, &value1);
-    LLStackPush(&stack, &value2);
+TEST(DFS_IsConnectedTest, SameNode) {
+    const char* content = "1\n"
+                          "0"; // Single node graph
+    int n;
+    int** matrix = MatrixBypass(content, &n);
 
-    int* topValue = (int*)LLStackPeek(&stack);
-    EXPECT_EQ(*topValue, value2);
+    ASSERT_EQ(DFS_IsConnected(0, 0, matrix, n), 1);
+
+    DFS_MatrixDispose(matrix, n);
 }
 
-TEST(LLStackTest, PopElement) {
-    LLStack_t stack = LLStackCreate();
-    int value1 = 42;
-    int value2 = 99;
-    LLStackPush(&stack, &value1);
-    LLStackPush(&stack, &value2);
+TEST(DFS_IsConnectedTest, NotConnectedDueToOrientation) {
+    const char* content = "3\n"
+                          "0 1 0\n"
+                          "0 0 1\n"
+                          "0 0 0\n"; // Directed graph: 0 -> 1 -> 2
+    int n;
+    int** matrix = MatrixBypass(content, &n);
 
-    void* poppedValue = LLStackPop(&stack);
-    EXPECT_EQ(*(int*)poppedValue, value2);
+    ASSERT_EQ(DFS_IsConnected(2, 1, matrix, n), 0);
 
-    int* newTopValue = (int*)LLStackPeek(&stack);
-    EXPECT_EQ(*newTopValue, value1);
+    DFS_MatrixDispose(matrix, n);
 }
 
-TEST(LLStackTest, EmptyAfterPops) {
-    LLStack_t stack = LLStackCreate();
-    int value1 = 42;
-    int value2 = 99;
-    LLStackPush(&stack, &value1);
-    LLStackPush(&stack, &value2);
+TEST(DFS_IsConnectedTest, DifferentComponentsInUndirectedGraph) {
+    const char* content = "4\n"
+                          "0 1 0 0\n"
+                          "1 0 0 0\n"
+                          "0 0 0 1\n"
+                          "0 0 1 0\n"; // Two components: (0,1) and (2,3)
+    int n;
+    int** matrix = MatrixBypass(content, &n);
 
-    LLStackPop(&stack);
-    LLStackPop(&stack);
+    ASSERT_EQ(DFS_IsConnected(0, 2, matrix, n), 0);
 
-    EXPECT_TRUE(LLStackEmpty(&stack));
+    DFS_MatrixDispose(matrix, n);
 }
 
-TEST(ArrStackTest, CreateStack) {
-    ArrStack_t stack = ArrStackCreate();
-    EXPECT_TRUE(ArrStackEmpty(&stack));
-    ArrStackDestroy(&stack);
+TEST(DFS_IsConnectedTest, ConnectedNodes) {
+    const char* content = "3\n"
+                          "0 1 1\n"
+                          "1 0 1\n"
+                          "1 1 0\n"; // K3
+    int n;
+    int** matrix = MatrixBypass(content, &n);
+
+    ASSERT_EQ(DFS_IsConnected(0, 2, matrix, n), 1);
+\
+    DFS_MatrixDispose(matrix, n);
 }
 
-TEST(ArrStackTest, PushElement) {
-    ArrStack_t stack = ArrStackCreate();
-    int value = 42;
-    ArrStackPush(&stack, &value);
-    EXPECT_FALSE(ArrStackEmpty(&stack));
-    ArrStackDestroy(&stack);
+TEST(DFS_IsConnectedTest, CheckNonAdjacentNodesInDirectedGraph) {
+    const char* content = "4\n"
+                          "0 1 0 0\n"
+                          "0 0 1 0\n"
+                          "0 0 0 1\n"
+                          "0 0 0 0\n"; // Directed graph with no direct connection between nodes
+    int n;
+    int** matrix = MatrixBypass(content, &n);
+
+    ASSERT_EQ(DFS_IsConnected(3, 1, matrix, n), 0);
+    // Clean up
+    DFS_MatrixDispose(matrix, n);
 }
 
-TEST(ArrStackTest, PeekTopElement) {
-    ArrStack_t stack = ArrStackCreate();
-    int value1 = 42;
-    int value2 = 99;
-    ArrStackPush(&stack, &value1);
-    ArrStackPush(&stack, &value2);
+TEST(DFS_IsConnectedTest, SelfLoop) {
+    const char* content = "2\n"
+                          "1 1\n"
+                          "1 0\n"; // Graph with a self-loop at node 0
+    int n;
+    int** matrix = MatrixBypass(content, &n);
 
-    int* topValue = (int*)ArrStackPeek(&stack);
-    EXPECT_EQ(*topValue, value2);
-    ArrStackDestroy(&stack);
+    ASSERT_EQ(DFS_IsConnected(0, 0, matrix, n), 1);
+
+    DFS_MatrixDispose(matrix, n);
 }
 
-TEST(ArrStackTest, PopElement) {
-    ArrStack_t stack = ArrStackCreate();
-    int value1 = 42;
-    int value2 = 99;
-    ArrStackPush(&stack, &value1);
-    ArrStackPush(&stack, &value2);
+TEST(DFS_IsConnectedTest, IsolatedNode) {
+    const char* content = "5\n"
+                          "0 1 0 0 0\n"
+                          "1 0 0 1 1\n"
+                          "0 0 0 0 0\n"
+                          "0 1 0 1 1\n"
+                          "0 1 1 1 0\n"; // Node 2 is isolated
+    int n;
+    int** matrix = MatrixBypass(content, &n);
 
-    void* poppedValue = ArrStackPop(&stack);
-    EXPECT_EQ(*(int*)poppedValue, value2);
+    ASSERT_EQ(DFS_IsConnected(2, 3, matrix, n), 0);
 
-    int* newTopValue = (int*)ArrStackPeek(&stack);
-    EXPECT_EQ(*newTopValue, value1);
-    ArrStackDestroy(&stack);
+    DFS_MatrixDispose(matrix, n);
 }
 
-TEST(ArrStackTest, ResizeOnPush) {
-    ArrStack_t stack = ArrStackCreate();
+TEST(DFS_IsConnectedTest, FullyConnectedUndirectedGraph) {
+    const char* content = "4\n"
+                          "0 1 1 1\n"
+                          "1 0 1 1\n"
+                          "1 1 0 1\n"
+                          "1 1 1 0\n";
+    int n;
+    int** matrix = MatrixBypass(content, &n);
 
-    for (int i = 0; i <= 1024; ++i) {
-        int *value = new int(i);
-        ArrStackPush(&stack, value);
-    }
+    ASSERT_EQ(DFS_IsConnected(2, 3, matrix, n), 1);
 
-    int* topValue = (int*)ArrStackPeek(&stack);
-    EXPECT_EQ(*topValue, 1024);
+    DFS_MatrixDispose(matrix, n);
+}
 
-    while (!ArrStackEmpty(&stack)) {
-        delete (int*)ArrStackPop(&stack);
-    }
+TEST(DFS_IsConnectedTest, MultiplePaths) {
+    const char* content = "5\n"
+                          "0 1 1 0 0\n"
+                          "1 0 1 1 0\n"
+                          "1 1 0 1 1\n"
+                          "0 1 1 0 1\n"
+                          "0 0 1 1 0\n";
+    int n;
+    int** matrix = MatrixBypass(content, &n);
+    ASSERT_EQ(DFS_IsConnected(0, 4, matrix, n), 1);
 
-    ArrStackDestroy(&stack);
+    DFS_MatrixDispose(matrix, n);
+}
+
+TEST(DFS_IsConnectedTest, NonExistentNode) {
+    const char* content = "3\n"
+                          "0 1 1\n"
+                          "1 0 1\n"
+                          "1 1 0\n";
+    int n;
+    int** matrix = MatrixBypass(content, &n);
+    
+    ASSERT_EQ(DFS_IsConnected(-1, -2, matrix, n), 0);
+
+    DFS_MatrixDispose(matrix, n);
 }
 
 int main(int argc, char **argv) {
