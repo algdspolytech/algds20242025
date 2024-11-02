@@ -7,7 +7,7 @@ FILE* init(const char* filename)
 	FILE* file = fopen(filename, "r");
 	if (file == NULL)
 	{
-		printf("Ошибка открытия файла");
+		printf("РћС€РёР±РєР° РѕС‚РєСЂС‹С‚РёСЏ С„Р°Р№Р»Р°");
 		return;
 	}
 
@@ -44,7 +44,7 @@ int adding(FILE* file, Full_name* arr)
 		count++;
 		if (count >= MAX_LEN_FILE)
 		{
-			printf("Достигнут предел записей");
+			printf("Р”РѕСЃС‚РёРіРЅСѓС‚ РїСЂРµРґРµР» Р·Р°РїРёСЃРµР№");
 			break;
 		}
 	}
@@ -61,7 +61,7 @@ void find(Full_name* people, int count)
 	scanf("%s %s %s", fullname.surname, fullname.name, fullname.patronymic);
 	fullname.patronymic[strcspn(fullname.patronymic, "\n")] = '\0';
 
-	printf("Найденные ФИО:\n");
+	printf("ГЌГ Г©Г¤ГҐГ­Г­Г»ГҐ Г”Г€ГЋ:\n");
 	for (int i = 0; i < count; i++)
 	{
 		if ((fullname.surname[0] == '\0' || strstr(people[i].surname, fullname.surname) == people[i].surname) &&
