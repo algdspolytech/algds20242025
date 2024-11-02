@@ -1,0 +1,7 @@
+apple 46
+joke 2000
+car 2
+718 89
+word 1
+52 52
+kol8 9
