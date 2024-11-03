@@ -1,21 +1,21 @@
-#pragma once
+п»ї#pragma once
 #include <stdio.h>
 #include <stdlib.h>
 
 #include "HashMap.h"
 
-#define INPUT_FILE "graph.txt"
+#define INPUT_FILE "input.txt"
 #define OUTPUT_FILE "output.txt"
 
+// Р¤СѓРЅС†РёСЏ РїРѕР»СѓС‡Р°СЋС‰Р°СЏ СЃР»РѕРІР° РёР· С„Р°Р№Р»Р°
+char **get_words_from_file(FILE *file);
 
-// Функция считывающая слова
-char** get_words_from_file(FILE* file);
+// Р¤СѓРЅРєС†РёСЏ СЃРѕР·РґР°СЋС‰Р°СЏ РЅР° РѕСЃРЅРѕРІР°РЅРёРё РЅР°РґРѕСЂР° СЃР»РѕРІ, СЃР»РѕРІР°СЂСЊ РІ РєРѕС‚РѕСЂРѕРј РєР°Р¶РґРѕРјСѓ СЃР»РѕРІСѓ
+// СЃС‚Р°РІРёС‚СЊСЃСЏ С‡РёСЃР»Рѕ РѕС‚ 0 РґРѕ n
+HashMap *get_words_table(char **words);
 
-// Функция создающая словарь слов, где каждому слову сопоставляется число от 1 до n
-HashMap* get_words_table(char** words);
+// Р¤СѓРЅРєС†РёСЏ СЃС‡РёС‚С‹РІР°СЋС‰Р°СЏ РёР· С„Р°Р№Р»Р° СЃРІСЏР·Рё РјРµР¶РґСѓ СѓР·Р»Р°РјРё РіСЂР°С„Р°
+int **get_segments(FILE *file, HashMap *dict);
 
-// Функция считывающая из файла связи между словами
-int** get_segments(FILE* file, HashMap* dict);
-
-// Рекурсивная функция топологической сортировки
-void top_sort(int i, int* visited, int* st, int** graph, int length);
+// Р РµРєСѓСЂСЃРёРІРЅР°СЏ С„СѓРЅРєС†РёСЏ С‚РѕРїРѕР»РѕРіРёС‡РµСЃРєРѕР№ СЃРѕСЂС‚РёСЂРѕРІРєРё
+void top_sort(int i, int *visited, int *st, int **graph, int length);

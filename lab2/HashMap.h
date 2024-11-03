@@ -1,32 +1,36 @@
-#pragma once
+п»ї#pragma once
 
-#include <stdlib.h>
-#include <stdio.h>
 #include <stdint.h>
+#include <stdio.h>
+#include <stdlib.h>
+
 
 #include <memory.h>
 
-
 typedef struct item {
-	char* key;
-	int value;
+  char *key;
+  int value;
 } item;
 
-// Структура хеш-таблицы
+// РЎС‚СЂСѓРєС‚СѓСЂР° С…РµС€-С‚Р°Р±Р»РёС†С‹
 typedef struct HashMap {
-	size_t size;
-	item** items;
+  size_t size;
+  item **items;
 
-	size_t keys_size;
-	char** keys;
+  size_t keys_size;
+  char **keys;
 
-	uint16_t mod;
+  uint16_t mod;
 } HashMap;
 
-HashMap* CreateHashMap(uint16_t mod); // Функция создания хеш-таблицы
-void AddItem(HashMap* hm, char* key, int value); // Функция добавления записы в хеш-таблицу
-int GetValue(HashMap* hm, char* key); // Получаение значения по ключю
-char* GetKeyByValue(HashMap* hm, int value); // Функция получения ключа по значению (просто перебирает все ключи пока не найдет нужный)
-char** GetKeys(HashMap* hm); // Фунция получения списка всех ключей из хеш-таблицы
+HashMap *CreateHashMap(uint16_t mod); // Р¤СѓРЅРєС†РёСЏ СЃРѕР·РґР°РЅРёСЏ С…РµС€-С‚Р°Р±Р»РёС†С‹
+void AddItem(HashMap *hm, char *key,
+             int value); // Р¤СѓРЅРєС†РёСЏ РґРѕР±Р°РІР»РµРЅРёСЏ Р·Р°РїРёСЃС‹ РІ С…РµС€-С‚Р°Р±Р»РёС†Сѓ
+int GetValue(HashMap *hm, char *key); // РџРѕР»СѓС‡Р°РµРЅРёРµ Р·РЅР°С‡РµРЅРёСЏ РїРѕ РєР»СЋС‡СЋ
+char *GetKeyByValue(HashMap *hm,
+                    int value); // Р¤СѓРЅРєС†РёСЏ РїРѕР»СѓС‡РµРЅРёСЏ РєР»СЋС‡Р° РїРѕ Р·РЅР°С‡РµРЅРёСЋ (РїСЂРѕСЃС‚Рѕ
+                                // РїРµСЂРµР±РёСЂР°РµС‚ РІСЃРµ РєР»СЋС‡Рё РїРѕРєР° РЅРµ РЅР°Р№РґРµС‚ РЅСѓР¶РЅС‹Р№)
+char **
+GetKeys(HashMap *hm); // Р¤СѓРЅС†РёСЏ РїРѕР»СѓС‡РµРЅРёСЏ СЃРїРёСЃРєР° РІСЃРµС… РєР»СЋС‡РµР№ РёР· С…РµС€-С‚Р°Р±Р»РёС†С‹
 
-int cmp_str(char* s1, char* s2); // Функция сравнения строк
+int cmp_str(char *s1, char *s2); // Р¤СѓРЅРєС†РёСЏ СЃСЂР°РІРЅРµРЅРёСЏ СЃС‚СЂРѕРє

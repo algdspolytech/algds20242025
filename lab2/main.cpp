@@ -1,66 +1,53 @@
-#include "LabC.h"
-
+Ôªø#include "LabC.h"
 
 int main() {
-	HashMap* hm = CreateHashMap((uint16_t)1024);
+  // –°—á–∏—Ç—ã–≤–∞–µ–º –¥–∞–Ω–Ω—ã–µ –∏–∑ —Ñ–∞–π–ª–∞
+  FILE *file = fopen(INPUT_FILE, "r");
+  char **words = get_words_from_file(file);
 
-	char a[] = "asfdiu21";
-	AddItem(hm, a, 24);
-	char b[] = "srey1";
-	AddItem(hm, b, 267);
-	char c[] = "ifkhsd";
-	AddItem(hm, c, 90);
+  HashMap *dict = get_words_table(words);
 
-	char** keys = GetKeys(hm);
+  char **keys = GetKeys(dict);
 
-	printf("%s %s\n", keys[0], a);
-	printf("%s %s\n", keys[1], b);
-	printf("%s %s\n", keys[2], c);
-	/*
-	// —˜ËÚ˚‚‡ÂÏ ‰‡ÌÌ˚Â ËÁ Ù‡ÈÎ‡
-	FILE* file =  fopen(INPUT_FILE, "r");
-	char** words = get_words_from_file(file);
+  int **graph = get_segments(file, dict);
+  int length = dict->keys_size;
 
-	HashMap* dict = get_words_table(words);
+  // –í—ã–ø–æ–ª–Ω—è–µ–º —Ç–æ–ø–æ–ª–æ–≥–∏—á–µ—Å–∫—É—é —Å–æ—Ä—Ç–∏—Ä–æ–≤–∫—É
 
-	char** keys = GetKeys(dict);
+  int *st = (int *)malloc((length + 1) * sizeof(int));
+  st[0] = -1;
+  int *visited = (int *)malloc(length * sizeof(int));
+  for (int i = 0; i < length; i++)
+    visited[i] = 0;
 
-	int** graph = get_segments(file, dict);
-	int length = dict->keys_size;
+  // –í—ã–∑—ã–≤–∞–µ–º —Ä–µ–∫—É—Ä—Å–∏–≤–Ω—É—é –≤—Å–ø–æ–º–æ–≥–∞—Ç–µ–ª—å–Ω—É—é —Ñ—É–Ω–∫—Ü–∏—é —Ç–æ–ø–æ–ª–æ–≥–∏—á–µ—Å–∫–æ–π —Å–æ—Ä—Ç–∏—Ä–æ–≤–∫–∏ –¥–ª—è
+  // –∫–∞–∂–¥–æ–π –≤–µ—Ä—à–∏–Ω—ã
+  for (int i = 0; i < length; i++)
+    if (visited[i] == 0)
+      top_sort(i, visited, st, graph, length);
 
-	// ¬˚ÔÓÎÌˇÂÏ ÚÓÔÓÎÓ„Ë˜ÂÒÍÛ˛ ÒÓÚËÓ‚ÍÛ
+  length = 0;
+  while (st[length] != -1)
+    length++;
 
-	int* st = (int*)malloc((length + 1) * sizeof(int));
-	st[0] = -1;
-	int* visited = (int*)malloc(length * sizeof(int));
-	for (int i = 0;i < length;i++) visited[i] = 0;
+  // –í–æ–∑–º–æ–∂–Ω–∞ —Å–∏—Ç—É–∞—Ü–∏—è —á—Ç–æ —Ç–∞–∫–æ–π –ø–æ—Å–ª–µ–¥–æ–≤–∞—Ç–µ–ª—å–Ω–æ—Å—Ç–∏ –Ω–µ —Å—É—â–µ—Å—Ç–≤—É–µ—Ç –ø–æ—ç—Ç–æ–º—É
+  // –ø—Ä–æ–≤–µ—Ä–∏–º —á—Ç–æ –æ–Ω–∞ –±—ã–ª–∞ —Å–æ—Å—Ç–∞–≤–ª–µ–Ω–∞ –ø—Ä–∞–≤–∏–ª—å–Ω–æ
+  int flag = 1;
+  for (int i = 0; i < length; i++) {
+    for (int j = i; j < length; j++) {
+      if (graph[st[i]][st[j]] == 1) {
+        flag = 0;
+      }
+    }
+  }
 
-	// ¬˚Á˚‚‡ÂÏ ÂÍÛÒË‚ÌÛ˛ ‚ÒÔÓÏÓ„‡ÚÂÎ¸ÌÛ˛ ÙÛÌÍˆË˛ ÚÓÔÓÎÓ„Ë˜ÂÒÍÓÈ ÒÓÚËÓ‚ÍË ‰Îˇ Í‡Ê‰ÓÈ ‚Â¯ËÌ˚
-	for (int i = 0; i < length; i++)
-		if (visited[i] == 0)
-			top_sort(i, visited, st, graph, length);
-
-	length = 0;
-	while (st[length] != -1) length++;
-
-	// ¬ÓÁÏÓÊÌ‡ ÒËÚÛ‡ˆËˇ ˜ÚÓ Ú‡ÍÓÈ ÔÓÒÎÂ‰Ó‚‡ÚÂÎ¸ÌÓÒÚË ÌÂ ÒÛ˘ÂÒÚ‚ÛÂÚ ÔÓ˝ÚÓÏÛ ÔÓ‚ÂËÏ ˜ÚÓ ÓÌ‡ ·˚Î‡ ÒÓÒÚ‡‚ÎÂÌ‡ Ô‡‚ËÎ¸ÌÓ
-	int flag = 1;
-	for (int i = 0;i < length;i++) {
-		for (int j = i;j < length;j++) {
-			if (graph[st[i]][st[j]] == 1) {
-				flag = 0;
-			}
-		}
-	}
-
-	// œÓ ÂÁÛÎ¸Ú‡Ú‡Ï ÚÓÔÓÎÓ„Ë˜ÂÒÍÓÈ ÒÓÚËÓ‚ÍË Ë ÔÓ‚ÂÍË Á‡ÔËÒ˚‚‡ÂÏ ÂÁÛÎ¸Ú‡Ú ‚ ‚˚ıÓ‰ÌÓÈ Ù‡ÈÎ
-	file = fopen(OUTPUT_FILE, "w");
-	if (flag) {
-		for (int j = length - 1;j >= 0;j--)
-			fprintf(file, "%s ", GetKeyByValue(dict, st[j]));
-	}
-	else {
-		fprintf(file, "[Error]");
-	}
-	*/
+  // –ü–æ —Ä–µ–∑—É–ª—å—Ç–∞—Ç–∞–º —Ç–æ–ø–æ–ª–æ–≥–∏—á–µ—Å–∫–æ–π —Å–æ—Ä—Ç–∏—Ä–æ–≤–∫–∏ –∏ –ø—Ä–æ–≤–µ—Ä–∫–∏ –∑–∞–ø–∏—Å—ã–≤–∞–µ–º —Ä–µ–∑—É–ª—å—Ç–∞—Ç –≤
+  // –≤—ã—Ö–æ–¥–Ω–æ–π —Ñ–∞–π–ª
+  file = fopen(OUTPUT_FILE, "w");
+  if (flag) {
+    for (int j = length - 1; j >= 0; j--)
+      fprintf(file, "%s ", GetKeyByValue(dict, st[j]));
+  } else {
+    fprintf(file, "[Error]");
+  }
 }

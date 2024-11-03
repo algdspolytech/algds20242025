@@ -1,130 +1,126 @@
-#include "pch.h"
+п»ї#include "../LabC/HashMap.cpp"
 #include "../LabC/LabC.cpp"
-#include "../LabC/HashMap.cpp"
+#include "pch.h"
 
-
-// Тестируем функцию создания хешмапа
+// РўРµСЃС‚РёСЂСѓРµРј С„СѓРЅРєС†РёСЋ СЃРѕР·РґР°РЅРёСЏ С…РµС€РјР°РїР°
 TEST(HashMap_Tests, CreateHashMap_test__1) {
-	HashMap* hm = CreateHashMap((uint16_t)1024);
+  HashMap *hm = CreateHashMap((uint16_t)1024);
 
-
-	EXPECT_EQ(hm->mod, 52685);
-	EXPECT_EQ(hm->keys_size, 0);
-	EXPECT_EQ(hm->size, 0);
+  EXPECT_EQ(hm->mod, 52685);
+  EXPECT_EQ(hm->keys_size, 0);
+  EXPECT_EQ(hm->size, 0);
 }
 
-// Тестируем функцию добавления пары (ключ, значение) в хешмап
+// РўРµСЃС‚РёСЂСѓРµРј С„СѓРЅРєС†РёСЋ РґРѕР±Р°РІР»РµРЅРёСЏ РїР°СЂС‹ (РєР»СЋС‡, Р·РЅР°С‡РµРЅРёРµ) РІ С…РµС€РјР°Рї
 TEST(HashMap_Tests, AddItem_test__2) {
-	HashMap* hm = CreateHashMap((uint16_t)1024);
+  HashMap *hm = CreateHashMap((uint16_t)1024);
 
-	char a[] = "abc";
+  char a[] = "abc";
 
-	AddItem(hm, a, 13);
+  AddItem(hm, a, 13);
 
-	EXPECT_EQ(GetValue(hm, a), 13);
+  EXPECT_EQ(GetValue(hm, a), 13);
 }
 
-// Тестируем функцию получения значения по ключу
+// РўРµСЃС‚РёСЂСѓРµРј С„СѓРЅРєС†РёСЋ РїРѕР»СѓС‡РµРЅРёСЏ Р·РЅР°С‡РµРЅРёСЏ РїРѕ РєР»СЋС‡Сѓ
 TEST(HashMap_Tests, GetValue_test__3) {
-	HashMap* hm = CreateHashMap((uint16_t)1024);
+  HashMap *hm = CreateHashMap((uint16_t)1024);
 
-	char b[] = "asfdiu21";
-	AddItem(hm, b, 1237);
+  char b[] = "asfdiu21";
+  AddItem(hm, b, 1237);
 
-	int value = GetValue(hm, b);
+  int value = GetValue(hm, b);
 
-	EXPECT_EQ(value, 1237);
+  EXPECT_EQ(value, 1237);
 }
 
-// Тестируем функцию получения ключа по значению
+// РўРµСЃС‚РёСЂСѓРµРј С„СѓРЅРєС†РёСЋ РїРѕР»СѓС‡РµРЅРёСЏ РєР»СЋС‡Р° РїРѕ Р·РЅР°С‡РµРЅРёСЋ
 TEST(HashMap_Tests, GetKeyByValue_test__4) {
-	HashMap* hm = CreateHashMap((uint16_t)1024);
+  HashMap *hm = CreateHashMap((uint16_t)1024);
 
-	char b[] = "asfdiu21";
-	AddItem(hm, b, 563);
+  char b[] = "asfdiu21";
+  AddItem(hm, b, 563);
 
-	char* c = GetKeyByValue(hm, 563);
+  char *c = GetKeyByValue(hm, 563);
 
-	EXPECT_EQ(c, b);
+  EXPECT_EQ(c, b);
 }
 
-// Тестируем функцию сравнения строк (строки разной длинны)
+// РўРµСЃС‚РёСЂСѓРµРј С„СѓРЅРєС†РёСЋ СЃСЂР°РІРЅРµРЅРёСЏ СЃС‚СЂРѕРє (СЃС‚СЂРѕРєРё СЂР°Р·РЅРѕР№ РґР»РёРЅРЅС‹)
 TEST(HashMap_Tests, cmpr_str_DiffLengthStrings_test__6) {
-	char a[] = "srey1";
-	char b[] = "srey1234";
+  char a[] = "srey1";
+  char b[] = "srey1234";
 
-	int equal = cmp_str(a, b);
+  int equal = cmp_str(a, b);
 
-	EXPECT_EQ(equal, 0);
+  EXPECT_EQ(equal, 0);
 }
 
-
-// Тестируем функцию сравнения строк (строки не равны)
+// РўРµСЃС‚РёСЂСѓРµРј С„СѓРЅРєС†РёСЋ СЃСЂР°РІРЅРµРЅРёСЏ СЃС‚СЂРѕРє (СЃС‚СЂРѕРєРё РЅРµ СЂР°РІРЅС‹)
 TEST(HashMap_Tests, cmpr_str_DiffStrings_test__7) {
-	char a[] = "sre21";
-	char b[] = "srey1";
+  char a[] = "sre21";
+  char b[] = "srey1";
 
-	int equal = cmp_str(a, b);
+  int equal = cmp_str(a, b);
 
-	EXPECT_EQ(equal, 0);
+  EXPECT_EQ(equal, 0);
 }
 
-
-// Тестируем функцию сравнения строк (строки равны)
+// РўРµСЃС‚РёСЂСѓРµРј С„СѓРЅРєС†РёСЋ СЃСЂР°РІРЅРµРЅРёСЏ СЃС‚СЂРѕРє (СЃС‚СЂРѕРєРё СЂР°РІРЅС‹)
 TEST(HashMap_Tests, cmpr_str_DiffStrings_test__8) {
-	char a[] = "sre21";
-	char b[] = "sre21";
+  char a[] = "sre21";
+  char b[] = "sre21";
 
-	int equal = cmp_str(a, b);
+  int equal = cmp_str(a, b);
 
-	EXPECT_EQ(equal, 1);
+  EXPECT_EQ(equal, 1);
 }
 
-
-// Тестируем функцию сравнения строк (строки пустые)
+// РўРµСЃС‚РёСЂСѓРµРј С„СѓРЅРєС†РёСЋ СЃСЂР°РІРЅРµРЅРёСЏ СЃС‚СЂРѕРє (СЃС‚СЂРѕРєРё РїСѓСЃС‚С‹Рµ)
 TEST(HashMap_Tests, cmpr_str_DiffStrings_test__9) {
-	char a[] = "";
-	char b[] = "";
+  char a[] = "";
+  char b[] = "";
 
-	int equal = cmp_str(a, b);
+  int equal = cmp_str(a, b);
 
-	EXPECT_EQ(equal, 1);
+  EXPECT_EQ(equal, 1);
 }
 
-// Тестируем функцию получения списка ключей
+// РўРµСЃС‚РёСЂСѓРµРј С„СѓРЅРєС†РёСЋ РїРѕР»СѓС‡РµРЅРёСЏ СЃРїРёСЃРєР° РєР»СЋС‡РµР№
 TEST(HashMap_Tests, GetKeys_test__5) {
-	HashMap* hm = CreateHashMap((uint16_t)1024);
+  HashMap *hm = CreateHashMap((uint16_t)1024);
 
-	char a[] = "asfdiu21";
-	AddItem(hm, a, 24);
-	char b[] = "srey1";
-	AddItem(hm, b, 267);
-	char c[] = "asfdiu21";
-	AddItem(hm, c, 90);
+  char a[] = "asfdiu21";
+  AddItem(hm, a, 24);
+  char b[] = "srey1";
+  AddItem(hm, b, 267);
+  char c[] = "asfdiu21";
+  AddItem(hm, c, 90);
 
-	char** keys = GetKeys(hm);
+  char **keys = GetKeys(hm);
 
-	EXPECT_EQ(cmp_str(a, keys[0]), 1);
-	EXPECT_EQ(cmp_str(b, keys[1]), 1);
-	EXPECT_EQ(cmp_str(c, keys[2]), 1);
+  EXPECT_EQ(cmp_str(a, keys[0]), 1);
+  EXPECT_EQ(cmp_str(b, keys[1]), 1);
+  EXPECT_EQ(cmp_str(c, keys[2]), 1);
 }
 
-// Тестируем функции которая создает словарь (сопоставляет каждому слову число от 0 до n)
+// РўРµСЃС‚РёСЂСѓРµРј С„СѓРЅРєС†РёРё РєРѕС‚РѕСЂР°СЏ СЃРѕР·РґР°РµС‚ СЃР»РѕРІР°СЂСЊ (СЃРѕРїРѕСЃС‚Р°РІР»СЏРµС‚ РєР°Р¶РґРѕРјСѓ СЃР»РѕРІСѓ С‡РёСЃР»Рѕ
+// РѕС‚ 0 РґРѕ n)
 TEST(LabC_Tests, get_words_table_test__10) {
-	char** words = (char**)malloc(sizeof(char*) * 3);
+  char **words = (char **)malloc(sizeof(char *) * 3);
 
-	words[0] = (char*)malloc(sizeof(char) * 3);
-	for (int i = 0;i < 3;i++)
-		words[0][i] = "ab"[i];
+  words[0] = (char *)malloc(sizeof(char) * 3);
+  for (int i = 0; i < 3; i++)
+    words[0][i] = "ab"[i];
 
-	words[1] = (char*)malloc(sizeof(char) * 3);
-	for (int i = 0;i < 3;i++)
-		words[1][i] = "bf"[i];
+  words[1] = (char *)malloc(sizeof(char) * 3);
+  for (int i = 0; i < 3; i++)
+    words[1][i] = "bf"[i];
 
-	words[2] = NULL;
+  words[2] = NULL;
 
-	HashMap* dict = get_words_table(words);
+  HashMap *dict = get_words_table(words);
 
-	for (int i = 0;i < 2;i++)
-		EXPECT_EQ(i, GetValue(dict, words[i]));
+  for (int i = 0; i < 2; i++)
+    EXPECT_EQ(i, GetValue(dict, words[i]));
 }
