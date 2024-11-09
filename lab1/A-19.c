@@ -20,10 +20,10 @@ void DestroyList(list_t* list) {
     while (list->head != NULL) {
         node_t* p = list->head;
         list->head = list->head->next;
-        free(p->data); // ������
-        free(p);       // ����
+        free(p->data); // ñòðîêó
+        free(p);       // óçåë
     }
-    free(list); //  ������
+    free(list); //  ñïèñîê
 }
 
 void PrintLine(char* str) {
@@ -88,7 +88,7 @@ list_t* SortList(list_t* list) {
     node_t* ptr1;
     node_t* lptr = NULL;
 
-    //���������
+    //ïóçûðüêîì
     do {
         swapped = 0;
         ptr1 = list->head;
@@ -104,4 +104,14 @@ list_t* SortList(list_t* list) {
     } while (swapped);
 
     return list;
+}
+
+
+char* GetElement(list_t* list, int index) {
+    node_t* current = list->head;
+    for (int i = 0; i < index; i++) {
+        if (current == NULL) return NULL; // если индекс выходит за пределы
+        current = current->next;
+    }
+    return current ? current->data : NULL;
 }
