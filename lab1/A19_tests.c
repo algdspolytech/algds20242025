@@ -19,7 +19,8 @@ void utest_Standard() {
 
     printf("\nAfter sorting:\n");
     PrintList(myList);
-
+    assert(strcmp(GetElement(myList, 0), GetElement(myList, 1)) <= 0 && "List is not sorted correctly: first > second");
+    assert(strcmp(GetElement(myList, 1), GetElement(myList, 2)) <= 0 && "List is not sorted correctly: second > third");
     DestroyList(myList);
 }
 
@@ -36,7 +37,8 @@ void utest_Numeric() {
 
     printf("\nAfter sorting:\n");
     PrintList(myList);
-
+    assert(strcmp(GetElement(myList, 0), GetElement(myList, 1)) <= 0 && "List is not sorted correctly: first > second");
+    assert(strcmp(GetElement(myList, 1), GetElement(myList, 2)) <= 0 && "List is not sorted correctly: second > third");
     DestroyList(myList);
 }
 
@@ -53,7 +55,8 @@ void utest_Numeric_Standard() {
 
     printf("\nAfter sorting:\n");
     PrintList(myList);
-
+    assert(strcmp(GetElement(myList, 0), GetElement(myList, 1)) <= 0 && "List is not sorted correctly: first > second");
+    assert(strcmp(GetElement(myList, 1), GetElement(myList, 2)) <= 0 && "List is not sorted correctly: second > third");
     DestroyList(myList);
 }
 
@@ -70,7 +73,8 @@ void utest_SpecialCharacter_Numeric() {
 
     printf("\nAfter sorting:\n");
     PrintList(myList);
-
+    assert(strcmp(GetElement(myList, 0), GetElement(myList, 1)) <= 0 && "List is not sorted correctly: first > second");
+    assert(strcmp(GetElement(myList, 1), GetElement(myList, 2)) <= 0 && "List is not sorted correctly: second > third");
     DestroyList(myList);
 }
 
@@ -88,7 +92,8 @@ void utest_Numeric_mixed_Standard() {
 
     printf("\nAfter sorting:\n");
     PrintList(myList);
-
+    assert(strcmp(GetElement(myList, 0), GetElement(myList, 1)) <= 0 && "List is not sorted correctly: first > second");
+    assert(strcmp(GetElement(myList, 1), GetElement(myList, 2)) <= 0 && "List is not sorted correctly: second > third");
     DestroyList(myList);
 }
 
@@ -105,7 +110,8 @@ void utest_Space_Numeric() {
 
     printf("\nAfter sorting:\n");
     PrintList(myList);
-
+    assert(strcmp(GetElement(myList, 0), GetElement(myList, 1)) <= 0 && "List is not sorted correctly: first > second");
+    assert(strcmp(GetElement(myList, 1), GetElement(myList, 2)) <= 0 && "List is not sorted correctly: second > third");
     DestroyList(myList);
 }
 
@@ -123,7 +129,8 @@ void utest_SpecialCharacter_Standard() {
 
     printf("\nAfter sorting:\n");
     PrintList(myList);
-
+    assert(strcmp(GetElement(myList, 0), GetElement(myList, 1)) <= 0 && "List is not sorted correctly: first > second");
+    assert(strcmp(GetElement(myList, 1), GetElement(myList, 2)) <= 0 && "List is not sorted correctly: second > third");
     DestroyList(myList);
 }
 
@@ -140,7 +147,8 @@ void utest_Low_Upper_case() {
 
     printf("\nAfter sorting:\n");
     PrintList(myList);
-
+    assert(strcmp(GetElement(myList, 0), GetElement(myList, 1)) <= 0 && "List is not sorted correctly: first > second");
+    assert(strcmp(GetElement(myList, 1), GetElement(myList, 2)) <= 0 && "List is not sorted correctly: second > third");
     DestroyList(myList);
 }
 
@@ -158,7 +166,8 @@ void utest_Numeric_Standard_Special() {
 
     printf("\nAfter sorting:\n");
     PrintList(myList);
-
+    assert(strcmp(GetElement(myList, 0), GetElement(myList, 1)) <= 0 && "List is not sorted correctly: first > second");
+    assert(strcmp(GetElement(myList, 1), GetElement(myList, 2)) <= 0 && "List is not sorted correctly: second > third");
     DestroyList(myList);
 }
 
@@ -175,7 +184,8 @@ void utest_different_Length() {
 
     printf("\nAfter sorting:\n");
     PrintList(myList);
-
+    assert(strcmp(GetElement(myList, 0), GetElement(myList, 1)) <= 0 && "List is not sorted correctly: first > second");
+    assert(strcmp(GetElement(myList, 1), GetElement(myList, 2)) <= 0 && "List is not sorted correctly: second > third");
     DestroyList(myList);
 }
 
