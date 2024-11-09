@@ -24,4 +24,4 @@ char* CopyStr(char* from);
 void AddToList(list_t* list, char data[]);
 void SwapNodes(node_t* a, node_t* b);
 list_t* SortList(list_t* list);
-
+char* GetElement(list_t* list, int index);
