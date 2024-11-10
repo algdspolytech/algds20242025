@@ -237,49 +237,31 @@ int getStrLength(char *str) {
     return res;
 }
 
-char **getCopyCharArr(char **arr, int size) {
-    char **res = calloc(sizeof(char *), size);
-    if (res == NULL) {
-        printf("\neror getCopyCharArr\n");
+void printStrArr(char **arr, int size) {
+    if (arr == NULL) {
+        printf("error");
         return;
     }
-    for (int i = 0; i < size; i++) {
-        int lenghCurrentWord = getStrLength(arr[i]);
-        res[i] = calloc(sizeof(char), lenghCurrentWord);
-        if (res[i] == NULL) {
-            printf("\neror getCopyCharArr\n");
-            return;
-        }
-        for (int j = 0; j < lenghCurrentWord; j++) {
-            res[i][j] = arr[i][j];
-        }
-    }
-    return res;
-}
-
-int compareStrArrays(char **arr1, char **arr2, int size) {
-    for (int i = 0; i < size; i++) {
-        if (!compareStr(arr1[i], arr2[i])) return 0;
-    }
-    return 1;
-}
-
-void printStrArr(char **arr, int size) {
     for (int i = 0; i < size; i++) {
         printf("%s ", arr[i]);
     }
 }
 
-struct algorithmProfessorResult algorithmProfessor(struct couple *couples, int sizeCouples) {
-    char *errT = "error";
-    char **err = &errT;
+int getMaxSwapNum(int sizeOfArray) {
+    int res = 0;
+    for (int i = 1; i < sizeOfArray; i++) res += i;
+    return res;
+}
 
+struct algorithmProfessorResult algorithmProfessor(struct couple *couples, int sizeCouples) {
     struct createStrArrayResult arrayStruct = createStrArray(couples, sizeCouples);
     int arrSize = arrayStruct.size;
     char **arr = arrayStruct.arr;
 
-    char **startArrCopy = getCopyCharArr(arr, arrSize);
     int isError = 0;
+
+    int maxSwapNum = getMaxSwapNum(arrSize);
+    int countSwap = 0;
     while (1) {
         int break_while = 0;
         for (int i = 0; i < arrSize - 1; i++) {
@@ -287,8 +269,8 @@ struct algorithmProfessorResult algorithmProfessor(struct couple *couples, int s
             for (int j = i + 1; j < arrSize; j++) {
                 if (!isTrueOrder(couples, sizeCouples, arr[i], arr[j])) {
                     pastSelectedItemBeforeItem(arr, i, j);
-
-                    if (compareStrArrays(startArrCopy, arr, arrSize)) {
+                    countSwap++;
+                    if (countSwap > maxSwapNum) {
                         break_while = 1;
                         isError = 1;
                     }
@@ -309,8 +291,8 @@ struct algorithmProfessorResult algorithmProfessor(struct couple *couples, int s
         res.size = arrSize;
     } else {
         free(arr);
-        res.arr = err;
-        res.size = 1;
+        res.arr = NULL;
+        res.size = 0;
     }
     return res;
 }
@@ -318,7 +300,7 @@ struct algorithmProfessorResult algorithmProfessor(struct couple *couples, int s
 int main() {
     char *path = "../tests/testSimple.txt";
     char *str = readFile(path);
-    printf("\n%s\n", str);
+    printf("\n%s\n\n", str);
 
     struct getCouplesResult couplesResult = getCouples(str);
     struct couple *couples = couplesResult.couples;

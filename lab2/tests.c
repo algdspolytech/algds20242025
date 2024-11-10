@@ -106,9 +106,8 @@ void algorithmProfessor_testError_Error_11() {
     int couplesSize = couplesResult.size;
 
     struct algorithmProfessorResult res = algorithmProfessor(couples, couplesSize);
-    char **arr = res.arr;
 
-    assert(compareStr(arr[0], "error"));
+    assert(res.arr == NULL && res.size == 0);
 }
 
 void algorithmProfessor_notTheOnlySolution_NotError_12() {

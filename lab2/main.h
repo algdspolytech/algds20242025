@@ -45,9 +45,7 @@ int isTrueOrder(struct couple *couples, int size, char *x, char *y);
 
 int getStrLength(char *str);
 
-char **getCopyCharArr(char **arr, int size);
-
-int compareStrArrays(char **arr1, char **arr2, int size);
+int getMaxSwapNum(int sizeOfArray);
 
 void printStrArr(char **arr, int size);
 
