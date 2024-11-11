@@ -14,8 +14,8 @@
 
 typedef struct {
     char words[MAX_WORDS][MAX_LENGTH];
-    int adjMatrix[MAX_WORDS][MAX_WORDS]; // матрица упорядоченных пар
-    int indegree[MAX_WORDS]; // сколько ребер входит в вершину
+    int adjMatrix[MAX_WORDS][MAX_WORDS]; // РјР°С‚СЂРёС†Р° СѓРїРѕСЂСЏРґРѕС‡РµРЅРЅС‹С… РїР°СЂ
+    int indegree[MAX_WORDS]; // СЃРєРѕР»СЊРєРѕ СЂРµР±РµСЂ РІС…РѕРґРёС‚ РІ РІРµСЂС€РёРЅСѓ
     int wordCount;
 } Graph;
 
