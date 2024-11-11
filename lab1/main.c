@@ -1,14 +1,11 @@
 #define _CRT_SECURE_NO_WARNINGS
 
 #include <stdio.h>
-#include <locale.h>
 #include "funcs.h"
 #include "tests.h"
 
 int main()
 {
-	setlocale(LC_ALL, "Rus");
-
     FILE* inputFile = input_open("input.txt");
     FILE* outputFile = output_open("output.txt");
 
