@@ -2,10 +2,10 @@
 #include "xorList.h"   
 
 Node* xor (Node* a, Node* b) {
-	return (Node*)((uintptr_t)a ^ (uintptr_t)b);
+    return (Node*)((uintptr_t)a ^ (uintptr_t)b);
 }
 
-Node* createNode( char* data) {
+Node* createNode(char* data) {
     Node* newNode = (Node*)malloc(sizeof(Node));
     newNode->data = data;
     newNode->link = NULL;
@@ -18,18 +18,19 @@ xorList* createList() {
     list->tail = NULL;
     return list;
 }
-      
-void add(xorList* list, const char* data) {
+
+xorList* add(xorList* list, const char* data) {
     Node* newNode = createNode(data);
-    if (list->head == NULL) { 
+    if (list->head == NULL) {
         list->head = newNode;
         list->tail = newNode;
     }
     else {
-        newNode->link = xor(list->tail, NULL);
-        list->tail->link = xor(list->tail->link, newNode);
+        newNode->link = xor (list->tail, NULL);
+        list->tail->link = xor (list->tail->link, newNode);
         list->tail = newNode;
     }
+    return list;
 }
 Node* find(xorList* list, const char* data) {
     Node* cur = list->head;
@@ -38,15 +39,15 @@ Node* find(xorList* list, const char* data) {
 
     while (cur != NULL) {
         if (strcmp(cur->data, data) == 0) {
-            return cur; 
+            return cur;
         }
-        next = xor(prev, cur->link);
+        next = xor (prev, cur->link);
         prev = cur;
         cur = next;
     }
     return 0;
 }
-void delByAd(xorList* list, Node* link) {
+xorList* delByAd(xorList* list, Node* link) {
     Node* cur = list->head;
     Node* prev = NULL;
     Node* next;
@@ -71,13 +72,14 @@ void delByAd(xorList* list, Node* link) {
         prev = cur;
         cur = next;
     }
+    return list;
 }
-void delByD(xorList* list, const char* data) {
+xorList* delByD(xorList* list, const char* data) {
     Node* cur = find(list, data);
     if (cur) {
         delByAd(list, cur->link);
     }
-    return;
+    return list;
 }
 void iter(xorList* list) {
     Node* cur = list->head;
@@ -86,24 +88,25 @@ void iter(xorList* list) {
 
     while (cur != NULL) {
         printf("%s ", cur->data);
-        next = xor(prev, cur->link);
+        next = xor (prev, cur->link);
         prev = cur;
         cur = next;
     }
     printf("\n");
 }
-void freeList(xorList* list) {
+xorList* freeList(xorList* list) {
 
     Node* cur = list->head;
     Node* prev = NULL;
     Node* next;
 
     while (cur != NULL) {
-        next = xor(prev, cur->link);
-        free(cur->data);
+        next = xor (prev, cur->link);
+        cur->data = NULL;
         free(cur);
         prev = cur;
         cur = next;
     }
     free(list);
+    return NULL;
 }
