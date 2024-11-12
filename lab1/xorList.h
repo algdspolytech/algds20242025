@@ -1,3 +1,4 @@
+#pragma once
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
@@ -17,9 +18,9 @@ Node* xor (Node*, Node*);
 Node* createNode(const char*);
 
 xorList* createList();
-void add(xorList*, const char*);
+xorList* add(xorList*, const char*);
 Node* find(xorList*, const char*);
-void delByAd(xorList*, Node*);
-void delByD(xorList*, const char*);
+xorList* delByAd(xorList*, Node*);
+xorList* delByD(xorList*, const char*);
 void iter(xorList*);
-void freeList(xorList*);
+xorList* freeList(xorList*);
