@@ -37,7 +37,7 @@ protected:
     }
 };
 
-// Тест 1: TestMinimumPenalty_SimpleCase_no1
+// Г’ГҐГ±ГІ 1: TestMinimumPenalty_SimpleCase_no1
 TEST_F(TelegramSchedulerTest, TestMinimumPenalty_SimpleCase_no1) {
     std::string inputData =
         "3 0\n"
@@ -73,7 +73,7 @@ TEST_F(TelegramSchedulerTest, TestMinimumPenalty_SimpleCase_no1) {
     delete[] schedule;
 }
 
-// Тест 2: TestPenaltyExceedsK_NoPossibleSchedule_no2
+// Г’ГҐГ±ГІ 2: TestPenaltyExceedsK_NoPossibleSchedule_no2
 TEST_F(TelegramSchedulerTest, TestPenaltyExceedsK_NoPossibleSchedule_no2) {
     std::string inputData =
         "2 5\n"
@@ -108,7 +108,7 @@ TEST_F(TelegramSchedulerTest, TestPenaltyExceedsK_NoPossibleSchedule_no2) {
     delete[] schedule;
 }
 
-// Тест 3: TestSingleTelegram_ZeroPenalty_no3
+// Г’ГҐГ±ГІ 3: TestSingleTelegram_ZeroPenalty_no3
 TEST_F(TelegramSchedulerTest, TestSingleTelegram_ZeroPenalty_no3) {
     std::string inputData =
         "1 0\n"
@@ -143,7 +143,7 @@ TEST_F(TelegramSchedulerTest, TestSingleTelegram_ZeroPenalty_no3) {
 }
 
 
-// Тест 4: TestSingleTelegram_WithPenalty_no4
+// Г’ГҐГ±ГІ 4: TestSingleTelegram_WithPenalty_no4
 TEST_F(TelegramSchedulerTest, TestSingleTelegram_WithPenalty_no4) {
     std::string inputData =
         "1 10\n"
@@ -177,7 +177,7 @@ TEST_F(TelegramSchedulerTest, TestSingleTelegram_WithPenalty_no4) {
     delete[] schedule;
 }
 
-// Тест 5: TestZeroPenaltyAllowed_NoTimeConstraint_no5
+// Г’ГҐГ±ГІ 5: TestZeroPenaltyAllowed_NoTimeConstraint_no5
 TEST_F(TelegramSchedulerTest, TestZeroPenaltyAllowed_NoTimeConstraint_no5) {
     std::string inputData =
         "4 100\n"
@@ -214,7 +214,7 @@ TEST_F(TelegramSchedulerTest, TestZeroPenaltyAllowed_NoTimeConstraint_no5) {
     delete[] schedule;
 }
 
-// Тест 6: TestTightSchedule_ExactPenalty_no6
+// Г’ГҐГ±ГІ 6: TestTightSchedule_ExactPenalty_no6
 TEST_F(TelegramSchedulerTest, TestTightSchedule_ExactPenalty_no6) {
     std::string inputData =
         "2 15\n"
@@ -249,7 +249,7 @@ TEST_F(TelegramSchedulerTest, TestTightSchedule_ExactPenalty_no6) {
     delete[] schedule;
 }
 
-// Тест 7: TestLargeNumberOfTelegrams_no7
+// Г’ГҐГ±ГІ 7: TestLargeNumberOfTelegrams_no7
 TEST_F(TelegramSchedulerTest, TestLargeNumberOfTelegrams_no7) {
     std::string inputData =
         "10 50\n"
@@ -292,7 +292,7 @@ TEST_F(TelegramSchedulerTest, TestLargeNumberOfTelegrams_no7) {
     delete[] schedule;
 }
 
-// Тест 8: TestNegativeDelay_NoPenalty_no8
+// Г’ГҐГ±ГІ 8: TestNegativeDelay_NoPenalty_no8
 TEST_F(TelegramSchedulerTest, TestNegativeDelay_NoPenalty_no8) {
     std::string inputData =
         "2 0\n"
@@ -327,7 +327,7 @@ TEST_F(TelegramSchedulerTest, TestNegativeDelay_NoPenalty_no8) {
     delete[] schedule;
 }
 
-// Тест 9: TestHighPenaltyPerUnitTime_no9
+// Г’ГҐГ±ГІ 9: TestHighPenaltyPerUnitTime_no9
 TEST_F(TelegramSchedulerTest, TestHighPenaltyPerUnitTime_no9) {
     std::string inputData =
         "2 30\n"
@@ -362,7 +362,7 @@ TEST_F(TelegramSchedulerTest, TestHighPenaltyPerUnitTime_no9) {
     delete[] schedule;
 }
 
-// Тест 10: TestImpossibleToAvoidPenalty_no10
+// Г’ГҐГ±ГІ 10: TestImpossibleToAvoidPenalty_no10
 TEST_F(TelegramSchedulerTest, TestImpossibleToAvoidPenalty_no10) {
     std::string inputData =
         "3 25\n"
