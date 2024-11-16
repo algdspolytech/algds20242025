@@ -7,7 +7,7 @@ void maze1_simple_5_5() {
 	printf("\nInitial Maze 1:\n");
 	printMaze();
 
-	// Находим стартовую позицию
+	// РќР°С…РѕРґРёРј СЃС‚Р°СЂС‚РѕРІСѓСЋ РїРѕР·РёС†РёСЋ
 	for (int i = 0; i < rows; i++) {
 		for (int j = 0; j < cols; j++) {
 			if (maze[i][j] == START) {
@@ -16,22 +16,21 @@ void maze1_simple_5_5() {
 				break;
 			}
 		}
-		if (start.x != -1) break; // Если нашли начальную точку, то выходим из внешнего цикла
+		if (start.x != -1) break; // Р•СЃР»Рё РЅР°С€Р»Рё РЅР°С‡Р°Р»СЊРЅСѓСЋ С‚РѕС‡РєСѓ, С‚Рѕ РІС‹С…РѕРґРёРј РёР· РІРЅРµС€РЅРµРіРѕ С†РёРєР»Р°
 	}
 
-	// Проверяем, найдена ли начальная точка
-	if (start.x == -1) {
-		printf("Starting position is not found\n");
-		return 1;
-	}
+	// РџСЂРѕРІРµСЂСЏРµРј, РЅР°Р№РґРµРЅР° Р»Рё РЅР°С‡Р°Р»СЊРЅР°СЏ С‚РѕС‡РєР°
+	assert(start.x != -1 && "РЎС‚Р°СЂС‚РѕРІР°СЏ РїРѕР·РёС†РёСЏ РЅРµ РЅР°Р№РґРµРЅР°");
 
-	// Поиск пути
+
+	// РџРѕРёСЃРє РїСѓС‚Рё
 	if (findPath(start)) {
 		printf("\nWay is found:\n");
 		printMaze();
 	}
 	else {
 		printf("\nNo way to exit\n");
+		assert(0 && "!");
 	}
 
 }
@@ -43,7 +42,7 @@ void maze2_ordinary_6_6() {
 	printf("\nInitial Maze 2:\n");
 	printMaze();
 
-	// Находим стартовую позицию
+	// РќР°С…РѕРґРёРј СЃС‚Р°СЂС‚РѕРІСѓСЋ РїРѕР·РёС†РёСЋ
 	for (int i = 0; i < rows; i++) {
 		for (int j = 0; j < cols; j++) {
 			if (maze[i][j] == START) {
@@ -52,22 +51,21 @@ void maze2_ordinary_6_6() {
 				break;
 			}
 		}
-		if (start.x != -1) break; // Если нашли начальную точку, то выходим из внешнего цикла
+		if (start.x != -1) break; // Р•СЃР»Рё РЅР°С€Р»Рё РЅР°С‡Р°Р»СЊРЅСѓСЋ С‚РѕС‡РєСѓ, С‚Рѕ РІС‹С…РѕРґРёРј РёР· РІРЅРµС€РЅРµРіРѕ С†РёРєР»Р°
 	}
+	// РџСЂРѕРІРµСЂСЏРµРј, РЅР°Р№РґРµРЅР° Р»Рё РЅР°С‡Р°Р»СЊРЅР°СЏ С‚РѕС‡РєР°
+	assert(start.x != -1 && "РЎС‚Р°СЂС‚РѕРІР°СЏ РїРѕР·РёС†РёСЏ РЅРµ РЅР°Р№РґРµРЅР°");
 
-	// Проверяем, найдена ли начальная точка
-	if (start.x == -1) {
-		printf("\nStarting position is not found\n");
-		return 1;
-	}
 
-	// Поиск пути
+
+	// РџРѕРёСЃРє РїСѓС‚Рё
 	if (findPath(start)) {
 		printf("\nWay is found:\n");
 		printMaze();
 	}
 	else {
 		printf("\nNo way to exit\n");
+		assert(0 && "!");
 	}
 
 }
@@ -80,7 +78,7 @@ void maze3_rectangle_3_8() {
 	printf("\nInitial Maze 3:\n");
 	printMaze();
 
-	// Находим стартовую позицию
+	// РќР°С…РѕРґРёРј СЃС‚Р°СЂС‚РѕРІСѓСЋ РїРѕР·РёС†РёСЋ
 	for (int i = 0; i < rows; i++) {
 		for (int j = 0; j < cols; j++) {
 			if (maze[i][j] == START) {
@@ -89,22 +87,21 @@ void maze3_rectangle_3_8() {
 				break;
 			}
 		}
-		if (start.x != -1) break; // Если нашли начальную точку, то выходим из внешнего цикла
+		if (start.x != -1) break; // Р•СЃР»Рё РЅР°С€Р»Рё РЅР°С‡Р°Р»СЊРЅСѓСЋ С‚РѕС‡РєСѓ, С‚Рѕ РІС‹С…РѕРґРёРј РёР· РІРЅРµС€РЅРµРіРѕ С†РёРєР»Р°
 	}
+	// РџСЂРѕРІРµСЂСЏРµРј, РЅР°Р№РґРµРЅР° Р»Рё РЅР°С‡Р°Р»СЊРЅР°СЏ С‚РѕС‡РєР°
+	assert(start.x != -1 && "РЎС‚Р°СЂС‚РѕРІР°СЏ РїРѕР·РёС†РёСЏ РЅРµ РЅР°Р№РґРµРЅР°");
 
-	// Проверяем, найдена ли начальная точка
-	if (start.x == -1) {
-		printf("\nStarting position is not found\n");
-		return 1;
-	}
+	
 
-	// Поиск пути
+	// РџРѕРёСЃРє РїСѓС‚Рё
 	if (findPath(start)) {
 		printf("\nWay is found:\n");
 		printMaze();
 	}
 	else {
 		printf("\nNo way to exit\n");
+		assert(0 && "!");
 	}
 
 }
@@ -116,7 +113,7 @@ void maze4_without_start() {
 	printf("\nInitial Maze 4:\n");
 	printMaze();
 
-	// Находим стартовую позицию
+	// РќР°С…РѕРґРёРј СЃС‚Р°СЂС‚РѕРІСѓСЋ РїРѕР·РёС†РёСЋ
 	for (int i = 0; i < rows; i++) {
 		for (int j = 0; j < cols; j++) {
 			if (maze[i][j] == START) {
@@ -125,22 +122,20 @@ void maze4_without_start() {
 				break;
 			}
 		}
-		if (start.x != -1) break; // Если нашли начальную точку, то выходим из внешнего цикла
+		if (start.x != -1) break; // Р•СЃР»Рё РЅР°С€Р»Рё РЅР°С‡Р°Р»СЊРЅСѓСЋ С‚РѕС‡РєСѓ, С‚Рѕ РІС‹С…РѕРґРёРј РёР· РІРЅРµС€РЅРµРіРѕ С†РёРєР»Р°
 	}
+	// РџСЂРѕРІРµСЂСЏРµРј, РЅР°Р№РґРµРЅР° Р»Рё РЅР°С‡Р°Р»СЊРЅР°СЏ С‚РѕС‡РєР°
+	assert(start.x != -1 && "РЎС‚Р°СЂС‚РѕРІР°СЏ РїРѕР·РёС†РёСЏ РЅРµ РЅР°Р№РґРµРЅР°");
 
-	// Проверяем, найдена ли начальная точка
-	if (start.x == -1) {
-		printf("\nStarting position is not found\n");
-		return 1;
-	}
 
-	// Поиск пути
+	// РџРѕРёСЃРє РїСѓС‚Рё
 	if (findPath(start)) {
 		printf("\nWay is found:\n");
 		printMaze();
 	}
 	else {
 		printf("\nNo way to exit\n");
+		assert(0 && "!");
 	}
 
 }
@@ -152,7 +147,7 @@ void maze5_without_exit() {
 	printf("\nInitial Maze 5:\n");
 	printMaze();
 
-	// Находим стартовую позицию
+	// РќР°С…РѕРґРёРј СЃС‚Р°СЂС‚РѕРІСѓСЋ РїРѕР·РёС†РёСЋ
 	for (int i = 0; i < rows; i++) {
 		for (int j = 0; j < cols; j++) {
 			if (maze[i][j] == START) {
@@ -161,22 +156,20 @@ void maze5_without_exit() {
 				break;
 			}
 		}
-		if (start.x != -1) break; // Если нашли начальную точку, то выходим из внешнего цикла
+		if (start.x != -1) break; // Р•СЃР»Рё РЅР°С€Р»Рё РЅР°С‡Р°Р»СЊРЅСѓСЋ С‚РѕС‡РєСѓ, С‚Рѕ РІС‹С…РѕРґРёРј РёР· РІРЅРµС€РЅРµРіРѕ С†РёРєР»Р°
 	}
+	// РџСЂРѕРІРµСЂСЏРµРј, РЅР°Р№РґРµРЅР° Р»Рё РЅР°С‡Р°Р»СЊРЅР°СЏ С‚РѕС‡РєР°
+	assert(start.x != -1 && "РЎС‚Р°СЂС‚РѕРІР°СЏ РїРѕР·РёС†РёСЏ РЅРµ РЅР°Р№РґРµРЅР°");
 
-	// Проверяем, найдена ли начальная точка
-	if (start.x == -1) {
-		printf("\nStarting position is not found\n");
-		return 1;
-	}
 
-	// Поиск пути
+	// РџРѕРёСЃРє РїСѓС‚Рё
 	if (findPath(start)) {
 		printf("\nWay is found:\n");
 		printMaze();
 	}
 	else {
 		printf("\nNo way to exit\n");
+		assert(0 && "!");
 	}
 
 }
@@ -188,7 +181,7 @@ void maze6_empty() {
 	printf("\nInitial Maze 6:\n");
 	printMaze();
 
-	// Находим стартовую позицию
+	// РќР°С…РѕРґРёРј СЃС‚Р°СЂС‚РѕРІСѓСЋ РїРѕР·РёС†РёСЋ
 	for (int i = 0; i < rows; i++) {
 		for (int j = 0; j < cols; j++) {
 			if (maze[i][j] == START) {
@@ -197,22 +190,21 @@ void maze6_empty() {
 				break;
 			}
 		}
-		if (start.x != -1) break; // Если нашли начальную точку, то выходим из внешнего цикла
+		if (start.x != -1) break; // Р•СЃР»Рё РЅР°С€Р»Рё РЅР°С‡Р°Р»СЊРЅСѓСЋ С‚РѕС‡РєСѓ, С‚Рѕ РІС‹С…РѕРґРёРј РёР· РІРЅРµС€РЅРµРіРѕ С†РёРєР»Р°
 	}
 
-	// Проверяем, найдена ли начальная точка
-	if (start.x == -1) {
-		printf("\nStarting position is not found\n");
-		return 1;
-	}
+	// РџСЂРѕРІРµСЂСЏРµРј, РЅР°Р№РґРµРЅР° Р»Рё РЅР°С‡Р°Р»СЊРЅР°СЏ С‚РѕС‡РєР°
+	assert(start.x != -1 && "РЎС‚Р°СЂС‚РѕРІР°СЏ РїРѕР·РёС†РёСЏ РЅРµ РЅР°Р№РґРµРЅР°");
 
-	// Поиск пути
+
+	// РџРѕРёСЃРє РїСѓС‚Рё
 	if (findPath(start)) {
 		printf("\nWay is found:\n");
 		printMaze();
 	}
 	else {
 		printf("\nNo way to exit\n");
+		assert(0 && "!");
 	}
 
 }
@@ -224,7 +216,7 @@ void maze7_all_walls() {
 	printf("\nInitial Maze 7:\n");
 	printMaze();
 
-	// Находим стартовую позицию
+	// РќР°С…РѕРґРёРј СЃС‚Р°СЂС‚РѕРІСѓСЋ РїРѕР·РёС†РёСЋ
 	for (int i = 0; i < rows; i++) {
 		for (int j = 0; j < cols; j++) {
 			if (maze[i][j] == START) {
@@ -233,22 +225,20 @@ void maze7_all_walls() {
 				break;
 			}
 		}
-		if (start.x != -1) break; // Если нашли начальную точку, то выходим из внешнего цикла
+		if (start.x != -1) break; // Р•СЃР»Рё РЅР°С€Р»Рё РЅР°С‡Р°Р»СЊРЅСѓСЋ С‚РѕС‡РєСѓ, С‚Рѕ РІС‹С…РѕРґРёРј РёР· РІРЅРµС€РЅРµРіРѕ С†РёРєР»Р°
 	}
 
-	// Проверяем, найдена ли начальная точка
-	if (start.x == -1) {
-		printf("\nStarting position is not found\n");
-		return 1;
-	}
+	// РџСЂРѕРІРµСЂСЏРµРј, РЅР°Р№РґРµРЅР° Р»Рё РЅР°С‡Р°Р»СЊРЅР°СЏ С‚РѕС‡РєР°
+	assert(start.x != -1 && "РЎС‚Р°СЂС‚РѕРІР°СЏ РїРѕР·РёС†РёСЏ РЅРµ РЅР°Р№РґРµРЅР°");
 
-	// Поиск пути
+	// РџРѕРёСЃРє РїСѓС‚Рё
 	if (findPath(start)) {
 		printf("\nWay is found:\n");
 		printMaze();
 	}
 	else {
 		printf("\nNo way to exit\n");
+		assert(0 && "!");
 	}
 
 }
@@ -260,7 +250,7 @@ void maze8_all_path() {
 	printf("\nInitial Maze 8:\n");
 	printMaze();
 
-	// Находим стартовую позицию
+	// РќР°С…РѕРґРёРј СЃС‚Р°СЂС‚РѕРІСѓСЋ РїРѕР·РёС†РёСЋ
 	for (int i = 0; i < rows; i++) {
 		for (int j = 0; j < cols; j++) {
 			if (maze[i][j] == START) {
@@ -269,22 +259,21 @@ void maze8_all_path() {
 				break;
 			}
 		}
-		if (start.x != -1) break; // Если нашли начальную точку, то выходим из внешнего цикла
+		if (start.x != -1) break; // Р•СЃР»Рё РЅР°С€Р»Рё РЅР°С‡Р°Р»СЊРЅСѓСЋ С‚РѕС‡РєСѓ, С‚Рѕ РІС‹С…РѕРґРёРј РёР· РІРЅРµС€РЅРµРіРѕ С†РёРєР»Р°
 	}
 
-	// Проверяем, найдена ли начальная точка
-	if (start.x == -1) {
-		printf("\nStarting position is not found\n");
-		return 1;
-	}
+	// РџСЂРѕРІРµСЂСЏРµРј, РЅР°Р№РґРµРЅР° Р»Рё РЅР°С‡Р°Р»СЊРЅР°СЏ С‚РѕС‡РєР°
+	assert(start.x != -1 && "РЎС‚Р°СЂС‚РѕРІР°СЏ РїРѕР·РёС†РёСЏ РЅРµ РЅР°Р№РґРµРЅР°");
 
-	// Поиск пути
+
+	// РџРѕРёСЃРє РїСѓС‚Рё
 	if (findPath(start)) {
 		printf("\nWay is found:\n");
 		printMaze();
 	}
 	else {
 		printf("\nNo way to exit\n");
+		assert(0 && "!");
 	}
 
 }
@@ -296,7 +285,7 @@ void maze9_no_exit() {
 	printf("\nInitial Maze 9:\n");
 	printMaze();
 
-	// Находим стартовую позицию
+	// РќР°С…РѕРґРёРј СЃС‚Р°СЂС‚РѕРІСѓСЋ РїРѕР·РёС†РёСЋ
 	for (int i = 0; i < rows; i++) {
 		for (int j = 0; j < cols; j++) {
 			if (maze[i][j] == START) {
@@ -305,22 +294,20 @@ void maze9_no_exit() {
 				break;
 			}
 		}
-		if (start.x != -1) break; // Если нашли начальную точку, то выходим из внешнего цикла
+		if (start.x != -1) break; // Р•СЃР»Рё РЅР°С€Р»Рё РЅР°С‡Р°Р»СЊРЅСѓСЋ С‚РѕС‡РєСѓ, С‚Рѕ РІС‹С…РѕРґРёРј РёР· РІРЅРµС€РЅРµРіРѕ С†РёРєР»Р°
 	}
 
-	// Проверяем, найдена ли начальная точка
-	if (start.x == -1) {
-		printf("\nStarting position is not found\n");
-		return 1;
-	}
+	// РџСЂРѕРІРµСЂСЏРµРј, РЅР°Р№РґРµРЅР° Р»Рё РЅР°С‡Р°Р»СЊРЅР°СЏ С‚РѕС‡РєР°
+	assert(start.x != -1 && "РЎС‚Р°СЂС‚РѕРІР°СЏ РїРѕР·РёС†РёСЏ РЅРµ РЅР°Р№РґРµРЅР°");
 
-	// Поиск пути
+	// РџРѕРёСЃРє РїСѓС‚Рё
 	if (findPath(start)) {
 		printf("\nWay is found:\n");
 		printMaze();
 	}
 	else {
 		printf("\nNo way to exit\n");
+		assert(0 && "!");
 	}
 
 }
@@ -333,7 +320,7 @@ void maze10_undefined_signs() {
 	printf("\nInitial Maze 10:\n");
 	printMaze();
 
-	// Находим стартовую позицию
+	// РќР°С…РѕРґРёРј СЃС‚Р°СЂС‚РѕРІСѓСЋ РїРѕР·РёС†РёСЋ
 	for (int i = 0; i < rows; i++) {
 		for (int j = 0; j < cols; j++) {
 			if (maze[i][j] == START) {
@@ -342,22 +329,20 @@ void maze10_undefined_signs() {
 				break;
 			}
 		}
-		if (start.x != -1) break; // Если нашли начальную точку, то выходим из внешнего цикла
+		if (start.x != -1) break; // Р•СЃР»Рё РЅР°С€Р»Рё РЅР°С‡Р°Р»СЊРЅСѓСЋ С‚РѕС‡РєСѓ, С‚Рѕ РІС‹С…РѕРґРёРј РёР· РІРЅРµС€РЅРµРіРѕ С†РёРєР»Р°
 	}
+	// РџСЂРѕРІРµСЂСЏРµРј, РЅР°Р№РґРµРЅР° Р»Рё РЅР°С‡Р°Р»СЊРЅР°СЏ С‚РѕС‡РєР°
+	assert(start.x != -1 && "РЎС‚Р°СЂС‚РѕРІР°СЏ РїРѕР·РёС†РёСЏ РЅРµ РЅР°Р№РґРµРЅР°");
 
-	// Проверяем, найдена ли начальная точка
-	if (start.x == -1) {
-		printf("\nStarting position is not found\n");
-		return 1;
-	}
 
-	// Поиск пути
+	// РџРѕРёСЃРє РїСѓС‚Рё
 	if (findPath(start)) {
 		printf("\nWay is found:\n");
 		printMaze();
 	}
 	else {
 		printf("\nNo way to exit\n");
+		assert(0 && "!");
 	}
 
 }
@@ -369,7 +354,7 @@ void maze11_bigger_than_max_size() {
 	printf("\nInitial Maze 11:\n");
 	printMaze();
 
-	// Находим стартовую позицию
+	// РќР°С…РѕРґРёРј СЃС‚Р°СЂС‚РѕРІСѓСЋ РїРѕР·РёС†РёСЋ
 	for (int i = 0; i < rows; i++) {
 		for (int j = 0; j < cols; j++) {
 			if (maze[i][j] == START) {
@@ -378,22 +363,21 @@ void maze11_bigger_than_max_size() {
 				break;
 			}
 		}
-		if (start.x != -1) break; // Если нашли начальную точку, то выходим из внешнего цикла
+		if (start.x != -1) break; // Р•СЃР»Рё РЅР°С€Р»Рё РЅР°С‡Р°Р»СЊРЅСѓСЋ С‚РѕС‡РєСѓ, С‚Рѕ РІС‹С…РѕРґРёРј РёР· РІРЅРµС€РЅРµРіРѕ С†РёРєР»Р°
 	}
 
-	// Проверяем, найдена ли начальная точка
-	if (start.x == -1) {
-		printf("\nStarting position is not found\n");
-		return 1;
-	}
+	// РџСЂРѕРІРµСЂСЏРµРј, РЅР°Р№РґРµРЅР° Р»Рё РЅР°С‡Р°Р»СЊРЅР°СЏ С‚РѕС‡РєР°
+	assert(start.x != -1 && "РЎС‚Р°СЂС‚РѕРІР°СЏ РїРѕР·РёС†РёСЏ РЅРµ РЅР°Р№РґРµРЅР°");
 
-	// Поиск пути
+
+	// РџРѕРёСЃРє РїСѓС‚Рё
 	if (findPath(start)) {
 		printf("\nWay is found:\n");
 		printMaze();
 	}
 	else {
 		printf("\nNo way to exit\n");
+		assert(0 && "!");
 	}
 
 }
@@ -413,7 +397,7 @@ int main() {
 	maze8_all_path();
 	maze9_no_exit();
 	maze10_undefined_signs();
-	maze11_bigger_than_max_size(); //выводит предыдущий
+	maze11_bigger_than_max_size(); 
 	return 0;
 }
 
