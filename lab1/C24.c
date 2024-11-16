@@ -31,37 +31,34 @@ int isValid(int x, int y) {
 }
 
 int findPath(Position pos) {
-    // Если достигли выхода
     if (maze[pos.x][pos.y] == EXIT) {
-        return 1; // Путь найден
+        return 1; // РџСѓС‚СЊ РЅР°Р№РґРµРЅ
     }
 
-    // Если это не стартовая позиция, отмечаем её как посещённую
+  
     if (maze[pos.x][pos.y] != START) {
-        maze[pos.x][pos.y] = 'X'; // Отметка посещенной клетки
+        maze[pos.x][pos.y] = 'X'; // РћС‚РјРµС‚РєР° РїРѕСЃРµС‰РµРЅРЅРѕР№ РєР»РµС‚РєРё
     }
 
-    // Определяем возможные направления движения (вверх, вниз, влево, вправо)
+
     Position directions[4] = {
-        {pos.x - 1, pos.y}, // вверх
-        {pos.x + 1, pos.y}, // вниз
-        {pos.x, pos.y - 1}, // влево
-        {pos.x, pos.y + 1}  // вправо
+        {pos.x - 1, pos.y}, // РІРІРµСЂС…
+        {pos.x + 1, pos.y}, // РІРЅРёР·
+        {pos.x, pos.y - 1}, // РІР»РµРІРѕ
+        {pos.x, pos.y + 1}  // РІРїСЂР°РІРѕ
     };
 
-    // Перебираем все направления
+
     for (int i = 0; i < 4; i++) {
         if (isValid(directions[i].x, directions[i].y)) {
-            if (findPath(directions[i])) { // Рекурсивное обращение
-                return 1; // Путь найден
+            if (findPath(directions[i])) { 
+                return 1; 
             }
         }
     }
 
-    // Если путь не найден, возвращаем текущее состояние
-    // Восстанавливаем клетку как свободную, если это не стартовая позиция
     if (maze[pos.x][pos.y] != START) {
-        maze[pos.x][pos.y] = FREE; // Восстановить клетку
+        maze[pos.x][pos.y] = FREE;
     }
-    return 0; // Путь не найден
+    return 0; // РџСѓС‚СЊ РЅРµ РЅР°Р№РґРµРЅ
 }
