@@ -1,12 +1,10 @@
 #define _CRT_SECURE_NO_WARNINGS
 #pragma warning(disable: 4996)
-
-#define _CRT_SECURE_NO_WARNINGS
-#pragma warning(disable: 4996)
 #ifndef MAZE_H
 #define MAZE_H
 
 #include <stdio.h>
+#include <assert.h>
 
 #define MAX_SIZE 100
 #define WALL '#'
@@ -14,7 +12,7 @@
 #define START 'S'
 #define EXIT 'E'
 
-// структуру для позиции
+// СЃС‚СЂСѓРєС‚СѓСЂСѓ РґР»СЏ РїРѕР·РёС†РёРё
 typedef struct {
     int x;
     int y;
