@@ -1,82 +1,104 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include "labC.h"
 
-#define MAX_VERTICES 50
+#include "labD.h"
 
-Graph* createGraph(int num_vertices) {
-  Graph* graph = malloc(sizeof(Graph));
-  graph->num_vertices = num_vertices;
-  for (int i = 0; i < num_vertices; i++) {
-    graph->vertices[i].degree = 0;
-  }
-  return graph;
+void clearGraph() {
+    for (int i = 0; i < MAX_VERTICES; i++) {
+        for (int j = 0; j < MAX_VERTICES; j++) {
+            adj[i][j] = 0;
+        }
+        visited[i] = 0;
+        path[i] = -1;
+    }
 }
 
-void addEdge(Graph* graph, int source, int destination) {
-  graph->vertices[source].adj[graph->vertices[source].degree++] = destination;
-  graph->vertices[destination].adj[graph->vertices[destination].degree++] = source;
+void resetGraph() {
+    n = 0;
+    clearGraph();
 }
 
-Graph* readGraphFromFile(const char* filename) {
-  FILE* fp = fopen(filename, "r");
-  if (fp == NULL) {
-    printf("Ошибка открытия файла.\n");
-    return NULL;
-  }
-
-  int num_vertices;
-  fscanf(fp, "%d", &num_vertices);
-
-  Graph* graph = createGraph(num_vertices);
-
-  int source;
-  int destination;
-  while (fscanf(fp, "%d %d", &source, &destination) != EOF) {
-    addEdge(graph, source, destination);
-  }
-
-  fclose(fp);
-  return graph;
+void addGraphEdge(const int u, const int v) {
+    adj[u - 1][v - 1] = 1;
+    adj[v - 1][u - 1] = 1;
 }
 
-int* findShortestPath(Graph* graph, int start, int end) {
-  int visited[MAX_VERTICES] = {0};
-  int distance[MAX_VERTICES] = {0};
-  int previous[MAX_VERTICES] = {-1};
-  int queue[MAX_VERTICES];
-  int front = 0;
-  int rear = 0;
-
-  queue[rear++] = start;
-  visited[start] = 1;
-
-  while (front != rear) {
-    int current = queue[front++];
-
-    if (current == end) {
-      int* path = malloc(sizeof(int) * MAX_VERTICES);
-      int path_index = 0;
-      int node = end;
-
-      while (node != -1) {
-        path[path_index++] = node;
-        node = previous[node];
-      }
-
-      return path;
+int isHamiltonianPath(int position) {
+    if (position == n) {
+        return 1;
     }
 
-    for (int i = 0; i < graph->vertices[current].degree; i++) {
-      int neighbor = graph->vertices[current].adj[i];
-      if (!visited[neighbor]) {
-        visited[neighbor] = 1;
-        distance[neighbor] = distance[current] + 1;
-        previous[neighbor] = current;
-        queue[rear++] = neighbor;
-      }
+    for (int v = 0; v < n; v++) {
+        if (!visited[v]) {
+            int canAdd = position == 0 || adj[path[position - 1]][v];
+            if (canAdd) {
+                path[position] = v;
+                visited[v] = 1;
+                if (isHamiltonianPath(position + 1)) {
+                    return 1;
+                }
+                visited[v] = 0;
+                path[position] = -1;
+            }
+        }
     }
-  }
+    return 0;
+}
 
-  return NULL;
+int findHamiltonianPath() {
+    for (int startVertex = 0; startVertex < n; startVertex++) {
+        for (int i = 0; i < n; i++) {
+            visited[i] = 0;
+            path[i] = -1;
+        }
+        path[0] = startVertex;
+        visited[startVertex] = 1;
+        if (isHamiltonianPath(1)) {
+            return 1;
+        }
+    }
+    return 0;
+}
+
+void readGraphFromFile(const char* filename) {
+    FILE* file = fopen(filename, "r");
+    if (!file) {
+        printf("Ошибка при открытии файла");
+        exit(1);
+    }
+
+    fscanf(file, "%d", &n);
+    clearGraph();
+
+    for (int i = 1; i <= n; i++) {
+        int vertex;
+        while (fscanf(file, "%d", &vertex) == 1) {
+            if (vertex > 0 && vertex <= n) {
+                addGraphEdge(i, vertex);
+            }
+        }
+    }
+
+    fclose(file);
+}
+
+
+void writeResult(const char* filename) {
+    FILE* file = fopen(filename, "w");
+    if (!file) {
+        printf("Ошибка при открытии файла для записи");
+        exit(1);
+    }
+
+    if (findHamiltonianPath()) {
+        for (int i = 0; i < n; i++) {
+            fprintf(file, "%d ", path[i] + 1);
+        }
+        fprintf(file, "\n");
+    }
+    else {
+        fprintf(file, "0\n");
+    }
+
+    fclose(file);
 }
