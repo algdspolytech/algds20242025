@@ -1,0 +1,29 @@
+﻿################################################################################
+# Данный GITIGNORE-файл был автоматически создан Microsoft(R) Visual Studio.
+################################################################################
+
+*.vsidx
+*.ipch
+*.wsuo
+*.db
+*.db-shm
+*.db-wal
+*.opendb
+*.lock
+/.vs/CMake Overview
+/.vs/ProjectSettings.json
+*.sqlite
+*.json
+*.exe
+*.obj
+*.cmake
+/out/build/x64-Debug/CMakeFiles/ShowIncludes/foo.h
+/out/build/x64-Debug/CMakeFiles/cmake.check_cache
+/out/build/x64-Debug/CMakeFiles/CMakeConfigureLog.yaml
+/out/build/x64-Debug/CMakeCache.txt
+/out/build/x64-Debug/VSInheritEnvironments.txt
+/out/build/x64-Debug/CMakeFiles/3.26.0-msvc3/CMakeDetermineCompilerABI_CXX.bin
+/out/build/x64-Debug/CMakeFiles/3.26.0-msvc3/CMakeDetermineCompilerABI_C.bin
+/out/build/x64-Debug/CMakeFiles/ShowIncludes/main.c
+/out/build/x64-Debug/CMakeFiles/3.26.0-msvc3/CompilerIdC/CMakeCCompilerId.c
+/out/build/x64-Debug/CMakeFiles/3.26.0-msvc3/CompilerIdCXX/CMakeCXXCompilerId.cpp
