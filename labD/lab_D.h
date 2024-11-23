@@ -14,7 +14,6 @@ extern bool visited[MAX_NODES];
 extern int path[MAX_NODES];
 extern int vertexCount;
 
-// Функции
 int cmpfunc(const void* a, const void* b);
 void initializeGraph();
 void insertEdge(int u, int v);
