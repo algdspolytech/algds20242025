@@ -1,269 +1,326 @@
 #include <gtest/gtest.h>
 #include <cstdio>
-#include <cstdlib>
-#include <cstring>
+#include <string>
+#include <fstream>
 
 extern "C" {
-    #include "graph.h"
+    #include "rucksack.h"
 }
 
-FILE* CreateTempFile(const char* content) {
-    FILE* file = fopen("tmp.txt", "w");
-    if (file == nullptr) {
-        exit(EXIT_FAILURE);
-    }
-    fputs(content, file);
-    rewind(file);
-    fclose(file);
+FILE* tmp(const char* name, const char* data) {
+    FILE* f = fopen(name, "w");
+    fprintf(f, "%s", data);
+    fclose(f);
 
-    file = fopen("tmp.txt", "r");
-    if (file == nullptr) {
-        exit(EXIT_FAILURE);
-    }
-
-    return file;
+    f = fopen(name, "r");
+    return f;
 }
 
-TEST(GR_GetAssociationListTest, BasicFunctionality) {
-    const char* content = "3\n"
-                          "1 2\n"
-                          "1 3\n"
-                          "0\n";
-    FILE* file = CreateTempFile(content);
+std::vector<int> parseString(std::string& str) {
+    std::stringstream ss(str);
+    std::vector<int> res;
 
-    int n;
-    GR_Node_t* list = GR_GetAssociationList(file, &n);
-
-    ASSERT_EQ(n, 3);
-    ASSERT_EQ(list[0].connectionCnt, 1);
-    ASSERT_EQ(list[0].connectedTo[0], 2);
-    ASSERT_EQ(list[1].connectionCnt, 1);
-    ASSERT_EQ(list[1].connectedTo[0], 3);
-    ASSERT_EQ(list[2].connectionCnt, 0);
-
-    GR_DeleteAssociationList(list, n);
-    fclose(file);
-}
-
-TEST(GR_WriteAssociationListTest, BasicWrite) {
-    FILE* file = fopen("tmp.txt", "w");
-
-    GR_Node_t list[2];
-    list[0].connectionCnt = 2;
-    list[0].connectedTo = new int[2]{2, 3};
-    list[1].connectionCnt = 0;
-
-    GR_WriteAssociationList(file, list, 2);
-
-    rewind(file);
-    fclose(file);
-
-    file = fopen("tmp.txt", "r");
-
-    char buffer[256];
-    fgets(buffer, sizeof(buffer), file);
-    ASSERT_STREQ(buffer, "2\n");
-
-    fgets(buffer, sizeof(buffer), file);
-    ASSERT_STREQ(buffer, "2 2 3 \n");
-
-    fgets(buffer, sizeof(buffer), file);
-    ASSERT_STREQ(buffer, "0 \n");
-
-    delete[] list[0].connectedTo;
-    fclose(file);
-}
-
-TEST(GR_WriteAssociationListTest, WriteEmpty) {
-    FILE* file = fopen("tmp.txt", "w");
-
-    GR_Node_t list[0];
-
-    GR_WriteAssociationList(file, list, 0);
-
-    rewind(file);
-    fclose(file);
-
-    file = fopen("tmp.txt", "r");
-
-    char buffer[256];
-    fgets(buffer, sizeof(buffer), file);
-    ASSERT_STREQ(buffer, "0\n");
-
-    fclose(file);
-}
-
-TEST(GR_AssociationToMatrixTest, ConvertToMatrix) {
-    const char* content = "4\n"
-                          "3 1 2 3\n"
-                          "0\n"
-                          "0\n"
-                          "0\n";
-    // A graph with one outgoing connection from node 1 to nodes 2, 3, and 4
-    FILE* file = CreateTempFile(content);
-
-    int n;
-    GR_Node_t* list = GR_GetAssociationList(file, &n);
-
-    int** matrix = GR_AssociationToMatrix(list, n);
-
-    ASSERT_EQ(matrix[0][1], 1);
-    ASSERT_EQ(matrix[0][2], 1);
-    ASSERT_EQ(matrix[0][3], 1);
-    ASSERT_EQ(matrix[1][0], 0);
-
-    for (int i = 0; i < n; ++i) {
-        delete[] matrix[i];
-    }
-    delete[] matrix;
-
-    GR_DeleteAssociationList(list, n);
-    fclose(file);
-}
-
-TEST(GR_WriteAssociationListTest, WriteEmptyList) {
-    FILE* file = fopen("tmp.txt", "w");
-
-    GR_Node_t* list = nullptr;
-    GR_WriteAssociationList(file, list, 0);
-
-    rewind(file);
-    fclose(file);
-
-    file = fopen("tmp.txt", "r");
-
-    char buffer[256];
-    fgets(buffer, sizeof(buffer), file);
-
-    ASSERT_STREQ(buffer, "0\n"); // Expecting a single line indicating zero nodes
-
-    fclose(file);
-}
-
-TEST(GR_AssociationToMatrixTest, NoConnections) {
-    const char* content = "5\n"
-                          "0\n"
-                          "0\n"
-                          "0\n"
-                          "0\n"
-                          "0\n";
-    // Five nodes with no connections
-    FILE* file = CreateTempFile(content);
-
-    int n;
-    GR_Node_t* list = GR_GetAssociationList(file, &n);
-
-    int** matrix = GR_AssociationToMatrix(list, n);
-
-    for (int i = 0; i < n; ++i) {
-        for (int j = 0; j < n; ++j) {
-            ASSERT_EQ(matrix[i][j], 0); // All should be zero
-        }
-        delete[] matrix[i];
+    while (!ss.eof()) {
+        std::string token;
+        std::getline(ss, token, ' ');
+        if(!token.empty())
+            res.push_back(std::stoi(token));
     }
 
-    delete[] matrix;
-
-    delete[] list;
-    fclose(file);
+    return res;
 }
 
-TEST(GR_AssociationToMatrixTest, KnGraph) {
-    const char* content = "5\n"
-                          "4 1 2 3 4\n"
-                          "4 0 2 3 4\n"
-                          "4 0 1 3 4\n"
-                          "4 0 1 2 4\n"
-                          "4 0 1 2 3\n";
-    // Five nodes with no connections
-    FILE* file = CreateTempFile(content);
+bool isValid(std::string& str, std::pair<int, int> bound,
+             std::vector<int>& s, std::vector<int>& v) {
+    auto data = parseString(str);
 
-    int n;
-    GR_Node_t* list = GR_GetAssociationList(file, &n);
+    if(data[0] == 0)
+        return false;
 
-    int** matrix = GR_AssociationToMatrix(list, n);
+    int size = 0;
+    int value = 0;
 
-    for (int i = 0; i < n; ++i) {
-        for (int j = 0; j < n; ++j) {
-            if(i == j)
-                ASSERT_EQ(matrix[i][j], 0); //Kn dont have self loops
-            else
-                ASSERT_EQ(matrix[i][j], 1); // All should be one
-        }
-        delete[] matrix[i];
+    for(auto val : data) {
+        size += s[val - 1];
+        value += v[val - 1];
     }
 
-    delete[] matrix;
-
-    delete[] list;
-    fclose(file);
+    return size <= bound.first && value >= bound.second;
 }
 
-TEST(GR_AssociationToMatrixTest, OneWayConnection) {
-    const char* content = "3\n"
-                          "1 2\n"
-                          "0\n"
-                          "0\n";
-    // Node 1 -> Node 2, not vice versa
-    FILE* file = CreateTempFile(content);
+TEST(exec, TaskExampleNo1) {
+    const char* data =
+        "5 5 20 \n"
+        "1 2 2 2 3 \n"
+        "7 1 1 4 10 \n";
+    std::vector<int> s = {1, 2, 2, 2, 3};
+    std::vector<int> v = {7, 1, 1, 4, 10};
+    int B = 5;
+    int K = 20;
 
-    int n;
-    GR_Node_t* list = GR_GetAssociationList(file, &n);
+    FILE* in = tmp("in_test1.txt", data);
+    FILE* out = fopen("out_test1.txt", "w");
 
-    int** matrix = GR_AssociationToMatrix(list, n);
+    RUCKSACK_exec(in, out);
+    fclose(in);
+    fclose(out);
 
-    ASSERT_EQ(matrix[0][2], 1);
-    ASSERT_EQ(matrix[2][0], 0);
+    std::string res_str;
+    std::ifstream res;
+    res.open("out_test1.txt");
 
-    delete[] matrix;
+    std::getline(res, res_str);
 
-    delete[] list;
-    fclose(file);
+    ASSERT_STREQ("0", res_str.c_str());
 }
 
-TEST(GR_AssociationToMatrixTest, SelfLoop) {
-    const char* content = "3\n3 0 1 2\n1 1\n0\n";
-    // Node 1 has a self-loop and connections to Node 2 and Node 3
-    FILE* file = CreateTempFile(content);
+TEST(exec, TaskExampleNo2) {
+    const char* data =
+        "5 5 10 \n"
+        "1 2 2 2 3 \n"
+        "7 1 1 4 10 \n";
+    std::vector<int> s = {1, 2, 2, 2, 3};
+    std::vector<int> v = {7, 1, 1, 4, 10};
+    int B = 5;
+    int K = 10;
 
-    int n;
-    GR_Node_t* list = GR_GetAssociationList(file, &n);
+    FILE* in = tmp("in_test1.txt", data);
+    FILE* out = fopen("out_test1.txt", "w");
 
-    int** matrix = GR_AssociationToMatrix(list, n);
+    RUCKSACK_exec(in, out);
+    fclose(in);
+    fclose(out);
 
-    ASSERT_EQ(matrix[0][0], 1);
-    ASSERT_EQ(matrix[1][1], 1);
+    std::string res_str;
+    std::ifstream res;
+    res.open("out_test1.txt");
 
-    for (int i = 0; i < n; ++i) {
-        delete[] matrix[i];
-    }
+    std::getline(res, res_str);
 
-    delete[] matrix;
-
-    GR_DeleteAssociationList(list, n);
-    fclose(file);
+    ASSERT_TRUE(isValid(
+        res_str, {B, K}, s, v));
 }
 
-TEST(GR_GetAssociationListTest, TwoWaysConnection) {
-    const char* content = "4\n0\n2 2 3\n1 1\n0\n";
-    // Node connections: Node 2 -> Node 3 and Node 4; Node 3 -> Node 2
-    FILE* file = CreateTempFile(content);
+TEST(exec, TaskExampleNo3) {
+    const char* data =
+        "5 200 2 \n"
+        "1 2 2 2 3 \n"
+        "7 1 1 4 10 \n";
+    std::vector<int> s = {1, 2, 2, 2, 3};
+    std::vector<int> v = {7, 1, 1, 4, 10};
+    int B = 200;
+    int K = 2;
 
-    int n;
-    GR_Node_t* list = GR_GetAssociationList(file, &n);
+    FILE* in = tmp("in_test1.txt", data);
+    FILE* out = fopen("out_test1.txt", "w");
 
-    ASSERT_EQ(n, 4);
-    ASSERT_EQ(list[0].connectionCnt, 0);
-    ASSERT_EQ(list[1].connectionCnt, 2);
-    ASSERT_EQ(list[1].connectedTo[0], 2);
-    ASSERT_EQ(list[1].connectedTo[1], 3);
-    ASSERT_EQ(list[2].connectionCnt, 1);
-    ASSERT_EQ(list[2].connectedTo[0], 1);
-    ASSERT_EQ(list[3].connectionCnt, 0);
+    RUCKSACK_exec(in, out);
+    fclose(in);
+    fclose(out);
 
-    GR_DeleteAssociationList(list, n);
-    fclose(file);
+    std::string res_str;
+    std::ifstream res;
+    res.open("out_test1.txt");
+
+    std::getline(res, res_str);
+
+    ASSERT_TRUE(isValid(
+        res_str, {B, K}, s, v));
 }
+
+TEST(exec, OneElementFitsNo4) {
+    const char* data =
+        "1 200 2 \n"
+        "1 \n"
+        "7 \n";
+    std::vector<int> s = {1};
+    std::vector<int> v = {7};
+    int B = 200;
+    int K = 2;
+
+    FILE* in = tmp("in_test1.txt", data);
+    FILE* out = fopen("out_test1.txt", "w");
+
+    RUCKSACK_exec(in, out);
+    fclose(in);
+    fclose(out);
+
+    std::string res_str;
+    std::ifstream res;
+    res.open("out_test1.txt");
+
+    std::getline(res, res_str);
+
+    ASSERT_TRUE(isValid(
+        res_str, {B, K}, s, v));
+}
+
+TEST(exec, OneElementNotFitsNo5) {
+    const char* data =
+        "1 1 33 \n"
+        "1 \n"
+        "7 \n";
+    std::vector<int> s = {1};
+    std::vector<int> v = {7};
+    int B = 1;
+    int K = 33;
+
+    FILE* in = tmp("in_test1.txt", data);
+    FILE* out = fopen("out_test1.txt", "w");
+
+    RUCKSACK_exec(in, out);
+    fclose(in);
+    fclose(out);
+
+    std::string res_str;
+    std::ifstream res;
+    res.open("out_test1.txt");
+
+    std::getline(res, res_str);
+
+    ASSERT_STREQ("0", res_str.c_str());
+}
+
+TEST(exec, OnlyMaxValFitsNo6) {
+    const char* data =
+        "3 5 6 \n"
+        "1 1 1\n"
+        "1 2 3\n";
+    std::vector<int> s = {1, 1, 1};
+    std::vector<int> v = {1, 2, 3};
+    int B = 5;
+    int K = 6;
+
+    FILE* in = tmp("in_test1.txt", data);
+    FILE* out = fopen("out_test1.txt", "w");
+
+    RUCKSACK_exec(in, out);
+    fclose(in);
+    fclose(out);
+
+    std::string res_str;
+    std::ifstream res;
+    res.open("out_test1.txt");
+
+    std::getline(res, res_str);
+
+    ASSERT_TRUE(isValid(
+        res_str, {B, K}, s, v));
+}
+
+TEST(exec, OnlyMaxSizeFitsNo7) {
+    const char* data =
+        "3 3 6 \n"
+        "1 1 1\n"
+        "2 2 3\n";
+    std::vector<int> s = {1, 1, 1};
+    std::vector<int> v = {2, 2, 3};
+    int B = 5;
+    int K = 6;
+
+    FILE* in = tmp("in_test1.txt", data);
+    FILE* out = fopen("out_test1.txt", "w");
+
+    RUCKSACK_exec(in, out);
+    fclose(in);
+    fclose(out);
+
+    std::string res_str;
+    std::ifstream res;
+    res.open("out_test1.txt");
+
+    std::getline(res, res_str);
+
+    ASSERT_TRUE(isValid(
+        res_str, {B, K}, s, v));
+}
+
+TEST(exec, OnlyOneElementFitsNo8) {
+    const char* data =
+        "3 3 6 \n"
+        "1 1 3\n"
+        "2 2 6\n";
+    std::vector<int> s = {1, 1, 3};
+    std::vector<int> v = {2, 2, 6};
+    int B = 3;
+    int K = 6;
+
+    FILE* in = tmp("in_test1.txt", data);
+    FILE* out = fopen("out_test1.txt", "w");
+
+    RUCKSACK_exec(in, out);
+    fclose(in);
+    fclose(out);
+
+    std::string res_str;
+    std::ifstream res;
+    res.open("out_test1.txt");
+
+    std::getline(res, res_str);
+
+    ASSERT_TRUE(isValid(
+        res_str, {B, K}, s, v));
+}
+
+TEST(exec, NoElementsNo9) {
+    const char* data =
+        "0 3 6 \n"
+        "\n"
+        "\n";
+    std::vector<int> s = {};
+    std::vector<int> v = {};
+    int B = 3;
+    int K = 6;
+
+    FILE* in = tmp("in_test1.txt", data);
+    FILE* out = fopen("out_test1.txt", "w");
+
+    RUCKSACK_exec(in, out);
+    fclose(in);
+    fclose(out);
+
+    std::string res_str;
+    std::ifstream res;
+    res.open("out_test1.txt");
+
+    std::getline(res, res_str);
+
+    ASSERT_TRUE(res_str.empty());
+}
+
+TEST(exec, RandomBigExampleNo10) {
+    const char* data =
+        "20 33 70\n"
+        "2 7 5 3 9 1 2 33 1 23 4 5 6 9 2 5 10 2 3 5\n"
+        "11 21 3 4 5 77 9 22 3 4 5 2 1 2 3 4 77 9 9 2\n";
+    std::vector<int> s = {
+        2, 7, 5, 3, 9, 1, 2, 33, 1, 23,
+        4, 5, 6, 9, 2, 5, 10, 2, 3, 5
+    };
+    std::vector<int> v = {
+        11, 21, 3, 4, 5, 77, 9, 22, 3,
+        4, 5, 2, 1, 2, 3, 4, 77, 9, 9, 2
+    };
+    int B = 33;
+    int K = 70;
+
+    FILE* in = tmp("in_test1.txt", data);
+    FILE* out = fopen("out_test1.txt", "w");
+
+    RUCKSACK_exec(in, out);
+    fclose(in);
+    fclose(out);
+
+    std::string res_str;
+    std::ifstream res;
+    res.open("out_test1.txt");
+
+    std::getline(res, res_str);
+
+    ASSERT_TRUE(isValid(
+        res_str, {B, K}, s, v));
+}
+
 
 int main(int argc, char **argv) {
     ::testing::InitGoogleTest(&argc, argv);
