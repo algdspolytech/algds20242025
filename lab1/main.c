@@ -24,7 +24,7 @@ void listInsert(Node ** head, const char * data){
     if(*head){
         (*head) -> link = XOR_function(new_node, (*head) -> link);
     }
-    new_node = *head;
+    *head = new_node;
 }
 
 Node * find(Node * head, const char * key){
@@ -116,12 +116,19 @@ void clearList (Node ** head){
 }
 
 int main(){
-    Node * head = NULL;
-    listInsert(&head, "O");
-    listInsert(&head, "D");
-    listInsert(&head, "e");
-    listInsert(&head, "t");
-    iterate(head);
-    clearList(&head);
+    Node * list = NULL;
+    listInsert(&list, "new life");
+    listInsert(&list, "create");
+    listInsert(&list, "to");
+    listInsert(&list, "how");
+    printf("original list\n");
+    iterate(list);
+    deleteByKey(&list, "create");
+    printf("deleted by key (create)\n");
+    iterate(list);
+    deleteByAddress(&list, list);
+    printf("deleted by address the head of the list (how)\n");
+    iterate(list);
+    clearList(&list);
     return 0;
 }
