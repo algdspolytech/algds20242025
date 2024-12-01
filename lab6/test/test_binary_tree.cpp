@@ -1,6 +1,7 @@
 #include <gtest/gtest.h>
+extern "C"{
 #include "../src/binary_tree.h"
-
+}
 class BinaryTreeTest : public ::testing::Test {
 protected:
     TreeNode* root;
