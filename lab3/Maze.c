@@ -11,7 +11,7 @@ void CreateMaze(Maze* maze, int lab[ROWS][COLS]) {
 }
 
 Point SearchNext(Point *p, Direction dir) {
-    Point res;
+    Point res = *p;
     switch (dir) {
     case LEFT:
         res.x = p->x - 1;
