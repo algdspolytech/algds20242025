@@ -110,6 +110,6 @@ int FindWay(Maze* maze, Point start, Point exit) {
             }
         }
     }
-    printf("Way not found");
+    printf("Way not found\n");
     return 0;
 }
