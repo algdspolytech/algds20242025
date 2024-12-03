@@ -1,15 +1,14 @@
 #include "Maze.h" 
 #include <locale.h>
 
-void Test1() {
+void TestSearchNext_n1() {
     Point elem = { 4, 0 };
     Direction dir = LEFT;
     if (SearchNext(&elem, dir).x == 3 && SearchNext(&elem, dir).y == 0) {
         printf("1  -  Пройден\n");
     }
 }
-
-void Test2() {
+void TestSearchNext_NoneDir_n2() {
     Point elem = { 4, 0 };
     Direction dir = NONE;
     if (SearchNext(&elem, dir).x == 4 && SearchNext(&elem, dir).y == 0) {
@@ -17,7 +16,7 @@ void Test2() {
     }
 }
 
-void Test3() {
+void TestCreateMaze_n3() {
     Maze maze;
     int labyrinth[ROWS][COLS] = {
         {0, 1, 0, 0, 0, 0},
@@ -31,9 +30,10 @@ void Test3() {
     if (maze.cells[1][1] == 1 && maze.cells[ROWS - 1][COLS - 1] == 0) {
         printf("3  -  Пройден\n");
     }
+
 }
 
-void Test4() {
+void TestTestCreateNullMaze_n4() {
     Maze maze;
     int labyrinth[ROWS][COLS] = { {0} };
     CreateMaze(&maze, labyrinth);
@@ -42,7 +42,8 @@ void Test4() {
     }
 }
 
-void Test5() {
+
+void TestTestFindWay_n5() {
     Maze maze;
     Point start = { 0, 0 };
     Point exit = { 5, 5 };
@@ -59,8 +60,7 @@ void Test5() {
         printf("5  -  Пройден\n"); 
     }
 }
-
-void Test6() {
+void TestFindWay_StartIsWall_n6() {
     Maze maze;
     Point start = { 0, 0 };
     Point exit = { 5, 5 };
@@ -78,7 +78,7 @@ void Test6() {
     }
 }
 
-void Test7() {
+void TestFindWay_StartIsExit_n7() {
     Maze maze;
     Point start = { 0, 0 };
     Point exit = { 0, 0 };
@@ -96,12 +96,12 @@ void Test7() {
     }
 }
 
-void Test8() {
+void TestFindWay_noWay_n8() {
     Maze maze;
     Point start = { 0, 0 };
     Point exit = { 5, 5 };
     int labyrinth[ROWS][COLS] = {
-        {0, 0, 0, 0, 0, 0},
+        {0, 1, 0, 0, 0, 0},
         {0, 1, 0, 1, 0, 1},
         {0, 0, 1, 1, 0, 0},
         {0, 0, 1, 0, 1, 0},
@@ -114,7 +114,7 @@ void Test8() {
     }
 }
 
-void Test9() {
+void TestFindWay_ErrorExit_n9() {
     Maze maze;
     Point start = { 0, 0 };
     Point exit = { 7, 7 };
@@ -132,7 +132,7 @@ void Test9() {
     }
 }
 
-void Test10() {
+void TestTestFindWay_NotWalls_n10() {
     Maze maze;
     Point start = { 0, 0 };
     Point exit = { 5, 5 };
@@ -144,14 +144,14 @@ void Test10() {
 }
 
 void Tests() {
-    Test1();
-    Test2();
-    Test3();
-    Test4();
-    Test5();
-    Test6();
-    Test7();
-    Test8();
-    Test9();
-    Test10();
-}              
+    TestSearchNext_n1();
+    TestSearchNext_NoneDir_n2();
+    TestCreateMaze_n3();
+    TestTestCreateNullMaze_n4();
+    TestTestFindWay_n5();
+    TestFindWay_StartIsWall_n6();
+    TestFindWay_StartIsExit_n7();
+    TestFindWay_noWay_n8();
+    TestFindWay_ErrorExit_n9(); 
+    TestTestFindWay_NotWalls_n10();
+}    
