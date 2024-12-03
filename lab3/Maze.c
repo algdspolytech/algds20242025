@@ -107,8 +107,6 @@ int FindWay(Maze* maze, Point start, Point exit) {
                 queue[count++] = newCell;
                 visit[newCell.y][newCell.x] = true;
                 parent[newCell.y][newCell.x] = current;
-               
-
             }
         }
     }
