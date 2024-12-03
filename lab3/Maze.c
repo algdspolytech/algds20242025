@@ -81,6 +81,11 @@ int FindWay(Maze* maze, Point start, Point exit) {
         printf("Error\n");
         return -1;
     }
+    if (maze->cells[start.y][start.x] != 0) {
+        printf("It can't be start\n");
+        return -2;
+    }
+    
     bool visit[ROWS][COLS] = { false };
     int length = ROWS * COLS;
     int dir_size = 0;
