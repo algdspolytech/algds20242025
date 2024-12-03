@@ -78,7 +78,7 @@ void PrintWay(Point parent[ROWS][COLS], Point start, Point exit, Direction* dir,
 
 int FindWay(Maze* maze, Point start, Point exit) {
     if ((start.x < 0) || (start.y < 0) || (start.x > COLS-1) || (start.y > ROWS-1) || (exit.x < 0) || (exit.y < 0) || (exit.x > COLS-1) || (exit.y > ROWS-1)) {
-        printf("Error");
+        printf("Error\n");
         return -1;
     }
     bool visit[ROWS][COLS] = { false };
