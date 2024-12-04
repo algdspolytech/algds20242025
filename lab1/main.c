@@ -1,104 +1,141 @@
-#include <stdio.h>
 #include <stdlib.h>
+#include <stdio.h>
+#include "LabF.h"
 
-#include "labD.h"
-
-void clearGraph() {
-    for (int i = 0; i < MAX_VERTICES; i++) {
-        for (int j = 0; j < MAX_VERTICES; j++) {
-            adj[i][j] = 0;
-        }
-        visited[i] = 0;
-        path[i] = -1;
-    }
-}
-
-void resetGraph() {
-    n = 0;
-    clearGraph();
-}
-
-void addGraphEdge(const int u, const int v) {
-    adj[u - 1][v - 1] = 1;
-    adj[v - 1][u - 1] = 1;
-}
-
-int isHamiltonianPath(int position) {
-    if (position == n) {
-        return 1;
-    }
-
-    for (int v = 0; v < n; v++) {
-        if (!visited[v]) {
-            int canAdd = position == 0 || adj[path[position - 1]][v];
-            if (canAdd) {
-                path[position] = v;
-                visited[v] = 1;
-                if (isHamiltonianPath(position + 1)) {
-                    return 1;
-                }
-                visited[v] = 0;
-                path[position] = -1;
-            }
-        }
-    }
-    return 0;
-}
-
-int findHamiltonianPath() {
-    for (int startVertex = 0; startVertex < n; startVertex++) {
-        for (int i = 0; i < n; i++) {
-            visited[i] = 0;
-            path[i] = -1;
-        }
-        path[0] = startVertex;
-        visited[startVertex] = 1;
-        if (isHamiltonianPath(1)) {
-            return 1;
-        }
-    }
-    return 0;
-}
-
-void readGraphFromFile(const char* filename) {
-    FILE* file = fopen(filename, "r");
-    if (!file) {
-        printf("Ошибка при открытии файла");
+IntervalNode* createNode(int start, int end) {
+    IntervalNode* newNode = (IntervalNode*)malloc(sizeof(IntervalNode));
+    if (newNode == NULL) {
+        printf("Ошибка выделения памяти!\n");
         exit(1);
     }
-
-    fscanf(file, "%d", &n);
-    clearGraph();
-
-    for (int i = 1; i <= n; i++) {
-        int vertex;
-        while (fscanf(file, "%d", &vertex) == 1) {
-            if (vertex > 0 && vertex <= n) {
-                addGraphEdge(i, vertex);
-            }
-        }
-    }
-
-    fclose(file);
+    newNode->start = start;
+    newNode->end = end;
+    newNode->left = NULL;
+    newNode->right = NULL;
+    newNode->parent = NULL;
+    return newNode;
 }
 
-
-void writeResult(const char* filename) {
-    FILE* file = fopen(filename, "w");
-    if (!file) {
-        printf("Ошибка при открытии файла для записи");
-        exit(1);
+void insert(IntervalNode** root, int start, int end) {
+    IntervalNode* newNode = createNode(start, end);
+    if (*root == NULL) {
+        *root = newNode;
+        return;
     }
 
-    if (findHamiltonianPath()) {
-        for (int i = 0; i < n; i++) {
-            fprintf(file, "%d ", path[i] + 1);
+    IntervalNode* current = *root;
+    IntervalNode* parent = NULL;
+
+    while (current != NULL) {
+        parent = current;
+        if (start < current->start) {
+            current = current->left;
+        } else {
+            current = current->right;
         }
-        fprintf(file, "\n");
-    }
-    else {
-        fprintf(file, "0\n");
     }
 
-    fclose(file);
+    newNode->parent = parent;
+    if (start < parent->start) {
+        parent->left = newNode;
+    } else {
+        parent->right = newNode;
+    }
+}
+
+IntervalNode* search(IntervalNode* root, int start, int end) {
+    IntervalNode* current = root;
+    while (current != NULL) {
+        if (current->start == start && current->end == end) {
+            return current;
+        } else if (start < current->start) {
+            current = current->left;
+        } else {
+            current = current->right;
+        }
+    }
+    return NULL;
+}
+
+void deleteNode(IntervalNode** root, int start, int end) {
+    IntervalNode* nodeToDelete = search(*root, start, end);
+    if (nodeToDelete == NULL) return;
+
+    if (nodeToDelete->left == NULL && nodeToDelete->right == NULL) { // Лист
+        if (nodeToDelete->parent != NULL) {
+            if (nodeToDelete->parent->left == nodeToDelete) {
+                nodeToDelete->parent->left = NULL;
+            } else {
+                nodeToDelete->parent->right = NULL;
+            }
+        }
+        free(nodeToDelete);
+    } else if (nodeToDelete->left == NULL || nodeToDelete->right == NULL) { // Один потомок
+        IntervalNode* child = (nodeToDelete->left != NULL) ? nodeToDelete->left : nodeToDelete->right;
+        if (nodeToDelete->parent != NULL) {
+            if (nodeToDelete->parent->left == nodeToDelete) {
+                nodeToDelete->parent->left = child;
+            } else {
+                nodeToDelete->parent->right = child;
+            }
+        }
+        if (child != NULL) child->parent = nodeToDelete->parent;
+        free(nodeToDelete);
+    } else {
+        IntervalNode* minRight = nodeToDelete->right;
+        IntervalNode* minRightParent = nodeToDelete;
+        while (minRight->left != NULL) {
+            minRightParent = minRight;
+            minRight = minRight->left;
+        }
+
+        nodeToDelete->start = minRight->start;
+        nodeToDelete->end = minRight->end;
+
+        if (minRightParent == nodeToDelete) {
+            nodeToDelete->right = minRight->right;
+            if (minRight->right != NULL) minRight->right->parent = nodeToDelete;
+        } else {
+            minRightParent->left = minRight->right;
+            if (minRight->right != NULL) minRight->right->parent = minRightParent;
+        }
+        free(minRight);
+    }
+}
+
+void findOverlappingIntervals(IntervalNode* root, int queryStart, int queryEnd, IntervalNode** result, int *count) {
+  IntervalNode* current = root;
+  while(current != NULL){
+    if( (queryStart <= current->end && queryEnd >= current->start)){
+      result[*count] = current;
+      (*count)++;
+    }
+    if(queryStart < current->start){
+      current = current->left;
+    } else {
+      current = current->right;
+    }
+  }
+}
+
+void freeTree(IntervalNode* root) {
+    if (root == NULL) return;
+
+    IntervalNode* current = root;
+    IntervalNode* next;
+    while (current != NULL) {
+        if (current->left != NULL) {
+            next = current->left;
+            while (next->right != NULL) {
+                next = next->right;
+            }
+            next->right = current->right;
+            free(current);
+            current = next->right;
+        } else {
+            next = current->right;
+            free(current);
+            current = next;
+        }
+    }
 }
