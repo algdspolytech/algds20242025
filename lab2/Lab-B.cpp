@@ -101,7 +101,7 @@ void memfree(void* p) {
     if (prev && prev->is_free) {
         prev->size += block->size + sizeof(Block);
         prev->next = block->next;
-        block = prev; // Update 'block' to the coalesced block
+        block = prev; 
     }
     else if (!prev) {
     }
