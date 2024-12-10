@@ -1,11 +1,11 @@
 #include <stdlib.h>
 #include <string.h>
-#include "memallocator.h" // Include if provided
+#include "memallocator.h"
 
 typedef struct Block {
-    int size;                // Block size
-    int is_free;             // Free flag: 1 if free, 0 if allocated
-    struct Block* next;      // Pointer to the next block
+    int size;                
+    int is_free;             
+    struct Block* next;      
 } Block;
 
 static Block* free_list = NULL;
@@ -22,19 +22,19 @@ int memgetblocksize() {
 
 int meminit(void* pMemory, int size) {
     if (!pMemory || size < memgetminimumsize()) {
-        return 0; // Failure due to insufficient memory
+        return 0; 
     }
 
     memory_pool = pMemory;
     total_memory = size;
 
-    // Initialize the first free block
+    
     free_list = (Block*)pMemory;
     free_list->size = size - sizeof(Block);
     free_list->is_free = 1;
     free_list->next = NULL;
 
-    return 1; // Success
+    return 1; 
 }
 
 void memdone() {
@@ -53,7 +53,7 @@ void* memalloc(int size) {
     while (current) {
         if (current->is_free && current->size >= size) {
             if (current->size >= size + sizeof(Block)) {
-                // Split the block
+                
                 Block* new_block = (Block*)((char*)current + sizeof(Block) + size);
                 new_block->size = current->size - size - sizeof(Block);
                 new_block->is_free = 1;
@@ -63,13 +63,13 @@ void* memalloc(int size) {
                 current->next = new_block;
             }
 
-            current->is_free = 0; // Mark as allocated
+            current->is_free = 0; 
             return (char*)current + sizeof(Block);
         }
         current = current->next;
     }
 
-    return NULL; // No suitable block found
+    return NULL;
 }
 
 void memfree(void* p) {
@@ -80,13 +80,13 @@ void memfree(void* p) {
     Block* block = (Block*)((char*)p - sizeof(Block));
     block->is_free = 1;
 
-    // Coalesce with next block if free
+    
     if (block->next && block->next->is_free) {
         block->size += block->next->size + sizeof(Block);
         block->next = block->next->next;
     }
 
-    // Coalesce with previous block if free
+    
     Block* prev = NULL;
     Block* current = free_list;
     while (current && current != block) {
@@ -95,17 +95,14 @@ void memfree(void* p) {
     }
 
     if (!current) {
-        // Block not found; possible error
         return;
     }
 
     if (prev && prev->is_free) {
-        // Coalesce with previous block
         prev->size += block->size + sizeof(Block);
         prev->next = block->next;
         block = prev; // Update 'block' to the coalesced block
     }
     else if (!prev) {
-        // Block is the first block; nothing to do
     }
 }
