@@ -34,7 +34,12 @@ void print_tree_with_width(TreeNode *node, int level) {
   for (int i = 0; i < level; i++) {
     printf("  ");
   }
-  printf("%d\n(%d)\n", node->value, node->width);
+  printf("%d\n", node->value);
+
+  for (int i = 0; i < level; i++) {
+    printf("  ");
+  }
+  printf("(%d)\n", node->width);
 
   print_tree_with_width(node->left, level + 1);
   print_tree_with_width(node->right, level + 1);
