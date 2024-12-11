@@ -11,7 +11,6 @@ typedef struct Node{
 
 typedef struct {
     Node *root;
-    int count_of_nodes;
 } Bin_Tree;
 
 Bin_Tree *init_tree(double value);

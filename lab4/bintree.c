@@ -1,19 +1,5 @@
 #include "bintree.h"
 
-int main() {
-    Bin_Tree *tree = init_tree(11);
-    add_new_node(tree->root,6);
-    add_new_node(tree->root,3);
-    add_new_node(tree->root,1);
-    add_new_node(tree->root,2);
-    add_new_node(tree->root,8);
-    add_new_node(tree->root,7);
-    add_new_node(tree->root,12);
-    print_tree(tree->root,0);
-    free_tree(tree->root);
-    return 0;
-}
-
 Node *init_node(double value) {
     Node *new_node = malloc(sizeof(Node));
     new_node->value = value;
@@ -26,7 +12,6 @@ Node *init_node(double value) {
 Bin_Tree *init_tree(double value) {
     Bin_Tree *new_tree = malloc(sizeof(Bin_Tree));
     new_tree->root = init_node(value);
-    new_tree->count_of_nodes = 1;
     return new_tree;
 }
 
