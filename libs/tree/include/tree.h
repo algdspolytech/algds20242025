@@ -3,6 +3,7 @@
 #include<stdio.h>
 
 typedef struct Node {
+    int id;
     int data;
     int reqCnt;
 
