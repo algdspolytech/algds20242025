@@ -3,7 +3,7 @@
 #include <stddef.h>
 #include <stdbool.h>
 
-// Структура для хранения метаданных блока памяти
+// РЎС‚СЂСѓРєС‚СѓСЂР° РґР»СЏ С…СЂР°РЅРµРЅРёСЏ РјРµС‚Р°РґР°РЅРЅС‹С… Р±Р»РѕРєР° РїР°РјСЏС‚Рё
 struct MemoryChunk {
     void* memoryPointer;
     int blockSize;
@@ -18,7 +18,7 @@ typedef struct MemoryChunk MemoryChunk;
 MemoryChunk* _memoryPool;
 int _poolSize;
 
-// Инициализация системы памяти с блоком памяти memoryPointer.
+// РРЅРёС†РёР°Р»РёР·Р°С†РёСЏ СЃРёСЃС‚РµРјС‹ РїР°РјСЏС‚Рё СЃ Р±Р»РѕРєРѕРј РїР°РјСЏС‚Рё memoryPointer.
 int meminit(void* memoryPointer, int size) {
     if (!memoryPointer || size < sizeof(MemoryChunk))
         return 0;
@@ -35,50 +35,50 @@ int meminit(void* memoryPointer, int size) {
     return 0;
 }
 
-// Здесь можно реализовать проверки утечек памяти
+// Р—РґРµСЃСЊ РјРѕР¶РЅРѕ СЂРµР°Р»РёР·РѕРІР°С‚СЊ РїСЂРѕРІРµСЂРєРё СѓС‚РµС‡РµРє РїР°РјСЏС‚Рё
 void memdone() {
     _memoryPool = NULL;
     _poolSize = 0;
 }
 
-// Выделение блока памяти размером 'size'.
-// Возвращает указатель на блок памяти в случае успеха, 0 в противном случае
+// Р’С‹РґРµР»РµРЅРёРµ Р±Р»РѕРєР° РїР°РјСЏС‚Рё СЂР°Р·РјРµСЂРѕРј 'size'.
+// Р’РѕР·РІСЂР°С‰Р°РµС‚ СѓРєР°Р·Р°С‚РµР»СЊ РЅР° Р±Р»РѕРє РїР°РјСЏС‚Рё РІ СЃР»СѓС‡Р°Рµ СѓСЃРїРµС…Р°, 0 РІ РїСЂРѕС‚РёРІРЅРѕРј СЃР»СѓС‡Р°Рµ
 void* memalloc(int size) {
     if (size <= 0 || !_memoryPool)
         return 0;
 
     MemoryChunk* currentChunk = _memoryPool;
-    MemoryChunk* availableChunk = NULL; // Блок для получения памяти
+    MemoryChunk* availableChunk = NULL; // Р‘Р»РѕРє РґР»СЏ РїРѕР»СѓС‡РµРЅРёСЏ РїР°РјСЏС‚Рё
     int counter = 2;
 
-    // Проход по всем блокам памяти
+    // РџСЂРѕС…РѕРґ РїРѕ РІСЃРµРј Р±Р»РѕРєР°Рј РїР°РјСЏС‚Рё
     while (currentChunk != NULL) {
         if (currentChunk->blockSize >= size && currentChunk->isFree && counter > 0) {
             availableChunk = currentChunk;
 
             counter--;
 
-            if (!counter) // Ищем блок, пока счетчик не равен 0
+            if (!counter) // РС‰РµРј Р±Р»РѕРє, РїРѕРєР° СЃС‡РµС‚С‡РёРє РЅРµ СЂР°РІРµРЅ 0
                 break;
         }
 
         currentChunk = currentChunk->nextChunk;
     }
 
-    // Проверка, нашли ли мы действительный блок памяти
+    // РџСЂРѕРІРµСЂРєР°, РЅР°С€Р»Рё Р»Рё РјС‹ РґРµР№СЃС‚РІРёС‚РµР»СЊРЅС‹Р№ Р±Р»РѕРє РїР°РјСЏС‚Рё
     if (availableChunk == NULL)
         return 0;
 
-    // В противном случае выделяем память из этого блока
+    // Р’ РїСЂРѕС‚РёРІРЅРѕРј СЃР»СѓС‡Р°Рµ РІС‹РґРµР»СЏРµРј РїР°РјСЏС‚СЊ РёР· СЌС‚РѕРіРѕ Р±Р»РѕРєР°
     currentChunk = availableChunk;
     currentChunk->isFree = false;
 
-    // Если недостаточно памяти для создания дополнительных блоков
+    // Р•СЃР»Рё РЅРµРґРѕСЃС‚Р°С‚РѕС‡РЅРѕ РїР°РјСЏС‚Рё РґР»СЏ СЃРѕР·РґР°РЅРёСЏ РґРѕРїРѕР»РЅРёС‚РµР»СЊРЅС‹С… Р±Р»РѕРєРѕРІ
     if (currentChunk->blockSize <= size + sizeof(MemoryChunk))
         return currentChunk->memoryPointer;
 
-    // Если достаточно памяти для создания других блоков
-    // Создаем новый блок
+    // Р•СЃР»Рё РґРѕСЃС‚Р°С‚РѕС‡РЅРѕ РїР°РјСЏС‚Рё РґР»СЏ СЃРѕР·РґР°РЅРёСЏ РґСЂСѓРіРёС… Р±Р»РѕРєРѕРІ
+    // РЎРѕР·РґР°РµРј РЅРѕРІС‹Р№ Р±Р»РѕРє
     MemoryChunk* newChunk = (MemoryChunk*)((char*)currentChunk->memoryPointer + size);
     newChunk->memoryPointer = (void*)((char*)currentChunk->memoryPointer + size + sizeof(MemoryChunk));
     newChunk->blockSize = currentChunk->blockSize - size - sizeof(MemoryChunk);
@@ -89,14 +89,14 @@ void* memalloc(int size) {
     if (currentChunk->nextChunk)
         currentChunk->nextChunk->prevChunk = newChunk;
 
-    // Возвращаем старый блок
+    // Р’РѕР·РІСЂР°С‰Р°РµРј СЃС‚Р°СЂС‹Р№ Р±Р»РѕРє
     currentChunk->blockSize = size;
     currentChunk->nextChunk = newChunk;
 
     return currentChunk->memoryPointer;
 }
 
-// Освобождение памяти, ранее выделенной с помощью memalloc
+// РћСЃРІРѕР±РѕР¶РґРµРЅРёРµ РїР°РјСЏС‚Рё, СЂР°РЅРµРµ РІС‹РґРµР»РµРЅРЅРѕР№ СЃ РїРѕРјРѕС‰СЊСЋ memalloc
 void memfree(void* pointer) {
     if (!_memoryPool || pointer < _memoryPool->memoryPointer || pointer >((char*)_memoryPool->memoryPointer + _poolSize))
         return;
@@ -105,7 +105,7 @@ void memfree(void* pointer) {
 
     currentChunk->isFree = true;
 
-    // Проверяем, свободен ли следующий или предыдущий блок памяти
+    // РџСЂРѕРІРµСЂСЏРµРј, СЃРІРѕР±РѕРґРµРЅ Р»Рё СЃР»РµРґСѓСЋС‰РёР№ РёР»Рё РїСЂРµРґС‹РґСѓС‰РёР№ Р±Р»РѕРє РїР°РјСЏС‚Рё
     if (currentChunk->nextChunk) {
         if (currentChunk->nextChunk->isFree) {
             currentChunk->blockSize += currentChunk->nextChunk->blockSize + sizeof(MemoryChunk);
@@ -127,12 +127,12 @@ void memfree(void* pointer) {
     }
 }
 
-// Возвращает минимальный размер в байтах пула памяти для выделения блока на 0 байт
-// пример использования:
+// Р’РѕР·РІСЂР°С‰Р°РµС‚ РјРёРЅРёРјР°Р»СЊРЅС‹Р№ СЂР°Р·РјРµСЂ РІ Р±Р°Р№С‚Р°С… РїСѓР»Р° РїР°РјСЏС‚Рё РґР»СЏ РІС‹РґРµР»РµРЅРёСЏ Р±Р»РѕРєР° РЅР° 0 Р±Р°Р№С‚
+// РїСЂРёРјРµСЂ РёСЃРїРѕР»СЊР·РѕРІР°РЅРёСЏ:
 // void *p   = 0;
 // void *ptr = malloc(memgetminimumsize() + 1);
 // meminit(ptr, memgetminimumsize() + 1)
-// p = memalloc(1); // Успех!
+// p = memalloc(1); // РЈСЃРїРµС…!
 // memfree(p);
 // memdone();
 // free(ptr);
@@ -140,14 +140,14 @@ int memgetminimumsize() {
     return (int)sizeof(MemoryChunk);
 }
 
-// Возвращает размер в байтах дополнительной информации на каждое выделение
-// пример использования:
+// Р’РѕР·РІСЂР°С‰Р°РµС‚ СЂР°Р·РјРµСЂ РІ Р±Р°Р№С‚Р°С… РґРѕРїРѕР»РЅРёС‚РµР»СЊРЅРѕР№ РёРЅС„РѕСЂРјР°С†РёРё РЅР° РєР°Р¶РґРѕРµ РІС‹РґРµР»РµРЅРёРµ
+// РїСЂРёРјРµСЂ РёСЃРїРѕР»СЊР·РѕРІР°РЅРёСЏ:
 // void *p1 = 0, *p2 = 0;
 // int  memsize= memgetminimumsize() + memgetblocksize() + 2;
 // void *ptr= malloc(memsize);
 // meminit(ptr, memsize)
-// p1= memalloc(1); // Успех!
-// p2= memalloc(1); // Успех!
+// p1= memalloc(1); // РЈСЃРїРµС…!
+// p2= memalloc(1); // РЈСЃРїРµС…!
 // memfree(p2);
 // memfree(p1);
 // memdone();
