@@ -3,18 +3,6 @@
 #include <stdlib.h>
 #include <string.h>
 #include "maze_solver.h"
-#define MAZE_X 4
-#define MAZE_Y 4
-enum {U = 1<<0, D = 1<<1, R = 1<<2, L = 1<<3, START = 1<<4, FINISH = 1<<5};
-
-typedef struct Node {
-    int x, y;
-} Node;
-
-typedef struct Path {
-    int maxlen, head;
-    Node *path;
-} Path;
 
 int maze[MAZE_X][MAZE_Y] = {
     {R|D|START, L, R|D, L},
@@ -111,18 +99,18 @@ void printPath(Path *p) {
     printf("\n");
 }
 
-int main() {
-    Path path;
-    pathSetup(&path, &start);
-    visited[start.x][start.y] = 1;
+// int main() {
+//     Path path;
+//     pathSetup(&path, &start);
+//     visited[start.x][start.y] = 1;
 
-    if (findPath(&path, &start)) {
-        printf("Path found\n");
-        printPath(&path);
-    } else {
-        printf("No Path found\n");
-    }
+//     if (findPath(&path, &start)) {
+//         printf("Path found\n");
+//         printPath(&path);
+//     } else {
+//         printf("No Path found\n");
+//     }
 
-    free(path.path);
-    return 0;
-}
+//     free(path.path);
+//     return 0;
+// }
