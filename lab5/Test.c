@@ -138,9 +138,12 @@ void TestPrint_no10() {
     for (int i = 0; i < sizeof(values) / sizeof(values[0]); i++) {
         root = Insert(root, values[i]);
     }
-    printf("Test10 - ");
-    Print(root);      //ожидается 33 40 56
-    printf("\n");
+    if (Print(root)) {
+        printf("\nTest10 - passed\n");
+    }
+    else {
+        printf("Test10 - not passed\n");
+    }
 }
 
 void RunAllTests() {
