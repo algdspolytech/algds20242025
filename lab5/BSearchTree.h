@@ -1,6 +1,7 @@
 #pragma once
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdbool.h>
 
 typedef struct BinaryTreeNode {
     int key; 
@@ -15,5 +16,5 @@ BinaryTreeNode* Insert(BinaryTreeNode*, int);
 int FindNumElem(BinaryTreeNode*, int);
 BinaryTreeNode* FindElemInNum(BinaryTreeNode*, int);
 BinaryTreeNode* FindElemNumMinusK(BinaryTreeNode*, int, int);
-void Print(BinaryTreeNode*);
+bool Print(BinaryTreeNode*);
 void Free(BinaryTreeNode*);
