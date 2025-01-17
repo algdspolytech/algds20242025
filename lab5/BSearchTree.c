@@ -93,12 +93,15 @@ BinaryTreeNode* FindElemNumMinusK(BinaryTreeNode* node, int key, int k) {
     return FindElemInNum(node, currentOrder - k);
 }
 
-void Print(BinaryTreeNode* root) {
+bool Print(BinaryTreeNode* root) {
+    bool flag = false;
     if (root != NULL) {
         Print(root->left);
         printf("%d ", root->key);
         Print(root->right);
+        flag = true;
     }
+    return flag;
 }
 
 void Free(BinaryTreeNode* root) {
