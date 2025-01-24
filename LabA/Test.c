@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <assert.h>
 #include "labA.h"
 #include <locale.h>
 
@@ -9,82 +10,81 @@ int main() {
     setlocale(LC_CTYPE, "Russian");
     testLinkedQueue();
     testArrayQueue();
+    printf("Р’СЃРµ С‚РµСЃС‚С‹ СѓСЃРїРµС€РЅРѕ РїСЂРѕР№РґРµРЅС‹!\n");
     return 0;
 }
 
 void testLinkedQueue() {
     LinkedQueue* q = createLinkedQueue();
-    printf("Тесты для связной очереди\n\n");
+    printf("РўРµСЃС‚С‹ РґР»СЏ СЃРІСЏР·РЅРѕР№ РѕС‡РµСЂРµРґРё\n\n");
 
     // Test_no1
-    printf("Тест 1: Добавление в пустую очередь\n");
+    printf("РўРµСЃС‚ 1: Р”РѕР±Р°РІР»РµРЅРёРµ РІ РїСѓСЃС‚СѓСЋ РѕС‡РµСЂРµРґСЊ\n");
     enqueueLinked(q, 10);
-    printf("Dequeued: %d\n", dequeueLinked(q));
+    assert(dequeueLinked(q) == 10);
 
     // Test_no2
-    printf("Тест 2: Добавление двух элементов\n");
+    printf("РўРµСЃС‚ 2: Р”РѕР±Р°РІР»РµРЅРёРµ РґРІСѓС… СЌР»РµРјРµРЅС‚РѕРІ\n");
     enqueueLinked(q, 20);
     enqueueLinked(q, 30);
-    printf("Dequeued: %d\n", dequeueLinked(q));
-    printf("Dequeued: %d\n", dequeueLinked(q));
+    assert(dequeueLinked(q) == 20);
+    assert(dequeueLinked(q) == 30);
 
     // Test_no3
-    printf("Тест 3: Дефицит из пустой очереди\n");
-    printf("Dequeued: %d\n", dequeueLinked(q)); // Ожидаем -1
+    printf("РўРµСЃС‚ 3: Р”РµС„РёС†РёС‚ РёР· РїСѓСЃС‚РѕР№ РѕС‡РµСЂРµРґРё\n");
+    assert(dequeueLinked(q) == -1); // РћР¶РёРґР°РµРј -1
 
     // Test_no4
-    printf("Тест 4: Добавление элемента после удаления\n");
+    printf("РўРµСЃС‚ 4: Р”РѕР±Р°РІР»РµРЅРёРµ СЌР»РµРјРµРЅС‚Р° РїРѕСЃР»Рµ СѓРґР°Р»РµРЅРёСЏ\n");
     enqueueLinked(q, 40);
-    printf("Dequeued: %d\n", dequeueLinked(q)); // Ожидаем 40
+    assert(dequeueLinked(q) == 40); // РћР¶РёРґР°РµРј 40
 
     // Test_no5
-    printf("Тест 5: Множественное добавление элементов\n");
+    printf("РўРµСЃС‚ 5: РњРЅРѕР¶РµСЃС‚РІРµРЅРЅРѕРµ РґРѕР±Р°РІР»РµРЅРёРµ СЌР»РµРјРµРЅС‚РѕРІ\n");
     for (int i = 50; i <= 70; i += 10) {
         enqueueLinked(q, i);
     }
-    printf("Доставить все элементы:\n");
-    for (int i = 0; i < 3; i++) {
-        printf("Dequeued: %d\n", dequeueLinked(q));
+    for (int i = 50; i <= 70; i += 10) {
+        assert(dequeueLinked(q) == i);
     }
 
     destroyLinkedQueue(q);
 }
 
 void testArrayQueue() {
-    printf("\nТесты для массивной очереди\n\n");
+    printf("\nРўРµСЃС‚С‹ РґР»СЏ РјР°СЃСЃРёРІРЅРѕР№ РѕС‡РµСЂРµРґРё\n\n");
     ArrayQueue* q = createArrayQueue(4);
 
     // Test_no6
-    printf("Тест 6: Добавление в пустую массивную очередь\n");
+    printf("РўРµСЃС‚ 6: Р”РѕР±Р°РІР»РµРЅРёРµ РІ РїСѓСЃС‚СѓСЋ РјР°СЃСЃРёРІРЅСѓСЋ РѕС‡РµСЂРµРґСЊ\n");
     enqueueArray(q, 10);
-    printf("Dequeued: %d\n", dequeueArray(q));
+    assert(dequeueArray(q) == 10);
 
     // Test_no7
-    printf("Тест 7: Добавление двух элементов\n");
+    printf("РўРµСЃС‚ 7: Р”РѕР±Р°РІР»РµРЅРёРµ РґРІСѓС… СЌР»РµРјРµРЅС‚РѕРІ\n");
     enqueueArray(q, 20);
     enqueueArray(q, 30);
-    printf("Dequeued: %d\n", dequeueArray(q));
-    printf("Dequeued: %d\n", dequeueArray(q));
+    assert(dequeueArray(q) == 20);
+    assert(dequeueArray(q) == 30);
 
     // Test_no8
-    printf("Тест 8: Переполнение массивной очереди\n");
+    printf("РўРµСЃС‚ 8: РџРµСЂРµРїРѕР»РЅРµРЅРёРµ РјР°СЃСЃРёРІРЅРѕР№ РѕС‡РµСЂРµРґРё\n");
     for (int i = 40; i <= 70; i += 10) {
         enqueueArray(q, i);
     }
-    printf("Попытка добавить в очередь элемент (80):\n");
-    enqueueArray(q, 80); // Ожидаем сообщение об ошибке
+    assert(!enqueueArray(q, 80));
 
     // Test_no9
-    printf("Тест 9: Достаем все элементы из массивной очереди\n");
-    while (!isEmpty(q)) {
-        printf("Dequeued: %d\n", dequeueArray(q)); // Достаем элементы из очереди
+    printf("РўРµСЃС‚ 9: Р”РѕСЃС‚Р°РµРј РІСЃРµ СЌР»РµРјРµРЅС‚С‹ РёР· РјР°СЃСЃРёРІРЅРѕР№ РѕС‡РµСЂРµРґРё\n");
+    for (int i = 40; i <= 70; i += 10) {
+        assert(dequeueArray(q) == i);
     }
-    printf("Dequeued: %d\n", dequeueArray(q)); // Ожидаем -1
+    assert(dequeueArray(q) == -1);
 
     // Test_no10
-    printf("Тест 10: Добавление элементов после полного опустошения очереди\n");
+    printf("РўРµСЃС‚ 10: Р”РѕР±Р°РІР»РµРЅРёРµ СЌР»РµРјРµРЅС‚РѕРІ РїРѕСЃР»Рµ РїРѕР»РЅРѕРіРѕ РѕРїСѓСЃС‚РѕС€РµРЅРёСЏ РѕС‡РµСЂРµРґРё\n");
     enqueueArray(q, 90);
-    printf("Dequeued: %d\n", dequeueArray(q)); // Ожидаем 90
+    assert(dequeueArray(q) == 90);
 
     destroyArrayQueue(q);
 }
