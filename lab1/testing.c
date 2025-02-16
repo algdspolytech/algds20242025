@@ -6,7 +6,7 @@
 #include <stdlib.h>
 #include <locale.h>  
 
-#define MAX 100
+#define MAX 100 
 
 
 void TestenqueueList_AddElement_no1() {
@@ -63,7 +63,7 @@ void TestdequeueList_AfterDelet_no4() {
 
 void TestdequeueList_OrderOfDeletion_no5() {
     struct QueueList* queue = (struct QueueList*)malloc(sizeof(struct QueueList));
-    queue->front = queue->rear = NULL;
+    queue->front = queue->rear = NULL;  // aboba
 
     enqueueList(queue, 5);
     enqueueList(queue, 10);
