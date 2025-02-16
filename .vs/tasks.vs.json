@@ -1,0 +1,10 @@
+{
+  "version": "0.2.1",
+  "tasks": [
+    {
+      "taskLabel": "задача-Source1",
+      "appliesTo": "lab1/Source1.c",
+      "type": "launch"
+    }
+  ]
+}

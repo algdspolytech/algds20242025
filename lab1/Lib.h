@@ -1,7 +1,7 @@
 #pragma once
 #include <stdio.h>
 #include <stdlib.h>
-#include <locale.h> 
+#include <locale.h>    // бла-бла-бла чекаю гит работает не работает ёмаё 
 
 #define MAX 100 
 
