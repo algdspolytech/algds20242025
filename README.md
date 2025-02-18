@@ -1,2 +1,2 @@
 # Лабораторная работа D
-![Image alt](labD.png)
+![Image alt](labF.png)
