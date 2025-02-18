@@ -4,7 +4,7 @@ project(LabC)
 set(CMAKE_C_STANDARD 11)
 
 add_library(LabC main.c
-        labC.h)
+        LibC.h)
 
 add_subdirectory(./googletest GTEST)
 include_directories(googletest/googletest/include)
