@@ -21,8 +21,8 @@
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
-    <ProjectGuid>{9f101eb8-b251-4761-ae63-24dd4ef71a5b}</ProjectGuid>
-    <RootNamespace>LabDRuzina</RootNamespace>
+    <ProjectGuid>{94d55c82-863b-4905-8ea4-54dce57cc51c}</ProjectGuid>
+    <RootNamespace>LabFRuzina</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -131,10 +131,12 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="LabD.c" />
+    <ClInclude Include="LabF.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="LabD.h" />
+    <ClCompile Include="LabF.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
+    </ClCompile>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
