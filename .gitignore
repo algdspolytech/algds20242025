@@ -1,0 +1,54 @@
+﻿################################################################################
+# Данный GITIGNORE-файл был автоматически создан Microsoft(R) Visual Studio.
+################################################################################
+
+/.vs/Долги етижи пассатижи/v17/Browse.VC.opendb
+/.vs/slnx.sqlite
+/.vs/Долги етижи пассатижи/v17/Browse.VC.db
+/.vs/Долги етижи пассатижи/FileContentIndex/2a0994ed-eb33-405c-bf89-527c32e4b0ae.vsidx
+/.vs/Долги етижи пассатижи/FileContentIndex/3a773c91-f8d9-45a9-932e-e99a351bbfb7.vsidx
+/.vs/Долги етижи пассатижи/FileContentIndex/61e6bcab-f57e-4d4b-9889-d5a5e6411d2e.vsidx
+/.vs/Долги етижи пассатижи/FileContentIndex/2840769a-de36-4e33-8973-092a5886dffd.vsidx
+/.vs/Долги етижи пассатижи/FileContentIndex/2a48bddf-f14b-46d2-aec3-3fe905465026.vsidx
+*.vsidx
+/.vs/Долги етижи пассатижи/FileContentIndex/9cbae5a8-eee8-4880-ad11-5beb1e96066c.vsidx
+/.vs/Долги етижи пассатижи/FileContentIndex/ac92e15a-e9f1-4a44-891f-ddaafa5f6927.vsidx
+/.vs/slnx.sqlite
+/.vs/Долги етижи пассатижи/v17/Browse.VC.db-shm
+/.vs/Долги етижи пассатижи/v17/Browse.VC.db
+/.vs/Долги етижи пассатижи/v17/.wsuo
+/.vs/Долги етижи пассатижи/v17/ipch/AutoPCH/674aab6719ef8c9e/TESTING.ipch
+/.vs/Долги етижи пассатижи/v17/ipch/AutoPCH/52f0bf41c2218bfd/VAR11.ipch
+/.vs/Долги етижи пассатижи/FileContentIndex/2a0994ed-eb33-405c-bf89-527c32e4b0ae.vsidx
+/.vs/Долги етижи пассатижи/FileContentIndex/2a0994ed-eb33-405c-bf89-527c32e4b0ae.vsidx
+/.vs/Долги етижи пассатижи/FileContentIndex/2a48bddf-f14b-46d2-aec3-3fe905465026.vsidx
+/.vs/Долги етижи пассатижи/FileContentIndex/2a0994ed-eb33-405c-bf89-527c32e4b0ae.vsidx
+/.vs/Долги етижи пассатижи/FileContentIndex/2a48bddf-f14b-46d2-aec3-3fe905465026.vsidx
+/.vs/Долги етижи пассатижи/FileContentIndex/9cbae5a8-eee8-4880-ad11-5beb1e96066c.vsidx
+/.vs/Долги етижи пассатижи/FileContentIndex/ac92e15a-e9f1-4a44-891f-ddaafa5f6927.vsidx
+/.vs/Долги етижи пассатижи/v17/ipch/AutoPCH/52f0bf41c2218bfd/VAR11.ipch
+/.vs/Долги етижи пассатижи/v17/ipch/AutoPCH/674aab6719ef8c9e/TESTING.ipch
+/.vs/slnx.sqlite
+/.vs/Долги етижи пассатижи/v17/Browse.VC.db-shm
+/.vs/Долги етижи пассатижи/v17/Browse.VC.db
+/.vs/Долги етижи пассатижи/v17/.wsuo
+/.vs/lab2/VSWorkspaceState.json
+/.vs/Долги етижи пассатижи/FileContentIndex/4c8d3e0b-5b46-4936-b682-ef48bf12e41a.vsidx
+/.vs/CMake Overview
+/.vs/cmake.db
+/.vs/CMakeWorkspaceSettings.json
+/.vs/Долги етижи пассатижи/v17/ipch/AutoPCH/bf30765e30373b5a/MAIN.ipch
+/lab2/out/build/x64-Debug/.cmake/api/v1/query/client-MicrosoftVS/query.json
+/lab2/out/build/x64-Debug/CMakeCache.txt
+/lab2/out/build/x64-Debug/CMakeFiles/cmake.check_cache
+/lab2/out/build/x64-Debug/VSInheritEnvironments.txt
+/.vs/Долги етижи пассатижи/v17/Browse.VC.db-wal
+/.vs/ProjectSettings.json
+/CppProperties.json
+/README.md
+/.vs/VSWorkspaceState.json
+/.vs/Долги етижи пассатижи/v17/ipch/AutoPCH/307bb7a081b0e1b1/LABD.ipch
+/.vs/Долги етижи пассатижи/v17/ipch/AutoPCH/448271c6ddd936f8/LIBD.ipch
+/.vs/Долги етижи пассатижи/v17/ipch/AutoPCH/b479e47a4a2e9141/MAIN.ipch
+/lab2/CMakeLists.txt
+/.vs/Долги етижи пассатижи/v17/ipch/AutoPCH
