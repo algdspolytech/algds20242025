@@ -72,25 +72,25 @@ int generate_expressions(char *a, int pos, char *expr, int expr_pos, long long b
 }
 
 
-// int main() {
-//     FILE *input = fopen("input.txt", "r");
-//     FILE *output = fopen("output.txt", "w");
-//     if (!input || !output) {
-//         fprintf(stderr, "Error opening files\n");
-//         return 1;
-//     }
+int main() {
+    FILE *input = fopen("input.txt", "r");
+    FILE *output = fopen("output.txt", "w");
+    if (!input || !output) {
+        fprintf(stderr, "Error opening files\n");
+        return 1;
+    }
 
-//     char a[MAX_A_LEN];
-//     long long b;
-//     fscanf(input, "%s %lld", a, &b);
-//     fclose(input);
+    char a[MAX_A_LEN];
+    long long b;
+    fscanf(input, "%s %lld", a, &b);
+    fclose(input);
 
-//     char expr[MAX_EXPR_LEN], result_expr[MAX_EXPR_LEN] = "0";
-//     if (generate_expressions(a, 0, expr, 0, b, result_expr)) {
-//         fprintf(output, "%s\n", result_expr);
-//     } else {
-//         fprintf(output, "0\n");
-//     }
-//     fclose(output);
-//     return 0;
-// }
+    char expr[MAX_EXPR_LEN], result_expr[MAX_EXPR_LEN] = "0";
+    if (generate_expressions(a, 0, expr, 0, b, result_expr)) {
+        fprintf(output, "%s\n", result_expr);
+    } else {
+        fprintf(output, "0\n");
+    }
+    fclose(output);
+    return 0;
+}
