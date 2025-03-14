@@ -1,91 +1,100 @@
 #include "splay_tree.h"
 #include <stdio.h>
+#include <stdbool.h>
 
 void runTests() {
     Node* root = NULL;
 
 
     root = insert(root, 10);
-    root = insert(root, 20);
-    root = insert(root, 5);
-    if (root->data == 5) {
-        printf("Test 1: Passed - Корнем дерева стал элемент 5\n");
+    root = insert(root, 10);
+    if (root->data == 10 && root->left == NULL && root->right == NULL) {
+        printf("Test 1: Passed - Дубликат не добавлен\n");
     } else {
-        printf("Test 1: Failed - Ожидалось, что корнем станет элемент 5, но корень равен %d\n", root->data);
+        printf("Test 1: Failed - Дубликат был добавлен\n");
     }
 
-
-    root = insert(root, 3);
-    root = insert(root, 7);
-    root = insert(root, 2);
-    root = insert(root, 4);
-    root = insert(root, 6);
-    printf("Test 2: ");
-    inorder(root);
-    printf("\n");
-
-
-    bool found = search(root, 7);
-    if (found && root->data == 7) {
-        printf("Test 3: Passed - Элемент 7 найден и стал корнем дерева\n");
-    } else {
-        printf("Test 3: Failed - Ожидалось, что элемент 7 станет корнем, но корень равен %d\n", root->data);
-    }
-
-
-    found = search(root, 100);
+    // 2.
+    bool found = search(root, 20); //
     if (!found) {
-        printf("Test 4: Passed - Элемент 100 не найден\n");
+        printf("Test 2: Passed - Элемент 20 не найден\n");
     } else {
-        printf("Test 4: Failed - Элемент 100 был найден,но его нет в дереве\n");
+        printf("Test 2: Failed - Элемент 20 был найден, но его нет в дереве\n");
     }
 
+    // 3.
+    root = deleteNode(root, 30);
+    if (root != NULL && root->data == 10) {
+        printf("Test 3: Passed\n");
+    } else {
+        printf("Test 3: Failed\n");
+    }
 
-    root = deleteNode(root, 4);
-    printf("Test 5: ");
-    inorder(root);
-    printf("\n");
-
-
-    root = deleteNode(root, 7);
-    printf("Test 6: ");
-    inorder(root);
-    printf("\n");
-
-
-    root = deleteNode(root, 100);
-    printf("Test 7: ");
-    inorder(root);
-    printf("\n");
-
-
-    root = deleteNode(root, 2);
-    root = deleteNode(root, 3);
-    root = deleteNode(root, 5);
-    root = deleteNode(root, 6);
+    // 4.
     root = deleteNode(root, 10);
-    root = deleteNode(root, 20);
     if (root == NULL) {
-        printf("Test 8: Passed - Дерево успешно очищено\n");
+        printf("Test 4: Passed - Дерево пустое\n");
     } else {
-        printf("Test 8: Failed - Дерево не пустое, корень равен %d\n", root->data);
+        printf("Test 4: Failed - Дерево не стало пустым\n");
     }
 
+    // 5.
+    root = insert(root, 50);
+    if (root != NULL && root->data == 50) {
+        printf("Test 5: Passed - Элемент 50 успешно добавлен в дерево\n");
+    } else {
+        printf("Test 5: Failed - Элемент 50 не был добавлен в  дерево\n");
+    }
 
-    root = insert(root, 5);
-    root = insert(root, 5);
-    printf("Test 9: ");
-    inorder(root);
-    printf("\n");
+    // 6.
+    root = insert(root, 60);
+    root = insert(root, 40);
+    found = search(root, 40);
+    if (found && root->data == 40) {
+        printf("Test 6: Passed - Элемент 40 найден\n");
+    } else {
+        printf("Test 6: Failed - Элемент 40 не найден\n");
+    }
 
+    // 7.
+    root = deleteNode(root, 40);
+    if (root != NULL && root->data == 60) {
+        printf("Test 7: Passed - Корневой элемент 40 удален, новый корень 60\n");
+    } else {
+        printf("Test 7: Failed - Корневой элемент 40 не был удален или новый корень некорректен\n");
+    }
 
+    // 8.
+    found = search(NULL, 100);
+    if (!found) {
+        printf("Test 8: Passed\n");
+    } else {
+        printf("Test 8: Failed\n");
+    }
+
+    // 9.
+    for (int i = 1; i <= 100; i++) {
+        root = insert(root, i);
+    }
+    for (int i = 1; i <= 100; i++) {
+        root = deleteNode(root, i);
+    }
+    if (root == NULL) {
+        printf("Test 9: Passed - Дерево пустое\n");
+    } else {
+        printf("Test 9: Failed - Дерево не пустое\n");
+    }
+
+    //10.
     root = insert(root, 10);
     root = insert(root, 20);
-    root = insert(root, 30);
-    root = deleteNode(root, 20);
-    printf("Test 10: ");
-    inorder(root);
-    printf("\n");
+    root = insert(root, 5);
+    root = deleteNode(root, 10);
+    if (root != NULL && root->data == 5 && root->right != NULL && root->right->data == 20) {
+        printf("Test 10: Passed - Структура дерева корректна \n");
+    } else {
+        printf("Test 10: Failed - Структура дерева некорректна\n");
+    }
 }
 
 int main() {
