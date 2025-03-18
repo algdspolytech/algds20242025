@@ -118,6 +118,148 @@ void insert(rb_tree **root, int key) {
   (*root)->c = BLACK;
 }
 
+rb_tree *tree_minimum(rb_tree *node) {
+  while (node->left != NULL) {
+    node = node->left;
+  }
+  return node;
+}
+
+rb_tree *tree_next(rb_tree *node) {
+  if (node->right != NULL) {
+    return tree_minimum(node);
+  }
+  rb_tree *node_parent = node->parent;
+  while (node_parent != NULL && node == node_parent->right) {
+    node = node_parent;
+    node_parent = node_parent->parent;
+  }
+  return node_parent;
+}
+
+color get_color(rb_tree *node) {
+  if (node == NULL) {
+    return BLACK;
+  } else {
+    return node->c;
+  }
+}
+
+void fix_after_del(rb_tree **root, rb_tree *node) {
+  while (node != *root && get_color(node) == BLACK) {
+    if (node == node->parent->left) {
+      rb_tree *node_tmp = node->parent->right;
+      if (get_color(node_tmp) == RED) {
+        node_tmp->c = BLACK;
+        node_tmp->parent->c = RED;
+        left_rotate(root, node->parent);
+        node_tmp = node->parent->right;
+      }
+      if (get_color(node_tmp->left) == BLACK &&
+          get_color(node_tmp->right) == BLACK) {
+        node_tmp->c = RED;
+        node_tmp = node_tmp->parent;
+      } else {
+        if (get_color(node_tmp->right) == BLACK) {
+          node_tmp->left->c = BLACK;
+          node_tmp->c = RED;
+          right_rotate(root, node_tmp);
+          node_tmp = node->parent->right;
+        }
+        node_tmp->c = get_color(node->parent);
+        node->parent->c = BLACK;
+        node_tmp->right->c = BLACK;
+        left_rotate(root, node->parent);
+        node = *root;
+      }
+    } else {
+      rb_tree *node_tmp = node->parent->left;
+      if (get_color(node_tmp) == RED) {
+        node_tmp->c = BLACK;
+        node_tmp->parent->c = RED;
+        right_rotate(root, node->parent);
+        node_tmp = node->parent->left;
+      }
+      if (get_color(node_tmp->right) == BLACK &&
+          get_color(node_tmp->left) == BLACK) {
+        node_tmp->c = RED;
+        node_tmp = node_tmp->parent;
+      } else {
+        if (get_color(node_tmp->left) == BLACK) {
+          node_tmp->right->c = BLACK;
+          node_tmp->c = RED;
+          left_rotate(root, node_tmp);
+          node_tmp = node->parent->left;
+        }
+        node_tmp->c = get_color(node->parent);
+        node->parent->c = BLACK;
+        node_tmp->left->c = BLACK;
+        right_rotate(root, node->parent);
+        node = *root;
+      }
+    }
+  }
+  node->c = BLACK;
+}
+
+void delete(rb_tree **root, rb_tree *node) {
+  if (node == NULL)
+    return;
+
+  rb_tree *node_parent = node;
+  rb_tree *node_tmp = NULL;
+  rb_tree *dummy = NULL;
+
+  if (node->left != NULL && node->right != NULL) {
+    rb_tree *successor = tree_minimum(node->right);
+    node->key = successor->key;
+    node_parent = successor;
+  }
+
+  node_tmp =
+      (node_parent->left != NULL) ? node_parent->left : node_parent->right;
+
+  if (node_tmp == NULL) {
+    dummy = create_node(0, BLACK);
+    dummy->parent = node_parent->parent;
+    node_tmp = dummy;
+  } else {
+    node_tmp->parent = node_parent->parent;
+  }
+
+  if (node_parent->parent == NULL) {
+    *root = node_tmp;
+  } else if (node_parent == node_parent->parent->left) {
+    node_parent->parent->left = node_tmp;
+  } else {
+    node_parent->parent->right = node_tmp;
+  }
+
+  if (get_color(node_parent) == BLACK) {
+    fix_after_del(root, node_tmp);
+  }
+
+  if (dummy != NULL) {
+    if (dummy->parent != NULL) {
+      if (dummy->parent->left == dummy) {
+        dummy->parent->left = NULL;
+      } else {
+        dummy->parent->right = NULL;
+      }
+    }
+    if (*root == dummy) {
+      *root = NULL;
+    }
+    free(dummy);
+  }
+
+  free(node_parent);
+
+  if (*root != NULL) {
+    (*root)->c = BLACK;
+  }
+}
+
 rb_tree *search(rb_tree *root, int key) {
   rb_tree *node = root;
   while (node != NULL && node->key != key) {

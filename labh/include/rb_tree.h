@@ -15,7 +15,7 @@ typedef struct rb_tree {
 } rb_tree;
 
 void insert(rb_tree **root, int key);
-void delete(rb_tree *root, int key);
+void delete(rb_tree **root, rb_tree *node);
 rb_tree *search(rb_tree *root, int key);
 
 #endif
