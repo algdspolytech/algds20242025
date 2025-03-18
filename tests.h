@@ -1,0 +1,9 @@
+void testInsertBinTree();
+void testInorderTraversalBinTree();
+void testSearchBinTree();
+void testRemoveBinTree();
+void testInsertAVLTree();
+void testRotateLeftRight();
+void testRotateRightLeft();
+void testRemoveAVLTree();
+void TESTS();
