@@ -1,60 +1,91 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <math.h>
+#include "AVLTree.h"
 
-#define MAX_N 20
-
-int queens[MAX_N]; 
-int N; 
-
-int isSafe(int row, int col) {
-    for (int i = 0; i < row; i++) {
-        if (queens[i] == col || abs(queens[i] - col) == abs(i - row)) {
-            return 0; 
-        }
-    }
-    return 1; 
+void measureTime(const char* testName, void (*testFunc)(void*), void* arg) {
+    clock_t start = clock();
+    testFunc(arg);
+    double elapsed = (double)(clock() - start) / CLOCKS_PER_SEC;
+    printf("%-20s: %.5f sec\n", testName, elapsed);
 }
 
-void solveNQueensUtil(int row) {
-    if (row == N) {
-        for (int i = 0; i < N; i++) {
-            for (int j = 0; j < N; j++) {
-                if (queens[i] == j) {
-                    printf(" Q ");
-                } else {
-                    printf(" . ");
-                }
-            }
-            printf("\n");
-        }
-        printf("\n");
-        return;
-    }
+#define NUM_ELEMENTS 100000
 
-    for (int col = 0; col < N; col++) {
-        if (isSafe(row, col)) {
-            queens[row] = col; 
-            solveNQueensUtil(row + 1); 
-        }
+void testRandomInsert(void* arg) {
+    int isAVL = *(int*)arg;
+    if (isAVL) {
+        struct Node* tree = NULL;
+        for (int i = 0; i < NUM_ELEMENTS; i++)
+            tree = insert(tree, rand());
+    } else {
+        BSTNode* tree = NULL;
+        for (int i = 0; i < NUM_ELEMENTS; i++)
+            tree = BSTInsert(tree, rand());
     }
 }
 
-void solveNQueens(int n) {
-    N = n;
-    for (int i = 0; i < N; i++) {
-        queens[i] = -1; 
+void testSortedInsert(void* arg) {
+    int isAVL = *(int*)arg;
+    if (isAVL) {
+        struct Node* tree = NULL;
+        for (int i = 0; i < NUM_ELEMENTS; i++)
+            tree = insert(tree, i);
+    } else {
+        BSTNode* tree = NULL;
+        for (int i = 0; i < NUM_ELEMENTS; i++)
+            tree = BSTInsert(tree, i);
     }
-    solveNQueensUtil(0); 
+}
+
+void testSearch(void* arg) {
+    int isAVL = *(int*)arg;
+    if (isAVL) {
+        struct Node* tree = NULL;
+        for (int i = 0; i < NUM_ELEMENTS; i++)
+            tree = insert(tree, rand());
+        for (int i = 0; i < NUM_ELEMENTS; i++)
+            search(tree, rand());
+    } else {
+        BSTNode* tree = NULL;
+        for (int i = 0; i < NUM_ELEMENTS; i++)
+            tree = BSTInsert(tree, rand());
+        for (int i = 0; i < NUM_ELEMENTS; i++)
+            BSTSearch(tree, rand());
+    }
+}
+
+void testDelete(void* arg) {
+    int isAVL = *(int*)arg;
+    if (isAVL) {
+        struct Node* tree = NULL;
+        for (int i = 0; i < NUM_ELEMENTS; i++)
+            tree = insert(tree, rand());
+        for (int i = 0; i < NUM_ELEMENTS; i++)
+            tree = deleteNode(tree, rand());
+    } else {
+        BSTNode* tree = NULL;
+        for (int i = 0; i < NUM_ELEMENTS; i++)
+            tree = BSTInsert(tree, rand());
+        for (int i = 0; i < NUM_ELEMENTS; i++)
+            tree = BSTDelete(tree, rand());
+    }
 }
 
 int main() {
-    printf("Введите размер шахматной доски (N): ");
-    scanf("%d", &N);
-    if (N > MAX_N) {
-        printf("Размер доски не должен превышать %d.\n", MAX_N);
-        return 1;
-    }
-    solveNQueens(N);
+    srand(time(NULL));
+    int isAVL;
+
+    printf("=== AVL Tree Performance ===\n");
+    isAVL = 1;
+    measureTime("Random Insert", testRandomInsert, &isAVL);
+    measureTime("Sorted Insert", testSortedInsert, &isAVL);
+    measureTime("Search", testSearch, &isAVL);
+    measureTime("Delete", testDelete, &isAVL);
+
+    printf("\n=== BST Performance ===\n");
+    isAVL = 0;
+    measureTime("Random Insert", testRandomInsert, &isAVL);
+    measureTime("Sorted Insert", testSortedInsert, &isAVL);
+    measureTime("Search", testSearch, &isAVL);
+    measureTime("Delete", testDelete, &isAVL);
+
     return 0;
 }
