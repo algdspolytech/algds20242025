@@ -1,116 +1,129 @@
 #include "funcs.h"
 
-Node *create_node(int key) {
-  Node *node = (Node *)malloc(sizeof(Node));
-  if (!node) {
-    fprintf(stderr, "Memory allocation failed\n");
-    exit(1);
-  }
+Node* make_node(int value) {
+    Node* new_node = (Node*)malloc(sizeof(Node));
+    if (!new_node) {
+        fprintf(stderr, "Failed to allocate memory for node\n");
+        exit(EXIT_FAILURE);
+    }
 
-  node->key = key;
-  node->priority = rand();
-  node->size = 1;
-
-  if (key == -1)
-    node->left = node->right = NULL;
-  else
-    node->left = node->right = NULL;
-
-  return node;
-}
-
-void update_size(Node *node) {
-  if (node && node->key != -1) {
-    node->size = 1;
-    if (node->left && node->left->key != -1)
-      node->size += node->left->size;
-    if (node->right && node->right->key != -1)
-      node->size += node->right->size;
-  }
-}
-
-Node *merge(Node *left, Node *right) {
-  if (!left)
-    return right;
-  if (!right)
-    return left;
-
-  if (left->key == -1)
-    return right;
-  if (right->key == -1)
-    return left;
-
-  if (left->priority > right->priority) {
-    left->right = merge(left->right, right);
-    update_size(left);
-    return left;
-  } else {
-    right->left = merge(left, right->left);
-    update_size(right);
-    return right;
-  }
-}
-
-void split(Node *node, int key, Node **left, Node **right) {
-  if (!node || node->key == -1) {
-    *left = NULL;
-    *right = NULL;
-    return;
-  }
-
-  if (key >= node->key) {
-    split(node->right, key, &node->right, right);
-    *left = node;
-  } else {
-    split(node->left, key, left, &node->left);
-    *right = node;
-  }
-
-  update_size(node);
-}
-
-Node *insert(Node *root, int key) {
-  Node *new_node = create_node(key);
-
-  if (!root || root->key == -1) {
-    free_tree(root);
+    new_node->value = value;
+    new_node->priority = rand();
+    new_node->left_child = NULL;
+    new_node->right_child = NULL;
     return new_node;
-  }
-
-  Node *left = NULL;
-  Node *right = NULL;
-
-  split(root, key, &left, &right);
-  return merge(merge(left, new_node), right);
 }
 
-Node *erase(Node *root, int key) {
-  if (!root || root->key == -1)
+Node* combine_trees(Node* tree1, Node* tree2) {
+    if (!tree1)
+        return tree2;
+    if (!tree2)
+        return tree1;
+
+    if (tree1->priority > tree2->priority) {
+        tree1->right_child = combine_trees(tree1->right_child, tree2);
+        return tree1;
+    }
+    else {
+        tree2->left_child = combine_trees(tree1, tree2->left_child);
+        return tree2;
+    }
+}
+
+void divide_tree(Node* root, int value, Node** left_tree, Node** right_tree) {
+    if (!root) {
+        *left_tree = NULL;
+        *right_tree = NULL;
+        return;
+    }
+
+    if (value >= root->value) {
+        divide_tree(root->right_child, value, &root->right_child, right_tree);
+        *left_tree = root;
+    }
+    else {
+        divide_tree(root->left_child, value, left_tree, &root->left_child);
+        *right_tree = root;
+    }
+}
+
+Node* add_value(Node* root, int value) {
+    if (!root)
+        return make_node(value);
+
+    if (value <= root->value) {
+        root->left_child = add_value(root->left_child, value);
+
+        if (root->left_child->priority > root->priority) {
+            Node* new_root = root->left_child;
+            root->left_child = new_root->right_child;
+            new_root->right_child = root;
+            root = new_root;
+        }
+    }
+    else {
+        root->right_child = add_value(root->right_child, value);
+
+        if (root->right_child->priority > root->priority) {
+            Node* new_root = root->right_child;
+            root->right_child = new_root->left_child;
+            new_root->left_child = root;
+            root = new_root;
+        }
+    }
+
     return root;
-
-  if (root->key == key) {
-    Node *temp = merge(root->left, root->right);
-    free(root);
-    return temp;
-  }
-
-  if (key < root->key)
-    root->left = erase(root->left, key);
-  else
-    root->right = erase(root->right, key);
-
-  update_size(root);
-  return root;
 }
 
-void free_tree(Node *root) {
-  if (!root)
-    return;
+Node* remove_value(Node* root, int value) {
+    if (!root)
+        return NULL;
 
-  if (root->key != -1) {
-    free_tree(root->left);
-    free_tree(root->right);
-  }
+    if (value < root->value)
+        root->left_child = remove_value(root->left_child, value);
+    else if (value > root->value)
+        root->right_child = remove_value(root->right_child, value);
+    else {
+        if (!root->left_child && !root->right_child) {
+            free(root);
+            return NULL;
+        }
+        else if (!root->left_child) {
+            Node* temp = root->right_child;
+            free(root);
+            return temp;
+        }
+        else if (!root->right_child) {
+            Node* temp = root->left_child;
+            free(root);
+            return temp;
+        }
+        else {
+            if (root->left_child->priority > root->right_child->priority) {
+                Node* new_root = root->left_child;
+                root->left_child = new_root->right_child;
+                new_root->right_child = root;
+                root = new_root;
+                root->right_child = remove_value(root->right_child, value);
+            }
+            else {
+                Node* new_root = root->right_child;
+                root->right_child = new_root->left_child;
+                new_root->left_child = root;
+                root = new_root;
+                root->left_child = remove_value(root->left_child, value);
+            }
+        }
+    }
 
-  free(root);
+    return root;
+}
+
+void release_tree(Node* root) {
+    if (!root)
+        return;
+
+    release_tree(root->left_child);
+    release_tree(root->right_child);
+    free(root);
 }

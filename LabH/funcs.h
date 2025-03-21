@@ -3,21 +3,20 @@
 #include <stdlib.h>
 
 typedef struct Node {
-  int key, priority, size;
-  struct Node *left, *right;
+  int value, priority;
+  struct Node *left_child, *right_child;
 } Node;
 
 #ifdef __cplusplus
 
 extern "C" {
 #endif
-Node *create_node(int key);
-void update_size(Node *node);
-Node *merge(Node *left, Node *right);
-void split(Node *node, int key, Node **left, Node **right);
-Node *insert(Node *root, int key);
-Node *erase(Node *root, int key);
-void free_tree(Node *root);
+Node* make_node(int value);
+Node* combine_trees(Node* tree1, Node* tree2);
+void divide_tree(Node* root, int value, Node** left_tree, Node** right_tree);
+Node* add_value(Node* root, int value);
+Node* remove_value(Node* root, int value);
+void release_tree(Node* root);
 #ifdef __cplusplus
 }
 #endif
