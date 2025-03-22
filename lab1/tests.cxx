@@ -1,160 +1,191 @@
 #include "gtest/gtest.h"
-
-extern "C" {
-#include "labF.h"
+extern "C"{
+ #include "labH.h"
 }
 
-TEST(LabF_Test1, Insert_ValidArguments_Inserted) {
-    //Arrange
-    IntervalNode* root = NULL;
+TEST(LabH_Test1, InsertAndSearch_ValidArguments_Correct) {
+ //Arrange
+ SplayNode *root = NULL;
+ root = insert(root, 10);
+ root = insert(root, 20);
+ root = insert(root, 30);
 
-    //Act
-    insert(&root, 1, 5);
+ //Act
+ root = search(root, 20);
 
-    //Assert
-    ASSERT_NE(root, nullptr);
-    ASSERT_EQ(root->start, 1);
-    ASSERT_EQ(root->end, 5);
-    freeTree(root);
+ //Assert
+ ASSERT_NE(root, nullptr);
+ ASSERT_EQ(root->key, 20);
+
+ //Act
+ root = search(root, 40);
+
+ //Assert
+ ASSERT_NE(root, nullptr);
+ ASSERT_NE(root->key, 40);
+
+ freeTree(root);
 }
 
-TEST(LabF_Test2, Insert_MultipleNodes_Inserted) {
-    //Arrange
-    IntervalNode* root = NULL;
+TEST(LabH_Test2, MultipleInser_ValidArguments_Correct) {
+  //Arrange
+  SplayNode *root = NULL;
 
-    //Act
-    insert(&root, 5, 10);
-    insert(&root, 1, 3);
-    insert(&root, 7, 12);
+  //Act
+  root = insert(root, 30);
+  root = insert(root, 10);
+  root = insert(root, 20);
+  root = insert(root, 5);
+  root = insert(root, 7);
 
-    //Assert
-    ASSERT_NE(root, nullptr);
-    freeTree(root);
+  //Assert
+  inorder(root);
+
+  freeTree(root);
 }
 
-TEST(LabF_Test3, Search_ExistingNode_Correct) {
-    //Arrange
-    IntervalNode* root = NULL;
-    insert(&root, 5, 10);
 
-    //Act
-    IntervalNode* node = search(root, 5, 10);
+TEST(LabH_Test3, DeleteRoot_ValidArguments_Deleted) {
+ //Arrange
+ SplayNode *root = NULL;
 
-    //Assert
-    ASSERT_NE(node, nullptr);
-    ASSERT_EQ(node->start, 5);
-    ASSERT_EQ(node->end, 10);
-    freeTree(root);
+ //Act
+ root = insert(root, 10);
+ root = deleteNode(root, 10);
+
+ //Assert
+ ASSERT_EQ(root, nullptr);
 }
 
-TEST(LabF_Test4, Search_NonExistingNode_Nullptr) {
-    //Arrange
-    IntervalNode* root = NULL;
-    insert(&root, 5, 10);
+TEST(LabH_Test4, Delete_NonExistent_NotDeleted) {
+ //Arrange
+ SplayNode *root = NULL;
+ root = insert(root, 10);
 
-    //Act
-    IntervalNode* node = search(root, 1, 2);
+ //Act
+ root = deleteNode(root, 20);
 
-    //Assert
-    ASSERT_EQ(node, nullptr);
-    freeTree(root);
+ //Assert
+ ASSERT_NE(root, nullptr);
+ ASSERT_EQ(root->key, 10);
+
+ freeTree(root);
 }
 
-TEST(LabF_Test5, Delete_LeafNode_Deleted) {
-    //Arrange
-    IntervalNode* root = NULL;
-    insert(&root, 5, 10);
-    insert(&root, 1, 3);
+TEST(LabH_Test5, DeleteAndSearch_ValidArguments_Nullptr) {
+ //Arrange
+ SplayNode *root = NULL;
+ root = insert(root, 10);
+ root = insert(root, 20);
+ root = insert(root, 30);
 
-    //Act
-    deleteNode(&root, 1, 3);
-    IntervalNode* node = search(root, 1, 3);
+ //Act
+ root = deleteNode(root, 20);
+ root = search(root, 20);
 
-    //Assert
-    ASSERT_EQ(node, nullptr);
-    freeTree(root);
+ //Assert
+ ASSERT_NE(root, nullptr);
+ ASSERT_NE(root->key, 20);
+ freeTree(root);
 }
 
-TEST(LabF_Test6, Delete_NodeWithOneChild_Deleted) {
-    //Arrange
-    IntervalNode* root = NULL;
-    insert(&root, 5, 10);
-    insert(&root, 1, 3);
-    insert(&root, 7, 12);
+TEST(LabH_Test6, MultipleInsertAndDelete_ValidArguments_Nullptr) {
+ //Arrange
+ SplayNode *root = NULL;
 
-    //Act
-    deleteNode(&root, 5, 10);
-    IntervalNode* node = search(root, 5, 10);
+ //Act
+ root = insert(root, 10);
+ root = insert(root, 20);
+ root = insert(root, 30);
+ root = deleteNode(root, 10);
+ root = insert(root, 5);
+ root = deleteNode(root, 30);
+ root = insert(root, 25);
 
-    //Assert
-    ASSERT_EQ(node, nullptr);
-    freeTree(root);
+ //Assert
+ root = search(root, 5);
+ ASSERT_NE(root, nullptr);
+ ASSERT_EQ(root->key, 5);
+ freeTree(root);
 }
 
-TEST(LabF_Test7, Delete_NodeWithTwoChildren_Deleted) {
-    //Arrange
-    IntervalNode* root = NULL;
-    insert(&root, 5, 10);
-    insert(&root, 1, 3);
-    insert(&root, 7, 12);
-    insert(&root, 3, 6);
+TEST(LabH_Test7, DeleteAndSearch_EmptyTree_BothNullptr) {
+ //Arrange
+ SplayNode *root = NULL;
 
-    //Act
-    deleteNode(&root, 5, 10);
-    IntervalNode* node = search(root, 5, 10);
+ //Act
+ root = search(root, 10);
 
-    //Assert
-    ASSERT_EQ(node, nullptr);
-    freeTree(root);
+ //Assert
+ ASSERT_EQ(root, nullptr);
+
+ //Act
+ root = deleteNode(root, 10);
+
+ //Assert
+ ASSERT_EQ(root, nullptr);
 }
 
-TEST(LabF_Test8, FindOverlappingIntervals_Valid_Correct) {
-    //Arrange
-    IntervalNode* root = NULL;
-    insert(&root, 1, 5);
-    insert(&root, 3, 7);
-    insert(&root, 8, 12);
-    IntervalNode* result[100];
-    int count = 0;
+TEST(LabH_Test8, Insert_SameKey_InsertedOnce) {
 
-    //Act
-    findOverlappingIntervals(root, 2, 6, result, &count);
+ //Arrange
+ SplayNode *root = NULL;
 
-    //Assert
-    ASSERT_GE(count,1);
-    freeTree(root);
+ //Act
+ root = insert(root, 10);
+ root = insert(root, 10);
+
+ //Assert
+ ASSERT_NE(root, nullptr);
+ ASSERT_EQ(root->key, 10);
+
+ int count = 0;
+ SplayNode *current = root;
+ while(current != NULL) {
+  count++;
+   if (current->left != NULL) {
+   current = current->left;
+  } else {
+   current = current->right;
+  }
+ }
+ ASSERT_EQ(count, 1);
+ freeTree(root);
 }
 
-TEST(LabF_Test9, FindOverlappingIntervals_NoOverlap_Zero) {
-    //Arrange
-    IntervalNode* root = NULL;
-    insert(&root, 1, 5);
-    insert(&root, 8, 12);
-    IntervalNode* result[100];
-    int count = 0;
+TEST(LabH_Test9, RightRotate_ValidArguments_Correct) {
+ //Arrange
+ SplayNode *root = newNode(3);
+ root->left = newNode(2);
+ root->left->left = newNode(1);
 
-    //Act
-    findOverlappingIntervals(root, 6, 7, result, &count);
+ //Act
+ SplayNode *new_root = rightRotate(root);
 
-    //Assert
-    ASSERT_EQ(count, 0);
-    freeTree(root);
+ //Assert
+ ASSERT_EQ(new_root->key, 2);
+ ASSERT_EQ(new_root->right->key, 3);
+ ASSERT_EQ(new_root->left->key, 1);
+ ASSERT_EQ(new_root->right->left, nullptr);
+ ASSERT_EQ(new_root->right->right, nullptr);
+
+ freeTree(new_root);
 }
 
-TEST(LabF_Test10, DeleteAndSearch_ValidArguments_Valid) {
-    //Arrange
-    IntervalNode* root = NULL;
-    insert(&root, 5, 10);
-    insert(&root, 1, 3);
-    insert(&root, 7, 12);
 
-    //Act
-    deleteNode(&root, 1, 3);
+TEST(LabH_Test10, LeftRotate_ValidArguments_Correct) {
+ //Arrange
+ SplayNode *root = newNode(1);
+ root->right = newNode(2);
+ root->right->right = newNode(3);
 
-    //Act & Assert
-    ASSERT_EQ(search(root, 1, 3), nullptr);
-    ASSERT_NE(search(root, 5, 10), nullptr);
-    ASSERT_NE(search(root, 7, 12), nullptr);
+ //Act
+ root = leftRotate(root);
 
-    freeTree(root);
+ //Assert
+ ASSERT_EQ(root->key, 2);
+ ASSERT_EQ(root->left->key, 1);
+ ASSERT_EQ(root->right->key, 3);
+
+ freeTree(root);
 }
