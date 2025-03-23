@@ -1,5 +1,5 @@
-#include "pch.h"
-#include "../LabH_lib.c"
+#include "abH_lib.c"
+
 #include <gtest/gtest.h>
 
 TEST(TreapTest, InsertToEmptyTree_no1) {
