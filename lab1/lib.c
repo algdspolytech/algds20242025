@@ -1,109 +1,250 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
+#include <assert.h>
+#include <time.h>
+
 #define _CRT_SECURE_NO_WARNINGS
 #pragma warning(disable: 4996)
-
 #include "lib.h"
 
-int compareDates(int day1, int month1, int year1, int day2, int month2, int year2)
-{
-    if(year1 * 365 + month1 * 31 + day1 < year2 * 365 + month2 * 31 + day2) return 1;
-    if(year1 * 365 + month1 * 31 + day1 > year2 * 365 + month2 * 31 + day2) return -1;
-    return 0;
+RBTree* createRBTree();
+Node* createNode(int data);
+void leftRotate(RBTree *tree, Node *x);
+void rightRotate(RBTree *tree, Node *y);
+void insert(RBTree *tree, int data);
+void insertFix(RBTree *tree, Node *k);
+Node* search(RBTree *tree, int data);
+void deleteNode(RBTree *tree, int data);
+void deleteFix(RBTree *tree, Node *x);
+void inorderHelper(Node *node);
 
+// Function implementations
+RBTree* createRBTree() {
+    RBTree *tree = (RBTree*)malloc(sizeof(RBTree));
+    tree->TNULL = createNode(0);
+    tree->TNULL->color = BLACK;
+    tree->root = tree->TNULL;
+    return tree;
 }
 
-Node* insertSorted(Node* head, int day, int month, int year, int temperature)
-{
-    Node* new_node = (Node*)malloc(sizeof(Node));
-    new_node->day = day;
-    new_node->month = month;
-    new_node->year = year;
-    new_node->temperature = temperature;
-    new_node->next = NULL;
-
-    if (head == NULL || head->temperature > temperature || (head->temperature == temperature && (compareDates(head->day, head->month, head->year, day, month, year) < 0)))
-    {
-        new_node->next = head;
-        return new_node;
-    }
-
-    Node* current = head;
-    while (current->next != NULL && (current->next->temperature < temperature || (current->next->temperature == temperature && (compareDates(current->next->day, current->next->month, current->next->year, day, month, year) > 0))))
-    {
-        current = current->next;
-    }
-    new_node->next = current->next;
-    current->next = new_node;
-
-    return head;
+Node* createNode(int data) {
+    Node *newNode = (Node*)malloc(sizeof(Node));
+    newNode->data = data;
+    newNode->left = newNode->right = newNode->parent = NULL;
+    newNode->color = RED;
+    return newNode;
 }
 
-void printNegative(Node* head)
-{
-    int flag = 1;
-    while (head != NULL)
-    {
-        if (head->temperature < 0)
-        {
-            printf("Date: %02d.%02d.%02d, Temperature: %d\n", head->day, head->month, head->year, head->temperature);
-            flag = 0;
+// Left rotation
+void leftRotate(RBTree *tree, Node *x) {
+    Node *y = x->right;
+    x->right = y->left;
+    if (y->left != tree->TNULL) {
+        y->left->parent = x;
+    }
+    y->parent = x->parent;
+    if (x->parent == NULL) {
+        tree->root = y;
+    } else if (x == x->parent->left) {
+        x->parent->left = y;
+    } else {
+        x->parent->right = y;
+    }
+    y->left = x;
+    x->parent = y;
+}
+
+
+void rightRotate(RBTree *tree, Node *y) {
+    Node *x = y->left;
+    y->left = x->right;
+    if (x->right != tree->TNULL) {
+        x->right->parent = y;
+    }
+    x->parent = y->parent;
+    if (y->parent == NULL) {
+        tree->root = x;
+    } else if (y == y->parent->right) {
+        y->parent->right = x;
+    } else {
+        y->parent->left = x;
+    }
+    x->right = y;
+    y->parent = x;
+}
+
+void insert(RBTree *tree, int data) {
+    Node *node = createNode(data);
+    Node *y = NULL;
+    Node *x = tree->root;
+
+    while (x != tree->TNULL) {
+        y = x;
+        if (node->data < x->data) {
+            x = x->left;
+        } else {
+            x = x->right;
         }
-        head = head->next;
     }
-    if (flag)
-    {
-        printf("There are no dates with negative temperature!");
+    node->parent = y;
+    if (y == NULL) {
+        tree->root = node;
+    } else if (node->data < y->data) {
+        y->left = node;
+    } else {
+        y->right = node;
     }
+    node->left = node->right = tree->TNULL;
+    insertFix(tree, node);
 }
 
-Node* searchTemperature(Node* head, int temperature) 
-{
-    Node* result_head = NULL;
-    Node* result_tail = NULL;
-    while (head != NULL) 
-    {
-        if (head->temperature == temperature) 
-        {
-            Node* new_node = (Node*) malloc(sizeof(Node));
-            new_node->day = head->day;
-            new_node->month = head->month;
-            new_node->year = head->year;
-            new_node->temperature = head->temperature;
-            new_node->next = NULL;
-            if (result_head == NULL) 
-            {
-                result_head = new_node;
-                result_tail = new_node;
-            } 
-            else 
-            {
-                result_tail->next = new_node;
-                result_tail = new_node;
+void insertFix(RBTree *tree, Node *k) {
+    Node *u;
+    while (k->parent->color == RED) {
+        if (k->parent == k->parent->parent->left) {
+            u = k->parent->parent->right;
+            if (u->color == RED) {
+                k->parent->color = BLACK;
+                u->color = BLACK;
+                k->parent->parent->color = RED;
+                k = k->parent->parent;
+            } else {
+                if (k == k->parent->right) {
+                    k = k->parent;
+                    leftRotate(tree, k);
+                }
+                k->parent->color = BLACK;
+                k->parent->parent->color = RED;
+                rightRotate(tree, k->parent->parent);
+            }
+        } else {
+            u = k->parent->parent->left;
+            if (u->color == RED) {
+                k->parent->color = BLACK;
+                u->color = BLACK;
+                k->parent->parent->color = RED;
+                k = k->parent->parent;
+            } else {
+                if (k == k->parent->left) {
+                    k = k->parent;
+                    rightRotate(tree, k);
+                }
+                k->parent->color = BLACK;
+                k->parent->parent->color = RED;
+                leftRotate(tree, k->parent->parent);
             }
         }
-        head = head->next;
     }
-    return result_head;
+    tree->root->color = BLACK;
 }
 
-void printList(Node* head) 
-{
-    while (head != NULL) 
-    {
-        printf("Date: %02d.%02d.%02d, Temperature: %d\n", head->day, head->month, head->year, head->temperature);
-        head = head->next;
+Node* search(RBTree *tree, int data) {
+    Node *current = tree->root;
+    while (current != tree->TNULL) {
+        if (data == current->data) {
+            return current;
+        } else if (data < current->data) {
+            current = current->left;
+        } else {
+            current = current->right;
+        }
+    }
+    return NULL;
+}
+
+void deleteNode(RBTree *tree, int data) {
+    Node *z = tree->root;
+    Node *x, *y;
+    
+    while (z != tree->TNULL) {
+        if (z->data == data) {
+            break;
+        } else if (data < z->data) {
+            z = z->left;
+        } else {
+            z = z->right;
+        }
+    }
+
+    if (z == tree->TNULL) {
+        printf("Node not found in the tree.\n");
+        return;
+    }
+
+    y = z;
+    int yOriginalColor = y->color;
+
+    if (z->left == tree->TNULL) {
+        x = z->right;
+        if (x != tree->TNULL) {
+            x->parent = z->parent;
+        }
+        if (z->parent == NULL) {
+            tree->root = x;
+        } else if (z == z->parent->left) {
+            z->parent->left = x;
+        } else {
+            z->parent->right = x;
+        }
+    } else if (z->right == tree->TNULL) {
+        x = z->left;
+        if (x != tree->TNULL) {
+            x->parent = z->parent;
+        }
+        if (z->parent == NULL) {
+            tree->root = x;
+        } else if (z == z->parent->left) {
+            z->parent->left = x;
+        } else {
+            z->parent->right = x;
+        }
+    } else {
+        y = z->right;
+        while (y->left != tree->TNULL) {
+            y = y->left;
+        }
+        yOriginalColor = y->color;
+        x = y->right;
+        if (y->parent == z) {
+            x->parent = y;
+        } else {
+            if (x != tree->TNULL) {
+                x->parent = y->parent;
+            }
+            y->parent->left = x;
+            y->right = z->right;
+            y->right->parent = y;
+        }
+        if (z->parent == NULL) {
+            tree->root = y;
+        } else if (z == z->parent->left) {
+            z->parent->left = y;
+        } else {
+            z->parent->right = y;
+        }
+        y->parent = z->parent;
+        y->left = z->left;
+        y->left->parent = y;
+        y->color = z->color;
+    }
+
+    free(z);
+
+    if (yOriginalColor == BLACK) {
+        deleteFix(tree, x);
     }
 }
 
-void freeList(Node* head) 
-{
-    Node* temp;
-    while (head != NULL)
-    {
-        temp = head;
-        head = head->next;
-        free(temp);
+
+void inorderHelper(Node *node) {
+    if (node != NULL) {
+        inorderHelper(node->left);
+        printf("%d ", node->data);
+        inorderHelper(node->right);
     }
 }
+
+void inorder(RBTree *tree) {
+    inorderHelper(tree->root);
+}
+

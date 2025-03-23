@@ -1,203 +1,126 @@
+#include <assert.h>
+#include <stdio.h>
+#include <stdlib.h>
 #include "tests.h"
 
-void runAllTests()
-{
-    compareDates_FirstBigger_returnMinus1_no1();
-    compareDates_FirstSmaller_return1_no2();
-    compareDates_EqualDates_return0_no3();
 
-    insertSorted_AddToEmpty_ValidVal_no4();
-    insertSorted_InsertTheSmallestValue_NewNodeInTheBeginning_no5();
-    insertSorted_InsertMiddleValue_NewNodeInTheModdle_no6();
-    insertSorted_InsertTheBiggestValue_NewNodeInTheEnd_no7();
-
-    searchTemperature_EmptyList_returnNULL_no8();
-    searchTemperature_NoSuchTemperature_returnNULL_no9();
-    searchTemperature_OneSuchTemperatureExist_returnValidNode_no10();
-    searchTemperature_TwoSuchTemperaturesExist_returnValidVal_no11();
-
-    printf("Tests ran successfully!\n");
-
+void test_newNode_ValidValue_returnValidVal_no1() {
+    Node *node = newNode(10);
+    assert(node != NULL);
+    assert(node->data == 10);
+    assert(node->color == RED);
+    free(node);
 }
 
-void compareDates_FirstBigger_returnMinus1_no1()
-{
-    int day1 = 1;
-    int month1 = 1;
-    int year1 = 2;
-    int day2 = 1;
-    int month2 = 1;
-    int year2 = 1;
-    assert(compareDates(day1, month1, year1, day2, month2, year2) == -1);
+void test_createRBTree_EmptyTree_returnValidVal_no2() {
+    RBTree *tree = createRBTree();
+    assert(tree != NULL);
+    assert(tree->root == tree->TNULL);
+    assert(tree->TNULL->color == BLACK);
+    freeRBTree(tree);
 }
 
-void compareDates_FirstSmaller_return1_no2()
-{
-    int day1 = 1;
-    int month1 = 1;
-    int year1 = 1;
-    int day2 = 1;
-    int month2 = 2;
-    int year2 = 1;
-    assert(compareDates(day1, month1, year1, day2, month2, year2) == 1);
+void test_insert_SingleNode_TreeRootSet_no3() {
+    RBTree *tree = createRBTree();
+    insert(tree, 15);
+    assert(tree->root->data == 15);
+    assert(tree->root->color == BLACK);
+    freeRBTree(tree);
 }
 
-void compareDates_EqualDates_return0_no3()
-{
-    int day1 = 1;
-    int month1 = 1;
-    int year1 = 1;
-    int day2 = 1;
-    int month2 = 1;
-    int year2 = 1;
-    assert(compareDates(day1, month1, year1, day2, month2, year2) == 0);
+void test_insert_MultipleNodes_TreeStructureValid_no4() {
+    RBTree *tree = createRBTree();
+    insert(tree, 10);
+    insert(tree, 20);
+    insert(tree, 15);
+    assert(tree->root->data == 10);
+    assert(tree->root->right->data == 20);
+    assert(tree->root->right->left->data == 15);
+    freeRBTree(tree);
 }
 
-void insertSorted_AddToEmpty_ValidVal_no4()
-{
-    Node* head = NULL;
-    int day = 1;
-    int month = 1;
-    int year = 1;
-    int temperature = 1;
-    head = insertSorted(head, day, month, year, temperature);
-    assert(head->day == day && head->month == month && head->year == year && head->next == NULL);
+void test_search_ExistingElement_returnValidNode_no5() {
+    RBTree *tree = createRBTree();
+    insert(tree, 25);
+    insert(tree, 30);
+    Node *found = search(tree, 25);
+    assert(found != NULL);
+    assert(found->data == 25);
+    freeRBTree(tree);
+}
+
+void test_search_NonExistingElement_returnNull_no6() {
+    RBTree *tree = createRBTree();
+    insert(tree, 35);
+    Node *found = search(tree, 40);
+    assert(found == NULL);
+    freeRBTree(tree);
+}
+
+void test_insert_DuplicateElement_TreeStructureUnchanged_no7() {
+    RBTree *tree = createRBTree();
+    insert(tree, 50);
+    insert(tree, 50);
+    assert(tree->root->data == 50);
+    assert(tree->root->left == tree->TNULL);
+    assert(tree->root->right == tree->TNULL);
+    freeRBTree(tree);
+}
+
+void test_fixViolation_ColorsAdjustedAfterInsert_no8() {
+    RBTree *tree = createRBTree();
+    insert(tree, 30);
+    insert(tree, 20);
+    insert(tree, 10);
+    assert(tree->root->color == BLACK);
+    assert(tree->root->left->color == RED);
+    assert(tree->root->left->left->color == BLACK);
+    freeRBTree(tree);
+}
+
+void test_leftRotate_ValidLeftRotation_no9() {
+    RBTree *tree = createRBTree();
+    insert(tree, 10);
+    insert(tree, 20);
+    Node *node = tree->root; // 10
+    leftRotate(tree, node);
+    assert(tree->root->data == 20);
+    assert(tree->root->left->data == 10);
+    freeRBTree(tree);
+}
+
+void test_rightRotate_ValidRightRotation_no10() {
+    RBTree *tree = createRBTree();
+    insert(tree, 20);
+    insert(tree, 10);
+    Node *node = tree->root->right;
+    rightRotate(tree, node);
+    assert(tree->root->data == 10);
+    assert(tree->root->right->data == 20);
+    freeRBTree(tree);
+}
+
+void test_search_EmptyTree_returnNull_11() {
+    RBTree *tree = createRBTree();
+    Node *found = search(tree, 1);
+    assert(found == NULL);
+    freeRBTree(tree);
 }
 
 
-void insertSorted_InsertTheSmallestValue_NewNodeInTheBeginning_no5()
-{
-    int day = 1;
-    int month = 1;
-    int year = 1;
-    int temperature = 1;
-    Node* A = (Node*)malloc(sizeof(Node));
-    Node* B = (Node*)malloc(sizeof(Node));
-    A->day = 1;
-    A->month = 1;
-    A->year = 1;
-    A->temperature = 2;
-    A->next = B; 
-    B->day = 1;
-    B->month = 1;
-    B->year = 1;
-    B->temperature = 3;
-    B->next = NULL; 
-    Node* head = insertSorted(A, day, month, year, temperature);
-    assert(head->day == day && head->month == month && head->year == year && head->next == A);
-}
+int main() {
+    test_newNode_ValidValue_returnValidVal_no1();
+    test_createRBTree_EmptyTree_returnValidVal_no2();
+    test_insert_SingleNode_TreeRootSet_no3();
+    test_insert_MultipleNodes_TreeStructureValid_no4();
+    test_search_ExistingElement_returnValidNode_no5();
+    test_search_NonExistingElement_returnNull_no6();
+    test_insert_DuplicateElement_TreeStructureUnchanged_no7();
+    test_fixViolation_ColorsAdjustedAfterInsert_no8();
+    test_leftRotate_ValidLeftRotation_no9();
+    test_rightRotate_ValidRightRotation_no10();
+    test_search_EmptyTree_returnNull_no11();
 
-void insertSorted_InsertMiddleValue_NewNodeInTheModdle_no6()
-{
-    int day = 1;
-    int month = 1;
-    int year = 1;
-    int temperature = 2;
-    Node* A = (Node*)malloc(sizeof(Node));
-    Node* B = (Node*)malloc(sizeof(Node));
-    A->day = 1;
-    A->month = 1;
-    A->year = 1;
-    A->temperature = 1;
-    A->next = B; 
-    B->day = 1;
-    B->month = 1;
-    B->year = 1;
-    B->temperature = 3;
-    B->next = NULL; 
-    Node* head = insertSorted(A, day, month, year, temperature);
-    Node* C = head->next;
-    assert(C->day == day && C->month == month && C->year == year && C->next == B);
-}
-
-void insertSorted_InsertTheBiggestValue_NewNodeInTheEnd_no7()
-{
-    int day = 1;
-    int month = 1;
-    int year = 1;
-    int temperature = 3;
-    Node* A = (Node*)malloc(sizeof(Node));
-    Node* B = (Node*)malloc(sizeof(Node));
-    A->day = 1;
-    A->month = 1;
-    A->year = 1;
-    A->temperature = 1;
-    A->next = B; 
-    B->day = 1;
-    B->month = 1;
-    B->year = 1;
-    B->temperature = 2;
-    B->next = NULL; 
-    Node* head = insertSorted(A, day, month, year, temperature);
-    Node* C = head->next->next;
-    assert(C->day == day && C->month == month && C->year == year && C->next == NULL && B->next == C);
-}
-
-void searchTemperature_EmptyList_returnNULL_no8()
-{
-    Node* head = NULL;
-    Node* result = NULL;
-    int temperature = 1;
-    result = searchTemperature(head, temperature);
-    assert(result == NULL);
-}
-
-void searchTemperature_NoSuchTemperature_returnNULL_no9()
-{
-    Node* A = (Node*)malloc(sizeof(Node));
-    Node* B = (Node*)malloc(sizeof(Node));
-    A->day = 1;
-    A->month = 1;
-    A->year = 1;
-    A->temperature = 1;
-    A->next = B; 
-    B->day = 1;
-    B->month = 1;
-    B->year = 1;
-    B->temperature = 2;
-    B->next = NULL; 
-    Node* result = NULL;
-    int temperature = 3;
-    result = searchTemperature(A, temperature);
-    assert(result == NULL);
-}
-
-void searchTemperature_OneSuchTemperatureExist_returnValidNode_no10()
-{
-    Node* A = (Node*)malloc(sizeof(Node));
-    Node* B = (Node*)malloc(sizeof(Node));
-    A->day = 1;
-    A->month = 1;
-    A->year = 1;
-    A->temperature = 1;
-    A->next = B; 
-    B->day = 1;
-    B->month = 1;
-    B->year = 1;
-    B->temperature = 2;
-    B->next = NULL; 
-    Node* result = NULL;
-    int temperature = 2;
-    result = searchTemperature(A, temperature);
-    assert(result->next == B->next && result->day == B->day && result->month == B->month && result->year == B->year);
-}
-
-void searchTemperature_TwoSuchTemperaturesExist_returnValidVal_no11()
-{
-    Node* A = (Node*)malloc(sizeof(Node));
-    Node* B = (Node*)malloc(sizeof(Node));
-    A->day = 1;
-    A->month = 1;
-    A->year = 1;
-    A->temperature = 1;
-    A->next = B; 
-    B->day = 1;
-    B->month = 1;
-    B->year = 1;
-    B->temperature = 1;
-    B->next = NULL; 
-    Node* result = NULL;
-    int temperature = 1;
-    result = searchTemperature(A, temperature);
-    assert((result->day == A->day && result->month == A->month && result->year == A->year) && (result->next->day == B->day && result->next->month == B->month && result->next->year == B->year));
+    printf("All tests ran fine!\n");
+    return 0;
 }

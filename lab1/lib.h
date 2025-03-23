@@ -1,31 +1,35 @@
-#ifndef LIB_H
-#define LIB_H
+#ifndef RBTREE_H
+#define RBTREE_H
 
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
+#include <assert.h>
+#include <time.h>
 
-typedef struct Node
-{
-    int day;
-    int month;
-    int year;
-    int temperature;
-    struct Node* next;
+typedef enum { RED, BLACK } Color;
+
+typedef struct Node {
+    int data;
+    Color color;
+    struct Node *left, *right, *parent;
 } Node;
 
-int compareDates(int day1, int month1, int year1, int day2, int month2, int year2);
+typedef struct RBTree {
+    Node *root;
+    Node *TNULL;
+} RBTree;
 
-Node* insertSorted(Node* head, int day, int month, int year, int temperature);
 
-Node* datesBelowZero(Node* head);
-
-void printNegative(Node* head);
-
-Node* searchTemperature(Node* head, int temperature);
-
-void printList(Node* head);
-
-void freeList(Node* head);
+RBTree* createRBTree();
+Node* createNode(int data);
+void leftRotate(RBTree *tree, Node *x);
+void rightRotate(RBTree *tree, Node *y);
+void insert(RBTree *tree, int data);
+void insertFix(RBTree *tree, Node *k);
+Node* search(RBTree *tree, int data);
+void deleteNode(RBTree *tree, int data);
+void deleteFix(RBTree *tree, Node *x);
+void inorderHelper(Node *node);
+void inorder(RBTree *tree);
 
 #endif
