@@ -1,6 +1,6 @@
+#include <assert.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <assert.h>
 
 // Структура узла дерева
 typedef struct Node {
@@ -10,8 +10,9 @@ typedef struct Node {
 } Node;
 
 // Функция, которая создает новый узел скошенного дерева
-Node* createNode(int key) {
-    Node* newNode = (Node*)malloc(sizeof(Node));
+Node *createNode(int key) {
+    Node *newNode;
+    newNode = (Node *) malloc(sizeof(Node));
     newNode->key = key;
     newNode->left = NULL;
     newNode->right = NULL;
@@ -19,39 +20,39 @@ Node* createNode(int key) {
 }
 
 // Функция для правого поворота
-Node* rightRotation(Node* x) {
-    Node* y = x->left;
+Node *rightRotation(Node *x) {
+    Node *y = x->left;
     x->left = y->right;
     y->right = x;
     return y;
 }
 
 // Функция для левого поворота
-Node* leftRotation(Node* x) {
-    Node* y = x->right;
+Node *leftRotation(Node *x) {
+    Node *y = x->right;
     x->right = y->left;
     y->left = x;
     return y;
 }
 
 // Операция splay, которая перемещает узел с ключом key в корень
-Node* splay(Node* root, int key) {
+Node *splay(Node *root, int key) {
 
     // Если дерево пустое или ключ уже в корне, возвращаем корень
     if (root == NULL || root->key == key) {
         return root;
     }
 
-    Node dummy; // фиктивный узел для упрощения кода
+    Node dummy;// фиктивный узел для упрощения кода
     dummy.left = dummy.right = NULL;
     Node *leftTreeMax = &dummy; // Максимальный элемент левого поддерева
-    Node *rightTreeMin = &dummy; // Минимальный элемент правого поддерева
+    Node *rightTreeMin = &dummy;// Минимальный элемент правого поддерева
 
     while (1) {
         if (key < root->key) {
             // Если ключ меньше текущего узла, идем влево
             if (root->left == NULL) {
-                break; // Ключ не найден
+                break;// Ключ не найден
             }
             if (key < root->left->key) {
                 // Zig-Zig (левый-левый случай)
@@ -67,7 +68,7 @@ Node* splay(Node* root, int key) {
         } else if (key > root->key) {
             // Если ключ больше текущего узла, идем вправо
             if (root->right == NULL) {
-                break; // Ключ не найден
+                break;// Ключ не найден
             }
             if (key > root->right->key) {
                 // Zag-Zag (правый-правый случай)
@@ -97,7 +98,7 @@ Node* splay(Node* root, int key) {
 
 
 // Вставка нового ключа в дерево
-Node* insert(Node* root, int key) {
+Node *insert(Node *root, int key) {
     if (root == NULL) {
         return createNode(key);
     }
@@ -111,7 +112,7 @@ Node* insert(Node* root, int key) {
     }
 
     // Создаём новый узел
-    Node* newNode = createNode(key);
+    Node *newNode = createNode(key);
 
     // Вставляем новый узел в корень
     if (root->key > key) {
@@ -129,12 +130,12 @@ Node* insert(Node* root, int key) {
 }
 
 // Поиск ключа в дереве
-Node* search(Node* root, int key) {
+Node *search(Node *root, int key) {
     return splay(root, key);
 }
 
 // Удаление ключа из дерева
-Node* delete(Node* root, int key) {
+Node *delete(Node *root, int key) {
     if (root == NULL) {
         return NULL;
     }
@@ -149,15 +150,15 @@ Node* delete(Node* root, int key) {
 
     // Если левое поддерево пустое, возвращаем правое поддерево
     if (root->left == NULL) {
-        Node* temp = root;
+        Node *temp = root;
         root = root->right;
         free(temp);
     }
-        // Иначе объединяем левое и правое поддеревья
+    // Иначе объединяем левое и правое поддеревья
     else {
-        Node* temp = root;
-        root = splay(root->left, key); // Перемещаем максимальный элемент левого поддерева в корень
-        root->right = temp->right;     // Присоединяем правое поддерево
+        Node *temp = root;
+        root = splay(root->left, key);// Перемещаем максимальный элемент левого поддерева в корень
+        root->right = temp->right;    // Присоединяем правое поддерево
         free(temp);
     }
 
@@ -166,7 +167,7 @@ Node* delete(Node* root, int key) {
 }
 
 // Печать дерева (in-order обход)
-void printTree(Node* root) {
+void printTree(Node *root) {
     if (root != NULL) {
         printTree(root->left);
         printf("%d ", root->key);
@@ -177,7 +178,7 @@ void printTree(Node* root) {
 
 // Тест 1. Проверка вставки элемента в пустое дерево
 void TestInsert_EmptyTree_HappyPath_no1() {
-    Node* root = NULL;
+    Node *root = NULL;
     root = insert(root, 10);
     assert(root != NULL);
     assert(root->key == 10);
@@ -187,7 +188,7 @@ void TestInsert_EmptyTree_HappyPath_no1() {
 
 // Тест 2. Проверка вставки элемента, который уже существует в дереве
 void TestInsert_ExistingKey_NoChange_no2() {
-    Node* root = NULL;
+    Node *root = NULL;
     root = insert(root, 10);
     root = insert(root, 10);
     assert(root->key == 10);
@@ -197,7 +198,7 @@ void TestInsert_ExistingKey_NoChange_no2() {
 
 // Тест 3. Проверка вставки элемента в левое поддерево
 void TestInsert_LeftSubtree_HappyPath_no3() {
-    Node* root = NULL;
+    Node *root = NULL;
     root = insert(root, 20);
     root = insert(root, 10);
     assert(root->key == 10);
@@ -206,7 +207,7 @@ void TestInsert_LeftSubtree_HappyPath_no3() {
 
 // Тест 4. Проверка вставки элемента в правое поддерево
 void TestInsert_RightSubtree_HappyPath_no4() {
-    Node* root = NULL;
+    Node *root = NULL;
     root = insert(root, 10);
     root = insert(root, 20);
     assert(root->key == 20);
@@ -215,7 +216,7 @@ void TestInsert_RightSubtree_HappyPath_no4() {
 
 // Тест 5. Проверка поиска существующего элемента
 void TestSearch_ExistingKey_HappyPath_no5() {
-    Node* root = NULL;
+    Node *root = NULL;
     root = insert(root, 10);
     root = insert(root, 20);
     root = search(root, 10);
@@ -224,9 +225,9 @@ void TestSearch_ExistingKey_HappyPath_no5() {
 
 // Тест 6. Проверка поиска несуществующего элемента
 void TestSearch_NonExistingKey_ReturnLastAccessed_no6() {
-    Node* root = NULL;
-    root = insert(root, 10); // Вставляем 10
-    root = insert(root, 20); // Вставляем 20
+    Node *root = NULL;
+    root = insert(root, 10);// Вставляем 10
+    root = insert(root, 20);// Вставляем 20
 
     // Ищем несуществующий ключ 15
     root = search(root, 15);
@@ -238,22 +239,22 @@ void TestSearch_NonExistingKey_ReturnLastAccessed_no6() {
 
 // Тест 7. Проверка удаления существующего элемента
 void TestDelete_ExistingKey_HappyPath_no7() {
-    Node* root = NULL;
+    Node *root = NULL;
     root = insert(root, 10);
     root = insert(root, 20);
-    root = delete(root, 10);
+    root = delete (root, 10);
     assert(root->key == 20);
     assert(root->left == NULL);
 }
 
 // Тест 8. Проверка удаления несуществующего элемента
 void TestDelete_NonExistingKey_NoChange_no8() {
-    Node* root = NULL;
-    root = insert(root, 10); // Вставляем 10
-    root = insert(root, 20); // Вставляем 20
+    Node *root = NULL;
+    root = insert(root, 10);// Вставляем 10
+    root = insert(root, 20);// Вставляем 20
 
     // Удаляем несуществующий ключ 15
-    root = delete(root, 15);
+    root = delete (root, 15);
 
     // Проверяем, что корень — это узел, ближайший к 15
     // В данном случае это может быть либо 10, либо 20, в зависимости от реализации splay
@@ -262,26 +263,26 @@ void TestDelete_NonExistingKey_NoChange_no8() {
 
 // Тест 9. Проверка корректности структуры дерева после вставки нескольких элементов
 void TestInsert_MultipleElements_StructureValid_no9() {
-    Node* root = NULL;
-    root = insert(root, 30); // Вставляем 30
-    root = insert(root, 20); // Вставляем 20
-    root = insert(root, 40); // Вставляем 40
-    root = insert(root, 10); // Вставляем 10
-    root = insert(root, 25); // Вставляем 25
+    Node *root = NULL;
+    root = insert(root, 30);// Вставляем 30
+    root = insert(root, 20);// Вставляем 20
+    root = insert(root, 40);// Вставляем 40
+    root = insert(root, 10);// Вставляем 10
+    root = insert(root, 25);// Вставляем 25
 
     // Проверяем структуру дерева
-    assert(root->key == 25); // Корень после splay (последний вставленный элемент)
-    assert(root->left->key == 20); // Левый потомок корня
-    assert(root->left->left->key == 10); // Левый потомок узла 20
-    assert(root->left->right == NULL); // Правый потомок узла 20 отсутствует
-    assert(root->right->key == 30); // Правый потомок корня
-    assert(root->right->left == NULL); // Левый потомок узла 30 отсутствует
-    assert(root->right->right->key == 40); // Правый потомок узла 30
+    assert(root->key == 25);              // Корень после splay (последний вставленный элемент)
+    assert(root->left->key == 20);        // Левый потомок корня
+    assert(root->left->left->key == 10);  // Левый потомок узла 20
+    assert(root->left->right == NULL);    // Правый потомок узла 20 отсутствует
+    assert(root->right->key == 30);       // Правый потомок корня
+    assert(root->right->left == NULL);    // Левый потомок узла 30 отсутствует
+    assert(root->right->right->key == 40);// Правый потомок узла 30
 }
 
 // Тест 10. Проверка операции splay, когда ключ уже в корне
 void TestSplay_RootKey_NoChange_no10() {
-    Node* root = NULL;
+    Node *root = NULL;
     root = insert(root, 10);
     root = splay(root, 10);
     assert(root->key == 10);
