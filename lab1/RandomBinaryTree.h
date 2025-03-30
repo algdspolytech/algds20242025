@@ -17,24 +17,6 @@ struct Node {
 };
 
 
-Node* find(Node* node, int key);
-
-int get_size(Node* node);
-
-void fix_size(Node* node);
-
-Node* rotate_right(Node* node);
-
-Node* rotate_left(Node* node);
-
-Node* insert_root(Node* root, Node* node);
-
-Node* insert(Node* root, Node* node);
-
-Node* join(Node* node1, Node* node2); // объединение двух деревьев
-
-Node* remove(Node* tree, Node* p, int k); // удаление из дерева p первого найденного узла с ключом k 
-
 // Возвращает значение по ключу
 double get(Node* tree, int key);
 // Добавляет узел 
