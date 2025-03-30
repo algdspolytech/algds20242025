@@ -1,9 +1,9 @@
-#pragma once
+п»ї#pragma once
 #include <random>
 #include <cmath>
 
 
-// int - тип ключа, double - тип данных
+// int - С‚РёРї РєР»СЋС‡Р°, double - С‚РёРї РґР°РЅРЅС‹С…
 struct Node {
     int key;
     double data;
@@ -31,19 +31,19 @@ Node* insert_root(Node* root, Node* node);
 
 Node* insert(Node* root, Node* node);
 
-Node* join(Node* node1, Node* node2); // объединение двух деревьев
+Node* join(Node* node1, Node* node2); // РѕР±СЉРµРґРёРЅРµРЅРёРµ РґРІСѓС… РґРµСЂРµРІСЊРµРІ
 
-Node* remove(Node* tree, Node* p, int k); // удаление из дерева p первого найденного узла с ключом k 
+Node* remove(Node* tree, Node* p, int k); // СѓРґР°Р»РµРЅРёРµ РёР· РґРµСЂРµРІР° p РїРµСЂРІРѕРіРѕ РЅР°Р№РґРµРЅРЅРѕРіРѕ СѓР·Р»Р° СЃ РєР»СЋС‡РѕРј k 
 
-// Возвращает значение по ключу
+// Р’РѕР·РІСЂР°С‰Р°РµС‚ Р·РЅР°С‡РµРЅРёРµ РїРѕ РєР»СЋС‡Сѓ
 double get(Node* tree, int key);
-// Добавляет узел 
+// Р”РѕР±Р°РІР»СЏРµС‚ СѓР·РµР» 
 Node* add(Node* tree, int key, double data);
 
-// Удаляет узел
+// РЈРґР°Р»СЏРµС‚ СѓР·РµР»
 Node* remove(Node* tree, int key);
-// Высота дерева
+// Р’С‹СЃРѕС‚Р° РґРµСЂРµРІР°
 int height(Node* tree);
 
-// Размер дерева
+// Р Р°Р·РјРµСЂ РґРµСЂРµРІР°
 int size(Node* tree);
