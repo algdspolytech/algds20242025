@@ -2,7 +2,7 @@
 #include "RandomBinaryTree.h"
 
 // Тест: добавление множества узлов и проверка их наличия
-TEST(RandomBinaryTreeTests, AddManyNodes) {
+TEST(RandomBinaryTreeTests, AddManyNodes__1) {
     Node* tree = nullptr;
     const int n = 98765;
 
@@ -21,7 +21,7 @@ TEST(RandomBinaryTreeTests, AddManyNodes) {
 }
 
 // Тест: проверка размера дерева после добавления узлов
-TEST(RandomBinaryTreeTests, SizeAfterAddingNodes) {
+TEST(RandomBinaryTreeTests, SizeAfterAddingNodes__2) {
     Node* tree = nullptr;
     const int n = 23451;
 
@@ -33,7 +33,7 @@ TEST(RandomBinaryTreeTests, SizeAfterAddingNodes) {
 }
 
 // Тест: проверка высоты дерева
-TEST(RandomBinaryTreeTests, TreeHeight) {
+TEST(RandomBinaryTreeTests, TreeHeight__3) {
     Node* tree = nullptr;
     const int n = 34213;
 
@@ -45,7 +45,7 @@ TEST(RandomBinaryTreeTests, TreeHeight) {
 }
 
 // Тест: удаление узлов из дерева
-TEST(RandomBinaryTreeTests, RemoveManyNodes) {
+TEST(RandomBinaryTreeTests, RemoveManyNodes__4) {
     Node* tree = nullptr;
     const int n = 23451;
     const int k = 2132;
@@ -62,7 +62,7 @@ TEST(RandomBinaryTreeTests, RemoveManyNodes) {
 }
 
 // Тест: получение значений из дерева
-TEST(RandomBinaryTreeTests, GetValuesFromTree) {
+TEST(RandomBinaryTreeTests, GetValuesFromTree__5) {
     Node* tree = nullptr;
     const int n = 12342;
 
@@ -81,7 +81,7 @@ TEST(RandomBinaryTreeTests, GetValuesFromTree) {
 }
 
 // Тест: получение значения из пустого дерева
-TEST(RandomBinaryTreeTests, GetFromEmptyTree) {
+TEST(RandomBinaryTreeTests, GetFromEmptyTree__6) {
     Node* tree = nullptr;
     
     double value = get(tree, 7);
@@ -90,21 +90,21 @@ TEST(RandomBinaryTreeTests, GetFromEmptyTree) {
 }
 
 // Тест: размер пустого дерева
-TEST(RandomBinaryTreeTests, SizeOfEmptyTree) {
+TEST(RandomBinaryTreeTests, SizeOfEmptyTree__7) {
     Node* tree = nullptr;
 
     EXPECT_EQ(size(tree), 0);
 }
 
 // Тест: высота пустого дерева
-TEST(RandomBinaryTreeTests, HeightOfEmptyTree) {
+TEST(RandomBinaryTreeTests, HeightOfEmptyTree__8) {
     Node* tree = nullptr;
 
     EXPECT_EQ(height(tree), 0);
 }
 
 // Тест: удаление из пустого дерева
-TEST(RandomBinaryTreeTests, RemoveFromEmptyTree) {
+TEST(RandomBinaryTreeTests, RemoveFromEmptyTree__9) {
     Node* tree = nullptr;
 
     tree = remove(tree, 6);
@@ -113,7 +113,7 @@ TEST(RandomBinaryTreeTests, RemoveFromEmptyTree) {
 }
 
 // Тест: добавление и удаление всех узлов приводит к пустому дереву
-TEST(RandomBinaryTreeTests, AddAndRemoveAllNodes) {
+TEST(RandomBinaryTreeTests, AddAndRemoveAllNodes__10) {
     Node* tree = nullptr;
     const int n = 150;
 
