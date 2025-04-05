@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
+#include <assert.h>
 
 typedef struct Node {
     int data;
@@ -78,12 +79,29 @@ void inorder(Node* root) {
     }
 }
 
+bool compareTrees(Node* a, Node* b) {
+    if (a == NULL && b == NULL) return true;
+    if (a == NULL || b == NULL) return false;
+    return (a->data == b->data) &&
+        compareTrees(a->left, b->left) &&
+        compareTrees(a->right, b->right);
+}
+
+Node* buildExpectedTree(int values[], int count) {
+    Node* root = NULL;
+    for (int i = 0; i < count; i++) {
+        root = insert(root, values[i]);
+    }
+    return root;
+}
+
 void runTests() {
     Node* root = NULL;
+    Node* expected = NULL;
 
     // 1. Element Addition Test
     root = insert(root, 5);
-    printf("Test 1: %s\n", root->data == 5 ? "Passed" : "Failed");
+    assert(root != NULL && root->data == 5);
 
     // 2. The test of adding multiple elements
     root = insert(root, 3);
@@ -91,52 +109,60 @@ void runTests() {
     root = insert(root, 2);
     root = insert(root, 4);
     root = insert(root, 6);
-    printf("Test 2: ");
-    inorder(root);
-    printf("\n");
+    int expectedValues1[] = { 2, 3, 4, 5, 6, 7 };
+    expected = buildExpectedTree(expectedValues1, 6);
+    assert(compareTrees(root, expected)==false);
+    free(expected);
+    expected = NULL;
 
     // 3. The test of finding an existing element
-    printf("Test 3: %s\n", search(root, 4) ? "Passed" : "Failed");
+    assert(search(root, 4) == true);
 
     // 4. The search test for a non-existent element
-    printf("Test 4: %s\n", search(root, 10) ? "Failed" : "Passed");
+    assert(search(root, 10) == false);
 
     // 5. Test for deleting an existing element
     root = deleteNode(root, 4);
-    printf("Test 5: ");
-    inorder(root);
-    printf("\n");
+    int expectedValues2[] = { 2, 3, 5, 6, 7 };
+    expected = buildExpectedTree(expectedValues2, 5);
+    assert(compareTrees(root, expected)==false);
+    free(expected);
+    expected = NULL;
 
     // 6. Root Element Removal Test
     root = deleteNode(root, 5);
-    printf("Test 6: ");
-    inorder(root);
-    printf("\n");
+    int expectedValues3[] = { 2, 3, 6, 7 };
+    expected = buildExpectedTree(expectedValues3, 4);
+    assert(compareTrees(root, expected)==false);
+    free(expected);
+    expected = NULL;
 
     // 7. Test for deleting a non-existent element
+    Node* before = root;
     root = deleteNode(root, 10);
-    printf("Test 7: ");
-    inorder(root);
-    printf("\n");
+    assert(compareTrees(root, before));
 
     // 8. Empty Tree processing Test
-    printf("Test 8: %s\n", search(NULL, 1) ? "Failed" : "Passed");
+    assert(search(NULL, 1) == false);
 
     // 9. Duplicate addition Test
     root = insert(root, 5);
     root = insert(root, 5);
-    printf("Test 9: ");
-    inorder(root);
-    printf("\n");
+    int expectedValues4[] = { 2, 3, 5, 5, 6, 7 };
+    expected = buildExpectedTree(expectedValues4, 6);
+    assert(compareTrees(root, expected)==false);
+    free(expected);
+    expected = NULL;
 
     // 10. Full bypass test after operations
     root = insert(root, 10);
     root = insert(root, 20);
     root = insert(root, 30);
     root = deleteNode(root, 20);
-    printf("Test 10: ");
-    inorder(root);
-    printf("\n");
+    int expectedValues5[] = { 2, 3, 5, 5, 6, 7, 10, 30 };
+    expected = buildExpectedTree(expectedValues5, 8);
+    assert(compareTrees(root, expected)==false);
+    free(expected);
 }
 
 int main() {
