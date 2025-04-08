@@ -1,32 +1,21 @@
 #ifndef AVL_TREE_H
 #define AVL_TREE_H
 
-struct AVLNode {
+typedef struct AVLNode {
     int key;
-    AVLNode* left;
-    AVLNode* right;
+    struct AVLNode* left;
+    struct AVLNode* right;
     int height;
-    AVLNode(int k) : key(k), left(nullptr), right(nullptr), height(1) {}
-};
+} AVLNode;
 
-class AVLTree {
-public:
-    AVLTree();
-    void insert(int key);
-    bool search(int key);
-    void remove(int key);
-
-private:
+typedef struct {
     AVLNode* root;
+} AVLTree;
 
-    int getHeight(AVLNode* node);
-    int getBalance(AVLNode* node);
-    AVLNode* rightRotate(AVLNode* y);
-    AVLNode* leftRotate(AVLNode* x);
-    AVLNode* insert(AVLNode* node, int key);
-    AVLNode* remove(AVLNode* node, int key);
-    AVLNode* minValueNode(AVLNode* node);
-    bool search(AVLNode* node, int key);
-};
+void AVLTree_init(AVLTree* tree);
+void AVLTree_insert(AVLTree* tree, int key);
+int AVLTree_search(AVLTree* tree, int key);
+void AVLTree_remove(AVLTree* tree, int key);
+void AVLTree_free(AVLTree* tree);
 
 #endif

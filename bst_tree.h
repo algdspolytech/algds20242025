@@ -1,27 +1,20 @@
 #ifndef BST_TREE_H
 #define BST_TREE_H
 
-struct BSTNode {
+typedef struct BSTNode {
     int key;
-    BSTNode* left;
-    BSTNode* right;
-    BSTNode(int k) : key(k), left(nullptr), right(nullptr) {}
-};
+    struct BSTNode* left;
+    struct BSTNode* right;
+} BSTNode;
 
-class BSTree {
-public:
-    BSTree();
-    void insert(int key);
-    bool search(int key);
-    void remove(int key);
-
-private:
+typedef struct {
     BSTNode* root;
+} BSTree;
 
-    BSTNode* insert(BSTNode* node, int key);
-    BSTNode* remove(BSTNode* node, int key);
-    BSTNode* minValueNode(BSTNode* node);
-    bool search(BSTNode* node, int key);
-};
+void BSTree_init(BSTree* tree);
+void BSTree_insert(BSTree* tree, int key);
+int BSTree_search(BSTree* tree, int key);
+void BSTree_remove(BSTree* tree, int key);
+void BSTree_free(BSTree* tree);
 
 #endif

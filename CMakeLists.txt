@@ -16,10 +16,11 @@ set(Headers
 )
 
 set(Sources
-    avl_tree.cpp
-    bst_tree.cpp
+    avl_tree.c
+    bst_tree.c
 )
 
 add_library(TreeLib STATIC ${Sources} ${Headers})
 
 add_subdirectory(test)
+

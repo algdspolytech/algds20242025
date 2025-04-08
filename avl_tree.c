@@ -1,38 +1,49 @@
 #include "avl_tree.h"
-#include <algorithm>
+#include <stdlib.h>
 
-AVLTree::AVLTree() : root(nullptr) {}
+int max(int a, int b) {
+    return (a > b) ? a : b;
+}
 
-int AVLTree::getHeight(AVLNode* node) {
+int getHeight(AVLNode* node) {
     return node ? node->height : 0;
 }
 
-int AVLTree::getBalance(AVLNode* node) {
+int getBalance(AVLNode* node) {
     return node ? getHeight(node->left) - getHeight(node->right) : 0;
 }
 
-AVLNode* AVLTree::rightRotate(AVLNode* y) {
+AVLNode* rightRotate(AVLNode* y) {
     AVLNode* x = y->left;
     AVLNode* T2 = x->right;
     x->right = y;
     y->left = T2;
-    y->height = std::max(getHeight(y->left), getHeight(y->right)) + 1;
-    x->height = std::max(getHeight(x->left), getHeight(x->right)) + 1;
+    y->height = max(getHeight(y->left), getHeight(y->right)) + 1;
+    x->height = max(getHeight(x->left), getHeight(x->right)) + 1;
     return x;
 }
 
-AVLNode* AVLTree::leftRotate(AVLNode* x) {
+AVLNode* leftRotate(AVLNode* x) {
     AVLNode* y = x->right;
     AVLNode* T2 = y->left;
     y->left = x;
     x->right = T2;
-    x->height = std::max(getHeight(x->left), getHeight(x->right)) + 1;
-    y->height = std::max(getHeight(y->left), getHeight(y->right)) + 1;
+    x->height = max(getHeight(x->left), getHeight(x->right)) + 1;
+    y->height = max(getHeight(y->left), getHeight(y->right)) + 1;
     return y;
 }
 
-AVLNode* AVLTree::insert(AVLNode* node, int key) {
-    if (!node) return new AVLNode(key);
+AVLNode* newAVLNode(int key) {
+    AVLNode* node = (AVLNode*)malloc(sizeof(AVLNode));
+    node->key = key;
+    node->left = NULL;
+    node->right = NULL;
+    node->height = 1;
+    return node;
+}
+
+AVLNode* insert(AVLNode* node, int key) {
+    if (!node) return newAVLNode(key);
 
     if (key < node->key)
         node->left = insert(node->left, key);
@@ -41,7 +52,7 @@ AVLNode* AVLTree::insert(AVLNode* node, int key) {
     else
         return node;
 
-    node->height = 1 + std::max(getHeight(node->left), getHeight(node->right));
+    node->height = 1 + max(getHeight(node->left), getHeight(node->right));
 
     int balance = getBalance(node);
 
@@ -68,14 +79,14 @@ AVLNode* AVLTree::insert(AVLNode* node, int key) {
     return node;
 }
 
-AVLNode* AVLTree::minValueNode(AVLNode* node) {
+AVLNode* minValueNode(AVLNode* node) {
     AVLNode* current = node;
     while (current->left)
         current = current->left;
     return current;
 }
 
-AVLNode* AVLTree::remove(AVLNode* node, int key) {
+AVLNode* remove(AVLNode* node, int key) {
     if (!node) return node;
 
     if (key < node->key)
@@ -87,10 +98,11 @@ AVLNode* AVLTree::remove(AVLNode* node, int key) {
             AVLNode* temp = node->left ? node->left : node->right;
             if (!temp) {
                 temp = node;
-                node = nullptr;
-            } else
+                node = NULL;
+            } else {
                 *node = *temp;
-            delete temp;
+            }
+            free(temp);
         } else {
             AVLNode* temp = minValueNode(node->right);
             node->key = temp->key;
@@ -100,7 +112,7 @@ AVLNode* AVLTree::remove(AVLNode* node, int key) {
 
     if (!node) return node;
 
-    node->height = 1 + std::max(getHeight(node->left), getHeight(node->right));
+    node->height = 1 + max(getHeight(node->left), getHeight(node->right));
 
     int balance = getBalance(node);
 
@@ -123,15 +135,33 @@ AVLNode* AVLTree::remove(AVLNode* node, int key) {
     return node;
 }
 
-bool AVLTree::search(AVLNode* node, int key) {
-    if (!node) return false;
-    if (node->key == key) return true;
+int search(AVLNode* node, int key) {
+    if (!node) return 0;
+    if (node->key == key) return 1;
     if (key < node->key)
         return search(node->left, key);
     else
         return search(node->right, key);
 }
 
-void AVLTree::insert(int key) { root = insert(root, key); }
-void AVLTree::remove(int key) { root = remove(root, key); }
-bool AVLTree::search(int key) { return search(root, key); }
+void AVLTree_init(AVLTree* tree) {
+    tree->root = NULL;
+}
+
+void AVLTree_insert(AVLTree* tree, int key) {
+    tree->root = insert(tree->root, key);
+}
+
+int AVLTree_search(AVLTree* tree, int key) {
+    return search(tree->root, key);
+}
+
+void AVLTree_remove(AVLTree* tree, int key) {
+    tree->root = remove(tree->root, key);
+}
+
+void AVLTree_free(AVLTree* tree) {
+    while (tree->root) {
+        AVLTree_remove(tree, tree->root->key);
+    }
+}
