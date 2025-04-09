@@ -7,6 +7,8 @@ typedef struct node {
     struct node* right;
 } node;
 
+int getdepth(node* node);
+
 node* createnode(int x, node* left, node* right);
 
 void freetree(node* node);
