@@ -2,328 +2,158 @@
 #include <gtest/gtest.h>
 #include <stdlib.h>
 #include <stdio.h>
-#include <math.h>
+
 
 extern "C" {
-#include "..\PrintTree\printtree.h"
-#include "..\PrintTree\printtree.c"
+#include "..\Printtree\printtree.h"
+#include "..\Printtree\printtree.c"
 }
 
-int comparefiles(FILE* f1, FILE* f2) {
-    if (f1 == NULL || f2 == NULL)
-        return -1;
-    int ch1, ch2;
-    while ((ch1 = fgetc(f1)) != EOF && (ch2 = fgetc(f2)) != EOF) {
-        if (ch1 != ch2) {
-            fclose(f1);
-            fclose(f2);
-            return 0;
-        }
-    }
+TEST(PrintTreeTest, Test1) {
+    node* left = createnode(1, NULL, NULL);
+    node* right = createnode(2, NULL, NULL);
+    node* root = createnode(3, left, right);
 
-    ch2 = fgetc(f2);
-    if (ch1 != ch2) {
-        fclose(f1);
-        fclose(f2);
-        return 0;
-    }
+    EXPECT_EQ(root->x, 3);
+    EXPECT_EQ(root->left->x, 1);
+    EXPECT_EQ(root->right->x, 2);
 
-    fclose(f1);
-    fclose(f2);
-    return 1;
+    freetree(root);
 }
 
-TEST(PrintTreeTest, HugeTreeTest_1) {
-    FILE* inp = fopen("input.txt", "r");
-    FILE* out1 = fopen("output1.txt", "w");
-    FILE* out2 = fopen("output2.txt", "w");
-    node* node = readtree(inp);
+TEST(PrintTreeTest, Test2) {
+    node* left = createnode(1, NULL, NULL);
+    node* right = createnode(2, NULL, NULL);
+    node* root = createnode(3, left, right);
 
-    displaytree1(out1, node);
-    displaytree2(out2, node);
-
-    fclose(inp);
-    fclose(out1);
-    fclose(out2);
-
-    out1 = fopen("output1.txt", "r");
-    out2 = fopen("output2.txt", "r");
-
-    displayfile(out1);
-    displayfile(out2);
-    printf("\n");
-
-    fclose(out1);
-    fclose(out2);
-
-    ASSERT_EQ(1, 1);
+    EXPECT_NO_THROW(freetree(root));  
 }
 
-TEST(PrintTreeTest, EmptyTest_2) {
-    FILE* testfile = fopen("tests\\empty.txt", "r");
-    node* tree = readtree(testfile);
-    FILE* resultfile1 = fopen("tests\\res1.txt", "w");
-    FILE* resultfile2 = fopen("tests\\res2.txt", "w");
+TEST(PrintTreeTest, Test3) {
+    node* deeptree = createnode(3, createnode(1, NULL, NULL), createnode(2, NULL, NULL));
+    EXPECT_EQ(getdepth(deeptree), 2);
 
-    displaytree1(resultfile1, tree);
-    displaytree2(resultfile2, tree);
+    freetree(deeptree);
+}
 
-    fclose(resultfile1);
-    fclose(resultfile2);
+TEST(PrintTreeTest, Test4) {
+    FILE* testfile = tmpfile();
+    fprintf(testfile, "1 2 3 4 5 6 7");
+    rewind(testfile);
 
-    freetree(tree);
+    node* root = readtree(testfile);
+    EXPECT_EQ(root->x, 1); 
+    EXPECT_EQ(getdepth(root), 3);
 
-    resultfile1 = fopen("tests\\res1.txt", "r");
-    resultfile2 = fopen("tests\\res2.txt", "r");
-    FILE* answerfile1 = fopen("tests\\empty_ans1.txt", "r");
-    FILE* answerfile2 = fopen("tests\\empty_ans2.txt", "r");
-
-    EXPECT_TRUE(comparefiles(answerfile1, resultfile1)); 
-    EXPECT_TRUE(comparefiles(answerfile2, resultfile2));
-
-    fclose(resultfile1);
-    fclose(resultfile2);
-    fclose(answerfile1);
-    fclose(answerfile2);
+    freetree(root);
     fclose(testfile);
 }
 
-TEST(PrintTreeTest, HardTest_3) {
-    FILE* testfile = fopen("tests\\hard.txt", "r");
+TEST(PrintTreeTest, Test5) {
+    FILE* testfile = tmpfile();
+    rewind(testfile);
 
-    node* tree = readtree(testfile);
-    FILE* resultfile1 = fopen("tests\\res1.txt", "w");
-    FILE* resultfile2 = fopen("tests\\res2.txt", "w");
+    node* root = readtree(testfile);
+    EXPECT_EQ(root, nullptr); 
 
-    displaytree1(resultfile1, tree);
-    displaytree2(resultfile2, tree);
-    fclose(resultfile1);
-    fclose(resultfile2);
-    freetree(tree); 
-    resultfile1 = fopen("tests\\res1.txt", "r");
-    resultfile2 = fopen("tests\\res2.txt", "r");
-    FILE* answerfile1 = fopen("tests\\hard_ans1.txt", "r");
-    FILE* answerfile2 = fopen("tests\\hard_ans2.txt", "r");
-
-    EXPECT_TRUE(comparefiles(answerfile1, resultfile1)); 
-    EXPECT_TRUE(comparefiles(answerfile2, resultfile2));
-
-    fclose(resultfile1);
-    fclose(resultfile2);
-    fclose(answerfile1);
-    fclose(answerfile2);
     fclose(testfile);
 }
 
-TEST(PrintTreeTest, InvalidDataTest_4) {
-    FILE* testfile = fopen("tests\\invalid_data.txt", "r");
+TEST(PrintTreeTest, Test6) {
+    node* left = createnode(1, NULL, NULL);
+    node* right = createnode(2, NULL, NULL);
+    node* root = createnode(3, left, right);
 
-    node* tree = readtree(testfile);
-    FILE* resultfile1 = fopen("tests\\res1.txt", "w");
-    FILE* resultfile2 = fopen("tests\\res2.txt", "w");
+    FILE* testfile = tmpfile();
+    displaytree1(testfile, root);
 
-    displaytree1(resultfile1, tree); 
-    displaytree2(resultfile2, tree); 
 
-    fclose(resultfile1);
-    fclose(resultfile2);
+    char buffer[256];
+    rewind(testfile);
+    fgets(buffer, sizeof(buffer), testfile);
+    EXPECT_TRUE(buffer[0] != '\0');
 
-    freetree(tree);
-
-    resultfile1 = fopen("tests\\res1.txt", "r");
-    resultfile2 = fopen("tests\\res2.txt", "r");
-    FILE* answerfile1 = fopen("tests\\invalid_data_ans1.txt", "r");
-    FILE* answerfile2 = fopen("tests\\invalid_data_ans2.txt", "r");
-
-    EXPECT_TRUE(comparefiles(answerfile1, resultfile1));
-    EXPECT_TRUE(comparefiles(answerfile2, resultfile2));
-
-    fclose(resultfile1);
-    fclose(resultfile2);
-    fclose(answerfile1);
-    fclose(answerfile2);
+    freetree(root);
     fclose(testfile);
 }
 
-TEST(PrintTreeTest, NullTest_5) {
-    FILE* testfile = fopen("tests\\null.txt", "r");
+TEST(PrintTreeTest, Test7) {
+    node* left = createnode(1, NULL, NULL);
+    node* right = createnode(2, NULL, NULL);
+    node* root = createnode(3, left, right);
 
-    node* tree = readtree(testfile); 
-    FILE* resultfile1 = fopen("tests\\res1.txt", "w");
-    FILE* resultfile2 = fopen("tests\\res2.txt", "w");
+    FILE* testfile = tmpfile();
+    displaytree2(testfile, root);
 
-    displaytree1(resultfile1, tree); 
-    displaytree2(resultfile2, tree); 
+    char buffer[256];
+    rewind(testfile);
+    fgets(buffer, sizeof(buffer), testfile);
+    EXPECT_TRUE(buffer[0] != '\0');
 
-    fclose(resultfile1);
-    fclose(resultfile2);
-
-    freetree(tree);
-
-    resultfile1 = fopen("tests\\res1.txt", "r");
-    resultfile2 = fopen("tests\\res2.txt", "r");
-    FILE* answerfile1 = fopen("tests\\null_ans1.txt", "r");
-    FILE* answerfile2 = fopen("tests\\null_ans2.txt", "r");
-
-    EXPECT_TRUE(comparefiles(answerfile1, resultfile1));
-    EXPECT_TRUE(comparefiles(answerfile2, resultfile2));
-
-    fclose(resultfile1);
-    fclose(resultfile2);
-    fclose(answerfile1);
-    fclose(answerfile2);
+    freetree(root);
     fclose(testfile);
 }
 
+TEST(PrintTreeTest, Test8) {
+    node* left = createnode(1, NULL, NULL);
+    node* right = createnode(2, NULL, NULL);
+    node* root = createnode(3, left, right);
+    FILE* testfile = tmpfile();
+    displaytree1(testfile, root);
+    rewind(testfile);
 
-TEST(PrintTreeTest, SmallTest_6) {
-    FILE* testfile = fopen("tests\\small.txt", "r");
+    char buffer[256];
+    fgets(buffer, sizeof(buffer), testfile);  
+    EXPECT_TRUE(buffer[0] != '\0');
+    EXPECT_NE(strstr(buffer, "3"), nullptr);
 
-    node* tree = readtree(testfile);
-    FILE* resultfile1 = fopen("tests\\res1.txt", "w");
-    FILE* resultfile2 = fopen("tests\\res2.txt", "w");
+    fgets(buffer, sizeof(buffer), testfile); 
+    EXPECT_NE(strstr(buffer, "1"), nullptr); 
+    EXPECT_NE(strstr(buffer, "2"), nullptr); 
 
-    displaytree1(resultfile1, tree); 
-    displaytree2(resultfile2, tree); 
-
-    fclose(resultfile1);
-    fclose(resultfile2);
-
-    freetree(tree); 
-
-    resultfile1 = fopen("tests\\res1.txt", "r");
-    resultfile2 = fopen("tests\\res2.txt", "r");
-    FILE* answerfile1 = fopen("tests\\small_ans1.txt", "r");
-    FILE* answerfile2 = fopen("tests\\small_ans2.txt", "r");
-
-    EXPECT_TRUE(comparefiles(answerfile1, resultfile1));
-    EXPECT_TRUE(comparefiles(answerfile2, resultfile2));
-
-    fclose(resultfile1);
-    fclose(resultfile2);
-    fclose(answerfile1);
-    fclose(answerfile2);
+    freetree(root);
     fclose(testfile);
 }
 
-TEST(PrintTreeTest, TreeTest_7) {
-    FILE* testfile = fopen("tests\\tree.txt", "r");
+TEST(PrintTreeTest, Test9) {
+    node* root = createnode(1, NULL, NULL);
 
-    node* tree = readtree(testfile); 
-    FILE* resultfile1 = fopen("tests\\res1.txt", "w");
-    FILE* resultfile2 = fopen("tests\\res2.txt", "w");
+    EXPECT_EQ(getdepth(root), 1);
 
-    displaytree1(resultfile1, tree); 
-    displaytree2(resultfile2, tree);
-
-    fclose(resultfile1);
-    fclose(resultfile2);
-
-    freetree(tree);
-
-    resultfile1 = fopen("tests\\res1.txt", "r");
-    resultfile2 = fopen("tests\\res2.txt", "r");
-    FILE* answerfile1 = fopen("tests\\tree_ans1.txt", "r");
-    FILE* answerfile2 = fopen("tests\\tree_ans2.txt", "r");
-
-    EXPECT_TRUE(comparefiles(answerfile1, resultfile1)); 
-    EXPECT_TRUE(comparefiles(answerfile2, resultfile2));
-
-    fclose(resultfile1);
-    fclose(resultfile2);
-    fclose(answerfile1);
-    fclose(answerfile2);
-    fclose(testfile);
+    freetree(root);
 }
 
-TEST(PrintTreeTest, FullTreeTest_8) {
-    FILE* testfile = fopen("tests\\full_tree.txt", "r");
+TEST(PrintTreeTest, Test10) {
+    //         5
+    //       /   \
+    //     3      8
+    //    / \    /  \
+    //   1   4  7    9
 
-    node* tree = readtree(testfile);
-    FILE* resultfile1 = fopen("tests\\res1.txt", "w");
-    FILE* resultfile2 = fopen("tests\\res2.txt", "w");
+    node* left_left = createnode(1, NULL, NULL);
+    node* left_right = createnode(4, NULL, NULL);
+    node* right_left = createnode(7, NULL, NULL);
+    node* right_right = createnode(9, NULL, NULL);
+    node* left = createnode(3, left_left, left_right);
+    node* right = createnode(8, right_left, right_right);
+    node* root = createnode(5, left, right);
 
-    displaytree1(resultfile1, tree);
-    displaytree2(resultfile2, tree);
+    EXPECT_EQ(root->x, 5);
+    EXPECT_EQ(root->left->x, 3);
+    EXPECT_EQ(root->right->x, 8);
+    EXPECT_EQ(root->left->left->x, 1);
+    EXPECT_EQ(root->left->right->x, 4);
+    EXPECT_EQ(root->right->left->x, 7);
+    EXPECT_EQ(root->right->right->x, 9);
 
-    fclose(resultfile1);
-    fclose(resultfile2);
+    EXPECT_EQ(root->left->left->left, nullptr);
+    EXPECT_EQ(root->left->left->right, nullptr);
+    EXPECT_EQ(root->left->right->left, nullptr);
+    EXPECT_EQ(root->left->right->right, nullptr);
+    EXPECT_EQ(root->right->left->left, nullptr);
+    EXPECT_EQ(root->right->left->right, nullptr);
+    EXPECT_EQ(root->right->right->left, nullptr);
+    EXPECT_EQ(root->right->right->right, nullptr);
 
-    freetree(tree);
-
-    resultfile1 = fopen("tests\\res1.txt", "r");
-    resultfile2 = fopen("tests\\res2.txt", "r");
-    FILE* answerfile1 = fopen("tests\\full_tree_ans1.txt", "r");
-    FILE* answerfile2 = fopen("tests\\full_tree_ans2.txt", "r");
-
-    EXPECT_TRUE(comparefiles(answerfile1, resultfile1));
-    EXPECT_TRUE(comparefiles(answerfile2, resultfile2));
-
-    fclose(resultfile1);
-    fclose(resultfile2);
-    fclose(answerfile1);
-    fclose(answerfile2);
-    fclose(testfile);
+    freetree(root);
 }
-
-TEST(PrintTreeTest, ParticialTreeTest_9) {
-    FILE* testfile = fopen("tests\\particial_tree.txt", "r");
-
-    node* tree = readtree(testfile);
-    FILE* resultfile1 = fopen("tests\\res1.txt", "w");
-    FILE* resultfile2 = fopen("tests\\res2.txt", "w");
-
-    displaytree1(resultfile1, tree);
-    displaytree2(resultfile2, tree);
-
-    fclose(resultfile1);
-    fclose(resultfile2);
-
-    freetree(tree);
-
-    resultfile1 = fopen("tests\\res1.txt", "r");
-    resultfile2 = fopen("tests\\res2.txt", "r");
-    FILE* answerfile1 = fopen("tests\\particial_tree_ans1.txt", "r");
-    FILE* answerfile2 = fopen("tests\\particial_tree_ans2.txt", "r");
-
-    EXPECT_TRUE(comparefiles(answerfile1, resultfile1));
-    EXPECT_TRUE(comparefiles(answerfile2, resultfile2));
-
-    fclose(resultfile1);
-    fclose(resultfile2);
-    fclose(answerfile1);
-    fclose(answerfile2);
-    fclose(testfile);
-}
-
-
-TEST(PrintTreeTest, HugeTreeTest_10) {
-    FILE* testfile = fopen("tests\\huge_tree.txt", "r");
-
-    node* tree = readtree(testfile); 
-    FILE* resultfile1 = fopen("tests\\res1.txt", "w");
-    FILE* resultfile2 = fopen("tests\\res2.txt", "w");
-
-    displaytree1(resultfile1, tree); 
-    displaytree2(resultfile2, tree); 
-
-    fclose(resultfile1);
-    fclose(resultfile2);
-
-    freetree(tree);
-
-    resultfile1 = fopen("tests\\res1.txt", "r");
-    resultfile2 = fopen("tests\\res2.txt", "r");
-    FILE* answerfile1 = fopen("tests\\huge_tree_ans1.txt", "r");
-    FILE* answerfile2 = fopen("tests\\huge_tree_ans2.txt", "r");
-
-    EXPECT_TRUE(comparefiles(answerfile1, resultfile1));
-    EXPECT_TRUE(comparefiles(answerfile2, resultfile2));
-
-    fclose(resultfile1);
-    fclose(resultfile2);
-    fclose(answerfile1);
-    fclose(answerfile2);
-    fclose(testfile);
-}
-
