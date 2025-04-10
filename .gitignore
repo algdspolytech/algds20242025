@@ -1,0 +1,4 @@
+deps/
+*.sh
+build/
+Testing/
