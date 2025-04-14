@@ -212,6 +212,100 @@ int main() {
     return 0;
 }
 
+// test Lab A 
+#include <gtest/gtest.h>
+
+extern "C" {
+    #include "../include/queue.h"
+}
+
+
+TEST(QueueLinkedListTest, EnqueueDequeueSingle) {
+    struct QueueLinkedList q;
+    initQueueLinkedList(&q);
+
+    enqueueLinkedList(&q, 42);
+    EXPECT_EQ(dequeueLinkedList(&q), 42);
+    EXPECT_TRUE(isEmptyLinkedList(&q));
+}
+
+TEST(QueueLinkedListTest, EnqueueDequeueMultiple) {
+    struct QueueLinkedList q;
+    initQueueLinkedList(&q);
+
+    enqueueLinkedList(&q, 10);
+    enqueueLinkedList(&q, 20);
+    enqueueLinkedList(&q, 30);
+
+    EXPECT_EQ(dequeueLinkedList(&q), 10);
+    EXPECT_EQ(dequeueLinkedList(&q), 20);
+    EXPECT_EQ(dequeueLinkedList(&q), 30);
+    EXPECT_TRUE(isEmptyLinkedList(&q));
+}
+
+TEST(QueueLinkedListTest, DequeueFromEmptyQueue) {
+    struct QueueLinkedList q;
+    initQueueLinkedList(&q);
+    EXPECT_EQ(dequeueLinkedList(&q), -1);
+}
+
+TEST(QueueLinkedListTest, IsEmptyAfterOperations) {
+    struct QueueLinkedList q;
+    initQueueLinkedList(&q);
+    enqueueLinkedList(&q, 1);
+    dequeueLinkedList(&q);
+    EXPECT_TRUE(isEmptyLinkedList(&q));
+}
+
+TEST(QueueArrayTest, EnqueueDequeueSingle) {
+    struct QueueArray q;
+    initQueueArray(&q);
+
+    enqueueArray(&q, 77);
+    EXPECT_EQ(dequeueArray(&q), 77);
+    EXPECT_TRUE(isEmptyArray(&q));
+}
+
+TEST(QueueArrayTest, EnqueueDequeueMultiple) {
+    struct QueueArray q;
+    initQueueArray(&q);
+
+    enqueueArray(&q, 5);
+    enqueueArray(&q, 15);
+
+    EXPECT_EQ(dequeueArray(&q), 5);
+    EXPECT_EQ(dequeueArray(&q), 15);
+    EXPECT_TRUE(isEmptyArray(&q));
+}
+
+TEST(QueueArrayTest, OverflowQueue) {
+    struct QueueArray q;
+    initQueueArray(&q);
+
+    enqueueArray(&q, 1);
+    enqueueArray(&q, 2);
+    enqueueArray(&q, 3);  
+    EXPECT_EQ(q.rear, 1); 
+}
+
+TEST(QueueArrayTest, DequeueEmptyQueue) {
+    struct QueueArray q;
+    initQueueArray(&q);
+    EXPECT_EQ(dequeueArray(&q), -1);
+}
+
+TEST(QueueArrayTest, IsEmptyAfterReset) {
+    struct QueueArray q;
+    initQueueArray(&q);
+
+    enqueueArray(&q, 11);
+    dequeueArray(&q); 
+    EXPECT_TRUE(isEmptyArray(&q));
+
+    enqueueArray(&q, 22);
+    EXPECT_EQ(dequeueArray(&q), 22);
+}
+
 //Сравнение двух реализаций
 //1. очередь со связанным списком
 //Льготы :
