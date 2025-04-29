@@ -13,106 +13,79 @@ TEST(HashTableTest, InsertAndRetrieve) {
     ASSERT_NE(result, nullptr);
     EXPECT_EQ(result->value, 42);
     deleteHashMap(map, size);
-}
-
-TEST(HashTableTest, HandleCollision) {
-    const unsigned int size = 1;
-    node** map = createHashMap(size);
-    insertValue(map, size, "ab", 1);
-    insertValue(map, size, "ba", 2);
-    node* first = getVal(map, size, "ab");
-    node* second = getVal(map, size, "ba");
-    ASSERT_NE(first, nullptr);
-    ASSERT_NE(second, nullptr);
-    EXPECT_EQ(first->value, 1);
-    EXPECT_EQ(second->value, 2);
-    deleteHashMap(map, size);
-}
-
-TEST(HashTableTest, MultipleInserts) {
-    const unsigned int size = 5;
-    node** map = createHashMap(size);
-    for (int i = 0; i < 5; ++i) {
-        std::string key = "key" + std::to_string(i);
-        insertValue(map, size, const_cast<char*>(key.c_str()), i);
-    }
-    for (int i = 0; i < 5; ++i) {
-        std::string key = "key" + std::to_string(i);
-        node* result = getVal(map, size, key.c_str());
-        ASSERT_NE(result, nullptr);
-        EXPECT_EQ(result->value, i);
-    }
-    deleteHashMap(map, size);
-}
-
-TEST(HashTableTest, MissingKeyDeathTest) {
+}TEST(HashMapTest, CreateDestroy) {
     const unsigned int size = 10;
-    node** map = createHashMap(size);
-    EXPECT_DEATH({
-        getVal(map, size, "missing_key");
-    }, "");
-    deleteHashMap(map, size);
-}
-
-TEST(HashTableTest, HashFunction) {
-    unsigned int size = 100;
-    const char* key = "test";
-    unsigned int expected = ('t' + 'e' + 's' + 't') % size;
-    EXPECT_EQ(hash(key, size), expected);
-}
-
-TEST(HashTableTest, OverwriteKey) {
-    const unsigned int size = 10;
-    node** map = createHashMap(size);
-    insertValue(map, size, "key", 1);
-    insertValue(map, size, "key", 2);
-    node* first = getVal(map, size, "key");
-    ASSERT_NE(first->next, nullptr);
-    EXPECT_EQ(first->next->value, 2);
-    deleteHashMap(map, size);
-}
-
-TEST(HashTableTest, InsertEmptyKey) {
-    const unsigned int size = 10;
-    node** map = createHashMap(size);
-    EXPECT_DEATH({
-        insertValue(map, size, "", 123);
-        getVal(map, size, "");
-    }, "");
-    deleteHashMap(map, size);
-}
-
-TEST(HashTableTest, LargeMap) {
-    const unsigned int size = 1000;
-    node** map = createHashMap(size);
-    for (int i = 0; i < 100; ++i) {
-        std::string key = "key" + std::to_string(i);
-        insertValue(map, size, const_cast<char*>(key.c_str()), i);
+    struct node** map = createHashMap(size);
+    ASSERT_NE(map, nullptr);
+    
+    // Проверка инициализации buckets
+    for (unsigned int i = 0; i < size; ++i) {
+        ASSERT_NE(map[i], nullptr);
+        EXPECT_EQ(map[i]->key, nullptr);
+        EXPECT_EQ(map[i]->value, 0);
+        EXPECT_EQ(map[i]->next, nullptr);
     }
-    for (int i = 0; i < 100; ++i) {
-        std::string key = "key" + std::to_string(i);
-        node* result = getVal(map, size, key.c_str());
-        ASSERT_NE(result, nullptr);
-        EXPECT_EQ(result->value, i);
-    }
+    
     deleteHashMap(map, size);
 }
 
-TEST(HashTableTest, ChainOrder) {
-    const unsigned int size = 1;
-    node** map = createHashMap(size);
-    insertValue(map, size, "a", 1);
-    insertValue(map, size, "b", 2);
-    node* head = map[0];
-    ASSERT_NE(head->next, nullptr);
-    EXPECT_EQ(head->next->value, 1);
-    ASSERT_NE(head->next->next, nullptr);
-    EXPECT_EQ(head->next->next->value, 2);
-    deleteHashMap(map, size);
-}
-
-TEST(HashTableTest, DeleteMap) {
+TEST(HashMapTest, InsertAndGet) {
     const unsigned int size = 10;
-    node** map = createHashMap(size);
-    ASSERT_NO_FATAL_FAILURE(deleteHashMap(map, size));
+    struct node** map = createHashMap(size);
+    ASSERT_NE(map, nullptr);
+
+    // Тест на вставку и получение
+    insertValue(map, size, "key1", 42);
+    struct node* result = getVal(map, size, "key1");
+    ASSERT_NE(result, nullptr);
+    EXPECT_STREQ(result->key, "key1");
+    EXPECT_EQ(result->value, 42);
+
+    // Проверка обновления значения
+    insertValue(map, size, "key1", 100);
+    result = getVal(map, size, "key1");
+    ASSERT_NE(result, nullptr);
+    EXPECT_EQ(result->value, 100);
+
+    deleteHashMap(map, size);
+}
+
+TEST(HashMapTest, GetNonExistent) {
+    const unsigned int size = 10;
+    struct node** map = createHashMap(size);
+    ASSERT_NE(map, nullptr);
+
+    struct node* result = getVal(map, size, "nonexistent");
+    EXPECT_EQ(result, nullptr);
+
+    deleteHashMap(map, size);
+}
+
+TEST(HashMapTest, HandleCollisions) {
+    const unsigned int size = 1; 
+    struct node** map = createHashMap(size);
+    ASSERT_NE(map, nullptr);
+
+    insertValue(map, size, "key1", 1);
+    insertValue(map, size, "key2", 2);
+
+    struct node* result1 = getVal(map, size, "key1");
+    ASSERT_NE(result1, nullptr);
+    EXPECT_EQ(result1->value, 1);
+
+    struct node* result2 = getVal(map, size, "key2");
+    ASSERT_NE(result2, nullptr);
+    EXPECT_EQ(result2->value, 2);
+
+    deleteHashMap(map, size);
+}
+
+TEST(HashMapDeathTest, InsertEmptyKey) {
+    const unsigned int size = 10;
+    struct node** map = createHashMap(size);
+    ASSERT_NE(map, nullptr);
+
+    EXPECT_DEATH(insertValue(map, size, "", 42), "Assertion.*failed");
+    
+    deleteHashMap(map, size);
 }

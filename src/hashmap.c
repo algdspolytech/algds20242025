@@ -1,12 +1,6 @@
 #include "hashmap.h"
 
-struct node {
-    int value;
-    char* key;
-    struct node* next;
-};
-
-static unsigned int hash(const char* str, unsigned int size) {
+unsigned int hash(const char* str, unsigned int size) {
     unsigned int sum = 0;
     for (unsigned int i = 0; str[i] != '\0'; ++i) {
         sum += str[i];
@@ -32,21 +26,25 @@ struct node** createHashMap(unsigned int size) {
     return map;
 }
 
-int insertValue(struct node** map, unsigned int size, const char* key, int val) {
+void insertValue(struct node** map, unsigned int size, const char* key, int val) {
+    assert(key != NULL && strlen(key) > 0 && "Empty key is not allowed!");
     unsigned int index = hash(key, size);
-    struct node* new_node = (struct node*)malloc(sizeof(struct node));
-    if (!new_node) return -1;
+    struct node* current = map[index]; 
 
-    new_node->key = strdup(key);
-    if (!new_node->key) {
-        free(new_node);
-        return -1;
+    while (current->next != NULL) {
+        current = current->next;
+        if (strcmp(current->key, key) == 0) {
+            current->value = val;
+            return;
+        }
     }
 
+    struct node* new_node = (struct node*)malloc(sizeof(struct node));
+    new_node->key = strdup(key);
     new_node->value = val;
-    new_node->next = map[index]->next; 
-    map[index]->next = new_node;
-    return 0;
+    new_node->next = NULL;
+    
+    current->next = new_node;
 }
 
 struct node* getVal(struct node** map, unsigned int size, const char* key) {

@@ -1,27 +1,17 @@
-cmake_minimum_required(VERSION 3.8)
-project(tests_lab1)
+cmake_minimum_required(VERSION 3.20)
+project(tests_lab1 LANGUAGES CXX)
+
+# Указываем путь к vcpkg
+set(CMAKE_TOOLCHAIN_FILE "C:/Program Files/vcpkg/scripts/buildsystems/vcpkg.cmake" 
+    CACHE STRING "Vcpkg toolchain file")
 
 set(CMAKE_CXX_STANDARD 17)
 
-
-
 include_directories("${PROJECT_SOURCE_DIR}/include")
-include_directories("C:/Users/Egor/Documents/desktop/algos/algds20242025/build/vcpkg_installed/x64-windows/include")
 
+# Подключаем GTest через vcpkg
 find_package(GTest CONFIG REQUIRED)
-
-find_library(
-    LIBGTESTMAIN_LIBRARY
-    NAMES gtest_main
-    HINTS ${CMAKE_SOURCE_DIR}/../../../../tests_lab1/googletest/build/lib/)
-    
-set(GTEST_LOCATION "C:/Users/Egor/Documents/desktop/algos/algds20242025/build/vcpkg_installed/x64-windows/lib")
-
-
-set(CMAKE_PREFIX_PATH "C:/Program Files/vcpkg/installed/x64-windows/share")
+message(STATUS "GTest found: ${GTEST_FOUND}")  # Для отладки
 
 enable_testing()
-
-
 add_subdirectory(test)
-
