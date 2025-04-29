@@ -8,6 +8,8 @@ list(REMOVE_ITEM tests "${PROJECT_SOURCE_DIR}/test/main.cpp")
 foreach(file ${tests})
   get_filename_component(name ${file} NAME_WE)
   
+  project("${name}_tests" LANGUAGES CXX)
+
   add_executable("${name}_tests" ...)
   
   target_link_libraries("${name}_tests" ...)
@@ -17,4 +19,5 @@ foreach(file ${tests})
     COMMAND ${name}_tests
     CONFIGURATIONS Debug  
   )
+
 endforeach()
