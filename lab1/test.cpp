@@ -1,4 +1,4 @@
-#include "pch.h"
+п»ї#include "pch.h"
 #include "../LabH/red_black_treew.cpp"
 
 TEST(RedBlackTreeInsert, InsertRoot__1) {
@@ -51,7 +51,7 @@ TEST(RedBlackTreeInsert, InsertRedNode__5) {
 }
 
 
-// Естественно красный не может быть листовым, имеется ввиду что его детьми являются два черных Null'a
+// Р•СЃС‚РµСЃС‚РІРµРЅРЅРѕ РєСЂР°СЃРЅС‹Р№ РЅРµ РјРѕР¶РµС‚ Р±С‹С‚СЊ Р»РёСЃС‚РѕРІС‹Рј, РёРјРµРµС‚СЃСЏ РІРІРёРґСѓ С‡С‚Рѕ РµРіРѕ РґРµС‚СЊРјРё СЏРІР»СЏСЋС‚СЃСЏ РґРІР° С‡РµСЂРЅС‹С… Null'a
 TEST(RedBlackTreeDelete, DeleteLeafRedElement__6) {
     Node* root = nullptr;
 
@@ -65,7 +65,7 @@ TEST(RedBlackTreeDelete, DeleteLeafRedElement__6) {
     EXPECT_EQ(node, nullptr);
 }
 
-// Вариант удаления черного узла с одним ненулевым ребенком (этот ребенок красный, черным быть он не может)
+// Р’Р°СЂРёР°РЅС‚ СѓРґР°Р»РµРЅРёСЏ С‡РµСЂРЅРѕРіРѕ СѓР·Р»Р° СЃ РѕРґРЅРёРј РЅРµРЅСѓР»РµРІС‹Рј СЂРµР±РµРЅРєРѕРј (СЌС‚РѕС‚ СЂРµР±РµРЅРѕРє РєСЂР°СЃРЅС‹Р№, С‡РµСЂРЅС‹Рј Р±С‹С‚СЊ РѕРЅ РЅРµ РјРѕР¶РµС‚)
 TEST(RedBlackTreeDelete, DeleteBlackElementWithOneChild__7) {
     Node* root = nullptr;
 
