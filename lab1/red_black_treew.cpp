@@ -2,9 +2,6 @@
 #include <stdlib.h>
 
 
-using namespace std;
-
-
 Node* rotateLeft(Node* root, Node* node) {
     Node* child = node->right;
     node->right = child->left;
@@ -63,6 +60,15 @@ Node* sibling(Node* node) {
         return node->parent->right;
     else
         return node->parent->left;
+}
+
+Node* create_node(double data) {
+    Node* node = (Mode*)malloc(sizeof(Node));
+    node->left = nullptr;
+    node->right = nullptr;
+    node->data = data;
+    node->parent = nullptr;
+    node->color = 0;
 }
 
 Node* insert_case5(Node* root, Node* node) {
@@ -124,7 +130,7 @@ Node* insert_case2(Node* root, Node* node) {
 }
 
 Node* insert_node(Node* root, double data) {
-    Node* node = new Node(data);
+    Node* node = create_node(data);
 
     if (root == nullptr) {
         root = insert_case1(root, node);
