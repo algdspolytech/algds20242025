@@ -1,8 +1,4 @@
 #pragma once
-#include <iostream>
-
-
-using namespace std;
 
 enum Color { RED, BLACK };
 
@@ -12,14 +8,6 @@ struct Node {
     Node* left;
     Node* right;
     Node* parent;
-
-    Node(double value) {
-        data = value;
-        color = RED;
-        parent = nullptr;
-        left = nullptr;
-        right = nullptr;
-    }
 };
 
 
