@@ -1,2 +1,0 @@
-Unsorted list: G O I D A ! ! ! 
-Sorted list: ! ! ! A D G I O 
