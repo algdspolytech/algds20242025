@@ -1,3 +1,5 @@
 cmake-build-debug
 CMakeLists.txt
 .idea
+./labJ/package.c
+./labJ/test_hash_map.cpp

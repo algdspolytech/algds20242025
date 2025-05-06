@@ -1,5 +1,19 @@
-#include "hash_map.h"
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 
+#define HASH_CAPACITY 1000003
+#define KEY_MAX_LEN 255
+
+typedef struct BucketEntry {
+    char* data;
+    struct BucketEntry* chain;
+} BucketEntry;
+
+typedef struct {
+    BucketEntry** slots;
+    int capacity;
+} StringHashMap;
 
 unsigned int string_hash(const char* str) {
     const unsigned int BASIS = 0x811C9DC5;
@@ -78,29 +92,29 @@ void map_cleanup(StringHashMap* map) {
     free(map->slots);
 }
 
-// int main() {
-//     StringHashMap str_map;
-//     map_init(&str_map);
-//
-//     char operation[2];
-//     char input_key[KEY_MAX_LEN + 1];
-//
-//     while (fscanf(stdin, "%1s %255s", operation, input_key) == 2) {
-//         switch (operation[0]) {
-//             case 'a':
-//                 map_put(&str_map, input_key);
-//                 break;
-//             case 'r':
-//                 map_delete(&str_map, input_key);
-//                 break;
-//             case 'f':
-//                 printf("%s\n", map_contains(&str_map, input_key) ? "yes" : "no");
-//                 break;
-//             default:
-//                 break;
-//         }
-//     }
-//
-//     map_cleanup(&str_map);
-//     return 0;
-// }
+int main() {
+    StringHashMap str_map;
+    map_init(&str_map);
+
+    char operation[2];
+    char input_key[KEY_MAX_LEN + 1];
+
+    while (fscanf(stdin, "%1s %255s", operation, input_key) == 2) {
+        switch (operation[0]) {
+            case 'a':
+                map_put(&str_map, input_key);
+                break;
+            case 'r':
+                map_delete(&str_map, input_key);
+                break;
+            case 'f':
+                printf("%s\n", map_contains(&str_map, input_key) ? "yes" : "no");
+                break;
+            default:
+                break;
+        }
+    }
+
+    map_cleanup(&str_map);
+    return 0;
+}
