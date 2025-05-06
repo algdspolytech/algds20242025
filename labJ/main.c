@@ -3,12 +3,12 @@
 #include <stdlib.h>
 #include <string.h>
 
-#define TABLE_SIZE 1048576  // Размер хеш-таблицы (желательно простое число)
+#define TABLE_SIZE 1048576 
 
 typedef struct {
     char* key;
-    int is_deleted;  // Флаг удаленного элемента (для ленивого удаления)
-    int is_occupied;  // Флаг занятой ячейки
+    int is_deleted; 
+    int is_occupied; 
 } HashItem;
 
 typedef struct {
@@ -16,7 +16,6 @@ typedef struct {
     int size;
 } HashTable;
 
-// Первая хеш-функция (простое хеширование)
 unsigned int hash1(const char* key) {
     unsigned int hash = 0;
     while (*key) {
@@ -25,17 +24,14 @@ unsigned int hash1(const char* key) {
     return hash;
 }
 
-// Вторая хеш-функция (должна возвращать нечетное число)
 unsigned int hash2(const char* key) {
     unsigned int hash = 5381;
     while (*key) {
         hash = (hash * 33) ^ *key++;
     }
-    // Убедимся, что hash2 нечетный и не равен 0
     return hash | 1;
 }
 
-// Инициализация хеш-таблицы
 void initHashTable(HashTable* table) {
     table->size = TABLE_SIZE;
     table->items = (HashItem*)calloc(TABLE_SIZE, sizeof(HashItem));
@@ -45,9 +41,7 @@ void initHashTable(HashTable* table) {
     }
 }
 
-// Вставка элемента в хеш-таблицу
 void insert(HashTable* table, const char* key) {
-    // Проверим, не существует ли уже этот ключ
     if (search(table, key)) {
         return;
     }
@@ -59,18 +53,17 @@ void insert(HashTable* table, const char* key) {
 
     while (table->items[index].is_occupied && !table->items[index].is_deleted) {
         if (strcmp(table->items[index].key, key) == 0) {
-            return;  // Ключ уже существует
+            return;  
         }
         index = (h1 + i * h2) % table->size;
         i++;
-        if (i == table->size) {  // Таблица заполнена
+        if (i == table->size) {  
             return;
         }
     }
 
-    // Нашли свободное место или удаленную ячейку
     if (table->items[index].is_deleted) {
-        free(table->items[index].key);  // Освобождаем память старой строки
+        free(table->items[index].key);  
     }
 
     table->items[index].key = strdup(key);
@@ -78,7 +71,6 @@ void insert(HashTable* table, const char* key) {
     table->items[index].is_deleted = 0;
 }
 
-// Поиск элемента в хеш-таблице
 int search(HashTable* table, const char* key) {
     unsigned int h1 = hash1(key) % table->size;
     unsigned int h2 = hash2(key) % table->size;
@@ -87,19 +79,18 @@ int search(HashTable* table, const char* key) {
 
     while (table->items[index].is_occupied) {
         if (!table->items[index].is_deleted && strcmp(table->items[index].key, key) == 0) {
-            return 1;  // Нашли
+            return 1; 
         }
         index = (h1 + i * h2) % table->size;
         i++;
-        if (i == table->size) {  // Прошли всю таблицу
+        if (i == table->size) {
             break;
         }
     }
 
-    return 0;  // Не нашли
+    return 0;
 }
 
-// Удаление элемента из хеш-таблицы
 void remove_item(HashTable* table, const char* key) {
     unsigned int h1 = hash1(key) % table->size;
     unsigned int h2 = hash2(key) % table->size;
@@ -108,7 +99,6 @@ void remove_item(HashTable* table, const char* key) {
 
     while (table->items[index].is_occupied) {
         if (!table->items[index].is_deleted && strcmp(table->items[index].key, key) == 0) {
-            // Нашли элемент для удаления
             free(table->items[index].key);
             table->items[index].key = NULL;
             table->items[index].is_deleted = 1;
@@ -116,13 +106,12 @@ void remove_item(HashTable* table, const char* key) {
         }
         index = (h1 + i * h2) % table->size;
         i++;
-        if (i == table->size) {  // Прошли всю таблицу
+        if (i == table->size) {
             break;
         }
     }
 }
 
-// Освобождение памяти хеш-таблицы
 void freeHashTable(HashTable* table) {
     for (int i = 0; i < table->size; i++) {
         if (table->items[i].is_occupied && !table->items[i].is_deleted) {
@@ -137,17 +126,17 @@ int main() {
     initHashTable(&table);
 
     char operation[2];
-    char key[256];  // Буфер для ключа (ASCII-Z строки)
+    char key[256];
 
     while (scanf("%1s %255s", operation, key) == 2) {
         switch (operation[0]) {
-        case 'a':  // Вставка
+        case 'a':
             insert(&table, key);
             break;
-        case 'r':  // Удаление
+        case 'r':
             remove_item(&table, key);
             break;
-        case 'f':  // Поиск
+        case 'f':
             printf("%s\n", search(&table, key) ? "yes" : "no");
             break;
         default:
