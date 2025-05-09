@@ -1,0 +1,13 @@
+﻿################################################################################
+# Данный GITIGNORE-файл был автоматически создан Microsoft(R) Visual Studio.
+################################################################################
+
+/lab1
+/labA
+/.vscode
+/LabB/DoublyLinkedList
+/labC/Graphs
+/labD/SumSizes
+/labF/Tree
+/labH
+/res.bmp
