@@ -2,7 +2,6 @@
 # Данный GITIGNORE-файл был автоматически создан Microsoft(R) Visual Studio.
 ################################################################################
 
-/lab1
 /labA
 /.vscode
 /LabB/DoublyLinkedList
