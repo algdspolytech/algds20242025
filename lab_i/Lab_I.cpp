@@ -3,7 +3,6 @@
 #include <string.h>
 #include "btree.h"
 
-// Initialize a new B-tree node with the given properties
 static B_node* init_node(bool is_leaf, B_node* parent_node) {
     B_node* new_node = (B_node*)malloc(sizeof(B_node));
     new_node->is_leaf = is_leaf;
@@ -13,7 +12,6 @@ static B_node* init_node(bool is_leaf, B_node* parent_node) {
     return new_node;
 }
 
-// Search for a key in the B-tree
 B_search_result Search(B_tree* tree, int key) {
     B_node* current = tree->root;
 
@@ -36,7 +34,6 @@ B_search_result Search(B_tree* tree, int key) {
     return MISSING;
 }
 
-// Insert a key into a non-full node
 void insertNotFull(B_node* node, int key) {
     int idx = node->keys_count - 1;
 
@@ -64,7 +61,6 @@ void insertNotFull(B_node* node, int key) {
     }
 }
 
-// Split a full child node at the given index
 void split(B_node* parent_node, int split_index) {
     B_node* child_to_split = parent_node->children[split_index];
     B_node* new_sibling = init_node(child_to_split->is_leaf, parent_node);
@@ -98,7 +94,10 @@ void split(B_node* parent_node, int split_index) {
     child_to_split->keys_count = MIN_CHILDREN;
 }
 
-// Insert a key into the B-tree
+int Key(B_tree_iterator* iterator) {
+    return iterator->node->keys[iterator->position];
+}
+
 void Insert(B_tree* tree, int key) {
     if (!SplitFPtr) SplitFPtr = (split_t const*)(void*)&split;
     if (!InsertNotFullPtr) InsertNotFullPtr = (insertNotFull_t const*)(void*)&insertNotFull;
@@ -130,7 +129,6 @@ void Insert(B_tree* tree, int key) {
     }
 }
 
-// Recursively free a node and its children
 void free_node(B_node* node) {
     if (!node) return;
     if (!node->is_leaf) {
@@ -141,7 +139,6 @@ void free_node(B_node* node) {
     free(node);
 }
 
-// Free the entire B-tree
 void Free(B_tree* tree) {
     if (tree && tree->root) {
         free_node(tree->root);
@@ -149,7 +146,6 @@ void Free(B_tree* tree) {
     }
 }
 
-// Initialize an iterator pointing to the smallest key
 B_tree_iterator IteratorBegin(B_tree* tree) {
     B_tree_iterator iterator = { 0 };
 
@@ -168,7 +164,6 @@ B_tree_iterator IteratorBegin(B_tree* tree) {
     return iterator;
 }
 
-// Move the iterator to the next key
 int Next(B_tree_iterator* iterator) {
     if (!iterator->node) {
         return 0;
@@ -215,9 +210,4 @@ int Next(B_tree_iterator* iterator) {
 
     iterator->node = NULL;
     return 0;
-}
-
-// Retrieve the current key from the iterator
-int Key(B_tree_iterator* iterator) {
-    return iterator->node->keys[iterator->position];
 }
