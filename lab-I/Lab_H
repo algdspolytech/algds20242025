@@ -1,0 +1,176 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+// Структура узла AVL-дерева
+typedef struct AVLNode {
+    int key;        // ключ
+    int data;       // данные
+    int height;     // высота узла
+    int size;       // размер поддерева
+    struct AVLNode *left, *right; // левый и правый потомки
+} AVLNode;
+
+// Функция для получения высоты узла
+int height(AVLNode *node) {
+    return node ? node->height : 0;
+}
+
+// Функция для получения размера поддерева
+int size(AVLNode *node) {
+    return node ? node->size : 0;
+}
+
+// Обновление высоты и размера узла
+void update(AVLNode *node) {
+    if (node) {
+        int hL = height(node->left);
+        int hR = height(node->right);
+        node->height = 1 + (hL > hR ? hL : hR);
+        node->size = 1 + size(node->left) + size(node->right);
+    }
+}
+
+// Правый поворот (правильное вращение)
+AVLNode* rotateRight(AVLNode *y) {
+    AVLNode *x = y->left;
+    AVLNode *T = x->right;
+    x->right = y;
+    y->left = T;
+    update(y);
+    update(x);
+    return x;
+}
+
+// Левый поворот (левое вращение)
+AVLNode* rotateLeft(AVLNode *x) {
+    AVLNode *y = x->right;
+    AVLNode *T = y->left;
+    y->left = x;
+    x->right = T;
+    update(x);
+    update(y);
+    return y;
+}
+
+// Балансировка AVL
+int getBalance(AVLNode *node) {
+    return node ? height(node->left) - height(node->right) : 0;
+}
+
+// Вставка элемента по ключу
+AVLNode* insertByKey(AVLNode* node, int key, int data) {
+    if (!node) {
+        AVLNode* newNode = malloc(sizeof(AVLNode));
+        newNode->key = key;
+        newNode->data = data;
+        newNode->height = 1;
+        newNode->size = 1;
+        newNode->left = newNode->right = NULL;
+        return newNode;
+    }
+
+    if (key < node->key)
+        node->left = insertByKey(node->left, key, data);
+    else
+        node->right = insertByKey(node->right, key, data);
+
+    update(node);
+
+    int balance = getBalance(node);
+
+    // Ротации при необходимости
+    if (balance > 1 && key < node->left->key)
+        return rotateRight(node);
+    if (balance < -1 && key > node->right->key)
+        return rotateLeft(node);
+    if (balance > 1 && key > node->left->key) {
+        node->left = rotateLeft(node->left);
+        return rotateRight(node);
+    }
+    if (balance < -1 && key < node->right->key) {
+        node->right = rotateRight(node->right);
+        return rotateLeft(node);
+    }
+
+    return node;
+}
+
+// Поиск по ключу
+AVLNode* searchByKey(AVLNode* node, int key) {
+    if (!node) return NULL;
+    if (key == node->key) return node;
+    else if (key < node->key) return searchByKey(node->left, key);
+    else return searchByKey(node->right, key);
+}
+
+// Поиск K-го элемента по позиции (индексу)
+AVLNode* searchKth(AVLNode* node, int k) {
+    if (!node || k < 1 || k > size(node)) return NULL;
+    int leftSize = size(node->left);
+    if (k == leftSize + 1) return node;
+    else if (k <= leftSize) return searchKth(node->left, k);
+    else return searchKth(node->right, k - leftSize - 1);
+}
+
+// Поиск минимального узла (самого левого)
+AVLNode* minValueNode(AVLNode* node) {
+    while (node->left) node = node->left;
+    return node;
+}
+
+// Удаление узла по ключу
+AVLNode* deleteByKey(AVLNode* root, int key) {
+    if (!root) return NULL;
+
+    if (key < root->key)
+        root->left = deleteByKey(root->left, key);
+    else if (key > root->key)
+        root->right = deleteByKey(root->right, key);
+    else {
+        // Узел с одним или нулем потомков
+        if (!root->left || !root->right) {
+            AVLNode *temp = root->left ? root->left : root->right;
+            free(root);
+            return temp;
+        }
+
+        // Узел с двумя потомками
+        AVLNode *temp = minValueNode(root->right);
+        root->key = temp->key;
+        root->data = temp->data;
+        root->right = deleteByKey(root->right, temp->key);
+    }
+
+    update(root);
+
+    int balance = getBalance(root);
+    if (balance > 1 && getBalance(root->left) >= 0)
+        return rotateRight(root);
+    if (balance > 1 && getBalance(root->left) < 0) {
+        root->left = rotateLeft(root->left);
+        return rotateRight(root);
+    }
+    if (balance < -1 && getBalance(root->right) <= 0)
+        return rotateLeft(root);
+    if (balance < -1 && getBalance(root->right) > 0) {
+        root->right = rotateRight(root->right);
+        return rotateLeft(root);
+    }
+
+    return root;
+}
+
+// Слияние двух AVL-деревьев (все ключи T1 < все ключи T2)
+AVLNode* mergeAVL(AVLNode* T1, AVLNode* T2) {
+    if (!T1) return T2;
+    if (!T2) return T1;
+
+    // Находим минимальный узел во втором дереве
+    AVLNode *minNode = minValueNode(T2);
+    T2 = deleteByKey(T2, minNode->key);
+
+    minNode->left = T1;
+    minNode->right = T2;
+    update(minNode);
+    return minNode;
+}
