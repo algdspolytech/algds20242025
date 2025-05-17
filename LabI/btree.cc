@@ -23,6 +23,59 @@ static B_node *alloc_node(int is_leaf) {
   return n;
 }
 
+int Next(B_tree_iterator *iter) {
+  if (!iter || !iter->node)
+    return 0;
+  B_node *current_node = iter->node;
+  int current_pos = iter->position;
+  if (!current_node->is_leaf && current_pos != -1) {
+    B_node *child = current_node->children[current_pos + 1];
+    while (!child->is_leaf)
+      child = child->children[0];
+    iter->node = child;
+    iter->position = 0;
+    return 1;
+  }
+  if (current_node->is_leaf) {
+    if (current_pos + 1 < current_node->keys_count) {
+      iter->position++;
+      return 1;
+    } else {
+      B_node *child = current_node;
+      B_node *parent = child->parent;
+      int child_idx;
+      while (parent) {
+        for (child_idx = 0; child_idx <= parent->keys_count; child_idx++) {
+          if (parent->children[child_idx] == child) {
+            break;
+          }
+        }
+        if (child_idx < parent->keys_count) {
+          iter->node = parent;
+          iter->position = child_idx;
+          return 1;
+        }
+        child = parent;
+        parent = parent->parent;
+      }
+      iter->node = NULL;
+      iter->position = -1;
+      return 0;
+    }
+  }
+  if (!current_node->is_leaf && current_pos == -1) {
+    B_node *child = current_node;
+    while (!child->is_leaf)
+      child = child->children[0];
+    iter->node = child;
+    iter->position = 0;
+    return 1;
+  }
+  iter->node = NULL;
+  iter->position = -1;
+  return 0;
+}
+
 B_tree_iterator IteratorBegin(B_tree *tree) {
   B_tree_iterator it = {0};
   if (!tree || !tree->root || tree->root->keys_count == 0) {
@@ -36,36 +89,6 @@ B_tree_iterator IteratorBegin(B_tree *tree) {
   it.node = n;
   it.position = -1;
   return it;
-}
-
-int Next(B_tree_iterator *iter) {
-  if (!iter || !iter->node)
-    return 0;
-  B_node *n = iter->node;
-  int pos = iter->position;
-  if (pos + 1 < n->keys_count) {
-    iter->position = pos + 1;
-    return 1;
-  }
-  B_node *child = n;
-  B_node *p = n->parent;
-  while (p) {
-    int i;
-    for (i = 0; i <= p->keys_count; i++) {
-      if (p->children[i] == child)
-        break;
-    }
-    if (i < p->keys_count) {
-      iter->node = p;
-      iter->position = i;
-      return 1;
-    }
-    child = p;
-    p = p->parent;
-  }
-  iter->node = NULL;
-  iter->position = -1;
-  return 0;
 }
 
 int Key(B_tree_iterator *iter) {
