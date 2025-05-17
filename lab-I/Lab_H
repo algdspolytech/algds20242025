@@ -174,3 +174,89 @@ AVLNode* mergeAVL(AVLNode* T1, AVLNode* T2) {
     update(minNode);
     return minNode;
 }
+
+
+
+
+// Code Test Lab H 
+
+#include <stdio.h>
+#include <stdlib.h>
+
+// Симметричный обход дерева (вывод в отсортированном виде)
+void inorderPrint(AVLNode *root) {
+    if (root) {
+        inorderPrint(root->left);
+        printf("[ключ=%d, данные=%d] ", root->key, root->data);
+        inorderPrint(root->right);
+    }
+}
+
+int main() {
+    printf("=== ТЕСТ АВЛ-СПИСКА ===\n");
+
+    AVLNode *root1 = NULL;
+    AVLNode *root2 = NULL;
+
+    // 1. Вставка элементов
+    printf("\nВставка элементов в первый список...\n");
+    root1 = insertByKey(root1, 10, 100);
+    root1 = insertByKey(root1, 20, 200);
+    root1 = insertByKey(root1, 5, 50);
+    root1 = insertByKey(root1, 15, 150);
+    root1 = insertByKey(root1, 25, 250);
+
+    printf("Список 1 (симметричный обход): ");
+    inorderPrint(root1);
+    printf("\n");
+
+    // 2. Поиск по ключу
+    printf("\nПоиск элемента с ключом 15: ");
+    AVLNode *found = searchByKey(root1, 15);
+    if (found) printf("Найдено: данные = %d\n", found->data);
+    else printf("Не найдено.\n");
+
+    printf("Поиск элемента с ключом 99: ");
+    found = searchByKey(root1, 99);
+    if (found) printf("Найдено: данные = %d\n", found->data);
+    else printf("Не найдено.\n");
+
+    // 3. Поиск k-го элемента
+    for (int k = 1; k <= size(root1); k++) {
+        AVLNode *kth = searchKth(root1, k);
+        printf("%d-й элемент: [ключ=%d, данные=%d]\n", k, kth->key, kth->data);
+    }
+
+    // 4. Удаление элементов
+    printf("\nУдаление элемента с ключом 10 (корень)...\n");
+    root1 = deleteByKey(root1, 10);
+    printf("Список 1 после удаления: ");
+    inorderPrint(root1);
+    printf("\n");
+
+    printf("Удаление элемента с ключом 5 (лист)...\n");
+    root1 = deleteByKey(root1, 5);
+    printf("Список 1 после удаления: ");
+    inorderPrint(root1);
+    printf("\n");
+
+    // 5. Второй список
+    printf("\nВставка элементов во второй список...\n");
+    root2 = insertByKey(root2, 30, 300);
+    root2 = insertByKey(root2, 35, 350);
+    root2 = insertByKey(root2, 40, 400);
+
+    printf("Список 2 (симметричный обход): ");
+    inorderPrint(root2);
+    printf("\n");
+
+    // 6. Слияние двух списков
+    printf("\nСлияние двух списков...\n");
+    AVLNode *merged = mergeAVL(root1, root2);
+
+    printf("Объединённый список (симметричный обход): ");
+    inorderPrint(merged);
+    printf("\n");
+
+    return 0;
+}
