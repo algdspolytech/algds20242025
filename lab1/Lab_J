@@ -1,0 +1,121 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+#define TABLE_SIZE 10
+#define MAX_STRING_LENGTH 100
+
+// Структура для узла цепочки (элемента таблицы)
+typedef struct Node {
+    char* value;
+    struct Node* next;
+} Node;
+
+// Хеш-таблица
+Node* hashTable[TABLE_SIZE];
+
+// Простая хеш-функция (сумма ASCII-кодов символов по модулю размера таблицы)
+unsigned int hash(const char* str) {
+    unsigned int hash = 0;
+    while (*str) {
+        hash += (unsigned char)(*str);
+        str++;
+    }
+    return hash % TABLE_SIZE;
+}
+
+// Вставка строки в хеш-таблицу
+void insert(const char* str) {
+    unsigned int index = hash(str);
+    Node* newNode = (Node*)malloc(sizeof(Node));
+    newNode->value = strdup(str); // копируем строку
+    newNode->next = hashTable[index];
+    hashTable[index] = newNode;
+    printf("Добавлена строка \"%s\" в индекс %u\n", str, index);
+}
+
+// Поиск строки в таблице
+int search(const char* str) {
+    unsigned int index = hash(str);
+    Node* current = hashTable[index];
+    while (current) {
+        if (strcmp(current->value, str) == 0)
+            return 1;
+        current = current->next;
+    }
+    return 0;
+}
+
+// Удаление строки
+void delete(const char* str) {
+    unsigned int index = hash(str);
+    Node* current = hashTable[index];
+    Node* prev = NULL;
+
+    while (current) {
+        if (strcmp(current->value, str) == 0) {
+            if (prev)
+                prev->next = current->next;
+            else
+                hashTable[index] = current->next;
+            free(current->value);
+            free(current);
+            printf("Удалена строка \"%s\"\n", str);
+            return;
+        }
+        prev = current;
+        current = current->next;
+    }
+    printf("Строка \"%s\" не найдена\n", str);
+}
+
+// Печать содержимого хеш-таблицы
+void printTable() {
+    printf("\n--- Хеш-таблица ---\n");
+    for (int i = 0; i < TABLE_SIZE; i++) {
+        printf("[%d]: ", i);
+        Node* current = hashTable[i];
+        while (current) {
+            printf("\"%s\" -> ", current->value);
+            current = current->next;
+        }
+        printf("NULL\n");
+    }
+}
+
+// Освобождение памяти
+void freeTable() {
+    for (int i = 0; i < TABLE_SIZE; i++) {
+        Node* current = hashTable[i];
+        while (current) {
+            Node* tmp = current;
+            current = current->next;
+            free(tmp->value);
+            free(tmp);
+        }
+        hashTable[i] = NULL;
+    }
+}
+
+int main() {
+    insert("кот");
+    insert("собака");
+    insert("птица");
+    insert("рыба");
+    insert("тигр");
+    insert("лев");
+    insert("пантера");
+
+    printTable();
+
+    printf("\nПоиск \"собака\": %s\n", search("собака") ? "найдена" : "не найдена");
+    printf("Поиск \"обезьяна\": %s\n", search("обезьяна") ? "найдена" : "не найдена");
+
+    delete("лев");
+    delete("обезьяна");
+
+    printTable();
+
+    freeTable();
+    return 0;
+}
