@@ -12,4 +12,5 @@ B-tree
 вашей библиотеки.
 После отправки нажимайте оранжевую кнопку Играть, чтобы узнать результат.
 Скрин:
-![Uploading image.png…]()
+
+![image](https://github.com/user-attachments/assets/d88f75e8-4219-4184-95f9-b1933a36b909)
