@@ -148,6 +148,14 @@ void hashtable_delete(HashTable* hashtable, char* key) {
     return;
 }
 
+void hashtable_free(HashTable* hashtable) {
+    if (hashtable) {
+        if (hashtable->hashtable)
+            free(hashtable->hashtable);
+        free(hashtable);
+    }
+}
+
 void hashtable_show(HashTable* hashtable) {
     int counter = 0;
     for (int i = 0;i < hashtable->size;i++) {
@@ -192,6 +200,8 @@ int main()
 
         free(_data);
     }
+
+    hashtable_free(hashtable);
 
     return 0;
 }
