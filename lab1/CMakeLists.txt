@@ -3,4 +3,4 @@ project(LabJ)
 
 set(CMAKE_CXX_STANDARD 11)
 
-add_executable(LabJ main.c)
+add_executable(LabJ main.cc)
