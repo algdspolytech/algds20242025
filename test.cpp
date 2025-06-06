@@ -3,135 +3,123 @@
 #include <stdio.h>
 
 extern "C" {
-#include "..\labH\RandomizedBinaryTree.h"
+#include "..\LabJ\hash_table.h"
 }
 
-TEST(RBST_tests, insertOneToEmptyTree_no1) { 
-	Node* root = (Node*)NULL;
-	root = RBST_insert(root, 1);
-	ASSERT_EQ(root->key, 1);
-	ASSERT_EQ(root->left,(Node*)NULL);
-	ASSERT_EQ(root->right, (Node*)NULL);
-	ASSERT_GT(root->priority, 0);
-	RBST_freeTree(root);
+class HashTableTest : public ::testing::Test {
+protected:
+    HashTable* ht;
+    void SetUp() override {
+        ht = create_table(5, 0.7);
+        ASSERT_NE(ht, nullptr);
+        ASSERT_EQ(get_hash_table_count(ht), 0);
+        ASSERT_EQ(get_hash_table_deleted_count(ht), 0);
+    }
+
+    void TearDown() override {
+        destroy_table(ht);
+    }
+};
+
+
+TEST_F(HashTableTest, HashTableCreationAndDestruction_no1) {
+    ASSERT_GT(get_hash_table_size(ht), 0);
+    ASSERT_EQ(get_hash_table_count(ht), 0);
+    ASSERT_EQ(get_hash_table_deleted_count(ht), 0);
 }
 
-TEST(RBST_tests, insertManyToEmptyTree_no2) {
-	Node* root = (Node*)NULL;
-	root = RBST_insert(root, 1);
-	root = RBST_insert(root, 2);
-	root = RBST_insert(root, 3);
-	int rootArr[3];
-	int i_rootArr = 0;
-	RBST_arrayInOrder(root, rootArr, &i_rootArr);
-	int exArr[3] = { 1, 2, 3 };
-
-	ASSERT_EQ(rootArr[0], exArr[0]);
-	ASSERT_EQ(rootArr[1], exArr[1]);
-	ASSERT_EQ(rootArr[2], exArr[2]);
-	RBST_freeTree(root);
+TEST_F(HashTableTest, InsertSingleElement_no2) {
+    EXPECT_EQ(insert(ht, "apple"), 0);
+    EXPECT_EQ(get_hash_table_count(ht), 1);
+    EXPECT_EQ(get_hash_table_deleted_count(ht), 0);
+    EXPECT_STREQ(search(ht, "apple"), "apple");
 }
 
-TEST(RBST_tests, insertNodeWithExistingKey_no3) {
-	Node* root = (Node*)NULL;
-	root = RBST_insert(root, 1);
-	root = RBST_insert(root, 1);
-
-	ASSERT_EQ(root->key, 1); 
-	ASSERT_EQ(root->left, (Node*)NULL);
-	ASSERT_EQ(root->right, (Node*)NULL);
-	ASSERT_GT(root->priority, 0);
-	RBST_freeTree(root);
+TEST_F(HashTableTest, SearchNonExistingElement_no3) {
+    insert(ht, "apple");
+    EXPECT_EQ(search(ht, "banana"), nullptr);
 }
 
-TEST(RBST_tests, removeNonExistentNode_no4) {
-	Node* root = (Node*)NULL;
-	root = RBST_insert(root, 1);
-	root = RBST_remove(root, 2);
-
-	ASSERT_EQ(root->key, 1);
-	ASSERT_EQ(root->left, (Node*)NULL);
-	ASSERT_EQ(root->right, (Node*)NULL);
-	ASSERT_GT(root->priority, 0);
-	RBST_freeTree(root);
+TEST_F(HashTableTest, InsertDuplicateElement_no4) {
+    insert(ht, "apple");
+    EXPECT_EQ(insert(ht, "apple"), 1);
+    EXPECT_EQ(get_hash_table_count(ht), 1);
+    EXPECT_EQ(get_hash_table_deleted_count(ht), 0);
+    EXPECT_STREQ(search(ht, "apple"), "apple");
 }
 
-TEST(RBST_tests, removeNodeWith1Child_no5) {
-	Node* root = (Node*)NULL;
-	root = RBST_insert(root, 4);
-	root = RBST_insert(root, 5);
-	root = RBST_insert(root, 10);
-	root = RBST_insert(root, 11);
-	root = RBST_remove(root, 5);
-	int rootArr[3];
-	int i_rootArr = 0;
-	RBST_arrayInOrder(root, rootArr, &i_rootArr);
-	int exArr1[3] = { 4,10, 11 };
-
-	ASSERT_EQ(rootArr[0], exArr1[0]);
-	ASSERT_EQ(rootArr[1], exArr1[1]);
-	ASSERT_EQ(rootArr[2], exArr1[2]);
-	RBST_freeTree(root);
+TEST_F(HashTableTest, DeleteExistingElement_no5) {
+    insert(ht, "banana");
+    EXPECT_EQ(delete_key(ht, "banana"), 0);
+    EXPECT_EQ(get_hash_table_count(ht), 0);
+    EXPECT_EQ(get_hash_table_deleted_count(ht), 1);
+    EXPECT_EQ(search(ht, "banana"), nullptr);
 }
 
-TEST(RBST_tests, removeNodeWith2Children_no6) {
-	Node* root = NULL;
-	root = RBST_insert(root, 2);
-	root = RBST_insert(root, 3);
-	root = RBST_insert(root, 4);
-	root = RBST_remove(root, 3);
-
-	ASSERT_TRUE(root->key == 2 || root->key == 4);
-
-	RBST_freeTree(root);
+TEST_F(HashTableTest, DeleteNonExistingElement_no6) {
+    insert(ht, "grape");
+    EXPECT_EQ(delete_key(ht, "orange"), -1);
+    EXPECT_EQ(get_hash_table_count(ht), 1);
+    EXPECT_EQ(get_hash_table_deleted_count(ht), 0);
 }
 
-TEST(RBST_tests, removeLeafNode_no7) {
-	Node* root = NULL;
-	root = RBST_insert(root, 10);
-	root = RBST_insert(root, 5);
+TEST_F(HashTableTest, InsertElementsWithCollisions_no7) {
+    EXPECT_EQ(insert(ht, "apple"), 0);
+    EXPECT_EQ(insert(ht, "banana"), 0);
+    EXPECT_EQ(insert(ht, "cherry"), 0);
+    EXPECT_EQ(insert(ht, "date"), 0);
 
-	root = RBST_remove(root, 5);
+    EXPECT_EQ(get_hash_table_count(ht), 4);
+    EXPECT_EQ(get_hash_table_deleted_count(ht), 0);
+    EXPECT_EQ(get_hash_table_size(ht), 11);
 
-	ASSERT_EQ(root->key, 10);
-	ASSERT_EQ(root->left, nullptr);
+    EXPECT_STREQ(search(ht, "apple"), "apple");
+    EXPECT_STREQ(search(ht, "banana"), "banana");
+    EXPECT_STREQ(search(ht, "cherry"), "cherry");
+    EXPECT_STREQ(search(ht, "date"), "date");
 
-	RBST_freeTree(root);
+    EXPECT_EQ(insert(ht, "elderberry"), 0);
+    EXPECT_EQ(insert(ht, "fig"), 0);
+    EXPECT_EQ(get_hash_table_count(ht), 6);
+    EXPECT_STREQ(search(ht, "elderberry"), "elderberry");
+    EXPECT_STREQ(search(ht, "fig"), "fig");
 }
 
-TEST(RBST_tests, removeFromEmptyTree_no8) {
-	Node* root = NULL;
+TEST_F(HashTableTest, RehashingTriggered_no8) {
+    EXPECT_EQ(insert(ht, "key1"), 0);
+    EXPECT_EQ(insert(ht, "key2"), 0);
+    EXPECT_EQ(insert(ht, "key3"), 0);
+    int old_size = get_hash_table_size(ht);
+    EXPECT_EQ(insert(ht, "key4"), 0);
+    int new_size = get_hash_table_size(ht);
 
-	root = RBST_remove(root, 10);
+    EXPECT_GT(new_size, old_size);
+    EXPECT_EQ(new_size, 11);
 
-	ASSERT_EQ(root, nullptr);
+    EXPECT_EQ(get_hash_table_count(ht), 4);
+    EXPECT_EQ(get_hash_table_deleted_count(ht), 0);
 
-	RBST_freeTree(root);
+    EXPECT_STREQ(search(ht, "key1"), "key1");
+    EXPECT_STREQ(search(ht, "key2"), "key2");
+    EXPECT_STREQ(search(ht, "key3"), "key3");
+    EXPECT_STREQ(search(ht, "key4"), "key4");
 }
 
-TEST(RBST_tests, searchValidNode_no9) {
-	Node* root = NULL;
-	root = RBST_insert(root, 10);
-	root = RBST_insert(root, 5);
-	root = RBST_insert(root, 15);
 
-	Node* foundNode = RBST_findNode(root, 5);
-
-	ASSERT_NE(foundNode, nullptr);
-	ASSERT_EQ(foundNode->key, 5);
-
-	RBST_freeTree(root);
+TEST_F(HashTableTest, EmptyTableDelete_no9) {
+    EXPECT_EQ(delete_key(ht, "any_key"), -1);
+    EXPECT_EQ(get_hash_table_count(ht), 0);
+    EXPECT_EQ(get_hash_table_deleted_count(ht), 0);
 }
 
-TEST(RBST_tests, searchInvalidNode_no10) {
-	Node* root = NULL;
-	root = RBST_insert(root, 10);
-	root = RBST_insert(root, 5);
-	root = RBST_insert(root, 15);
+TEST(HashTableEdgeCases, NullParameters_no10) {
+    HashTable* null_ht = nullptr;
+    EXPECT_EQ(insert(null_ht, "test"), -1);
+    EXPECT_EQ(insert(create_table(10, 0.7), nullptr), -1);
+    EXPECT_EQ(create_table(0, 0.7), nullptr);
+}
 
-	Node* foundNode = RBST_findNode(root, 20);
-
-	ASSERT_EQ(foundNode, nullptr);
-
-	RBST_freeTree(root);
+int main(int argc, char** argv) {
+    ::testing::InitGoogleTest(&argc, argv);
+    return RUN_ALL_TESTS();
 }
