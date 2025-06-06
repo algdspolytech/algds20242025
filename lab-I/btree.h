@@ -142,7 +142,6 @@ extern "C"
     extern insertNotFull_t const *InsertNotFullPtr;
 
 
-
 #ifdef __cplusplus
 }
 #endif

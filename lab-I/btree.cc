@@ -30,7 +30,6 @@ void split(B_node *parent, int i) {
                 new_node->children[j]->parent = new_node;
         }
     }
-
     full->keys_count = MIN_CHILDREN;
 
     for (int j = parent->keys_count; j > i; j--) {
