@@ -4,9 +4,9 @@ project(alg1)
 set(CMAKE_C_STANDARD 99)
 
 find_package(GTest REQUIRED)
-add_subdirectory(libs/tree)
+add_subdirectory(libs/hash)
 
-add_executable(lab1test src/tests.cpp)
+add_executable(lab6test src/tests.cpp)
 
-target_include_directories(lab1test PRIVATE libs/tree/include)
-target_link_libraries(lab1test PRIVATE tree GTest::gtest)
+target_include_directories(lab6test PRIVATE libs/hash/include)
+target_link_libraries(lab6test PRIVATE hash GTest::gtest)
