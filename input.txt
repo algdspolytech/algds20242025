@@ -1,0 +1,8 @@
+insert 5
+insert 3
+insert 8
+print
+search 3
+delete 3
+print
+exit
